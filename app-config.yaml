@@ -30,5 +30,11 @@ fasitResources:
   - alias: appdynamics
     resourceType: applicationproperties
 
+  - alias: loadbalancer:veilarbvedtakinfo
+    resourceType: loadbalancerconfig
+exposed:
+  - alias: veilarbvedtakinfoAPI
+    resourceType: restservice
+    path: /veilarbvedtakinfo/api
 alertProfiles:
   - common-java-modules
