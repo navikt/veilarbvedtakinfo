@@ -1,17 +1,17 @@
 package no.nav.fo.veilarbvedtakinfo;
-
-import no.nav.apiapp.ApiApp;
-import no.nav.fo.veilarbvedtakinfo.config.ApplicationTestConfig;
 import no.nav.testconfig.ApiAppTest;
 
+import static no.nav.fo.veilarbvedtakinfo.config.ApplicationConfig.APPLICATION_NAME;
+
 public class MainTest {
+    private static final String PORT = "8800";
 
     public static void main(String[] args) throws Exception {
         ApiAppTest.setupTestContext(ApiAppTest.Config.builder()
-                .applicationName("veilarbvedtakinfo")
+                .applicationName(APPLICATION_NAME)
                 .build()
         );
 
-        ApiApp.runApp(ApplicationTestConfig.class, args);
+        Main.main(PORT);
     }
 }

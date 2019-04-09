@@ -14,6 +14,10 @@ public class ApplicationConfig implements ApiApplication {
     public static final String APPLICATION_NAME = "veilarbvedtakinfo";
 
     @Override
+    public String getContextPath() {
+        return "/veilarbvedtakinfo";
+    }
+    @Override
     public void configure(ApiAppConfigurator apiAppConfigurator) {
 
     }
