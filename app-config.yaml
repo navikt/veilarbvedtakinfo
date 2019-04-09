@@ -24,5 +24,11 @@ resources:
   requests:
     cpu: 200m
     memory: 256Mi
+
+fasitResources:
+  used:
+  - alias: appdynamics
+    resourceType: applicationproperties
+
 alertProfiles:
   - common-java-modules
