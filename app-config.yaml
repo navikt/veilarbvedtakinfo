@@ -1,0 +1,28 @@
+image: docker.adeo.no:5000/fo/veilarbvedtakinfo
+team: pus
+replicas:
+  min: 2
+  max: 4
+  cpuThresholdPercentage: 50
+port: 8080
+webproxy: true
+leaderElection: true
+healthcheck:
+  liveness:
+    path: veilarbvedtakinfo/internal/isAlive
+    initialDelay: 20
+  readiness:
+    path: veilarbvedtakinfo/internal/isReady
+    initialDelay: 20
+prometheus:
+  enabled: true
+  path: veilarbvedtakinfo/internal/metrics
+resources:
+  limits:
+    cpu: 3
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi
+alertProfiles:
+  - common-java-modules
