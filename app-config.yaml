@@ -24,5 +24,18 @@ resources:
   requests:
     cpu: 200m
     memory: 256Mi
+
+fasitResources:
+  used:
+  - alias: appdynamics
+    resourceType: applicationproperties
+  - alias: loadbalancer:veilarbvedtakinfo
+    resourceType: loadbalancerconfig
+  - alias: srvveilarbvedtakinfo
+    resourceType: credential
+exposed:
+  - alias: veilarbvedtakinfoAPI
+    resourceType: restservice
+    path: /veilarbvedtakinfo/api
 alertProfiles:
   - common-java-modules
