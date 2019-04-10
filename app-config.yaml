@@ -1,5 +1,5 @@
 image: docker.adeo.no:5000/fo/veilarbvedtakinfo
-team: pus
+team: bos
 replicas:
   min: 2
   max: 4
