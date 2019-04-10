@@ -33,6 +33,8 @@ fasitResources:
     resourceType: loadbalancerconfig
   - alias: srvveilarbvedtakinfo
     resourceType: credential
+  - alias: veilarbvedtakinfoDB
+    resourceType: datasource
 exposed:
   - alias: veilarbvedtakinfoAPI
     resourceType: restservice
