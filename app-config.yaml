@@ -29,9 +29,10 @@ fasitResources:
   used:
   - alias: appdynamics
     resourceType: applicationproperties
-
   - alias: loadbalancer:veilarbvedtakinfo
     resourceType: loadbalancerconfig
+  - alias: srvveilarbvedtakinfo
+    resourceType: credential
 exposed:
   - alias: veilarbvedtakinfoAPI
     resourceType: restservice
