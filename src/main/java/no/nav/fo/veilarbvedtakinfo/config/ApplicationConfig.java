@@ -2,6 +2,7 @@ package no.nav.fo.veilarbvedtakinfo.config;
 
 import no.nav.apiapp.ApiApplication;
 import no.nav.apiapp.config.ApiAppConfigurator;
+import no.nav.dialogarena.aktor.AktorConfig;
 import no.nav.fo.veilarbvedtakinfo.db.MigrationUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -13,7 +14,11 @@ import javax.servlet.ServletContext;
 
 
 @Configuration
-@Import({ServiceBeans.class, DatabaseConfig.class})
+@Import({ServiceBeans.class,
+        DatabaseConfig.class,
+        AktorConfig.class,
+        PepConfig.class,
+        CacheConfig.class})
 
 public class ApplicationConfig implements ApiApplication {
 
