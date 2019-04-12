@@ -12,9 +12,7 @@ public class InfoOmMegService {
     }
 
     public FremtidigSituasjonData hentFremtidigSituasjon(AktorId aktorId) {
-        FremtidigSituasjonData fremtidigSituasjonData = infoOmMegRepository.hentFremtidigSituasjonForAktorId(aktorId);
-
-       return fremtidigSituasjonData;
+        return infoOmMegRepository.hentFremtidigSituasjonForAktorId(aktorId);
     }
 
     public void lagreFremtidigSituasjon(FremtidigSituasjonData fremtidigSituasjon, AktorId aktorId, String endretAv) {
