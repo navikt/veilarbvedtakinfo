@@ -1,6 +1,8 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 
 import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.dialogarena.aktor.AktorService;
+import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +42,12 @@ public class UserService {
 
         return fnr;
 
+    }
+
+    public static AktorId getAktorIdOrElseThrow(AktorService aktorService, String fnr) {
+        return aktorService.getAktorId(fnr)
+                .map(AktorId::new)
+                .orElseThrow(() -> new IllegalArgumentException("Fant ikke aktør for fnr: " + fnr));
     }
 
 }
