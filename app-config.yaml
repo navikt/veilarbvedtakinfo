@@ -35,9 +35,10 @@ fasitResources:
     resourceType: credential
   - alias: veilarbvedtakinfoDB
     resourceType: datasource
-exposed:
-  - alias: veilarbvedtakinfoAPI
-    resourceType: restservice
-    path: /veilarbvedtakinfo/api
+
+  exposed:
+    - alias: veilarbvedtakinfoAPI
+      resourceType: restservice
+      path: /veilarbvedtakinfo/api
 alertProfiles:
   - common-java-modules
