@@ -4,19 +4,22 @@ import no.nav.fo.veilarbvedtakinfo.config.ApplicationTestConfig;
 import no.nav.fo.veilarbvedtakinfo.db.DatabaseTestContext;
 import no.nav.testconfig.ApiAppTest;
 
+import static java.lang.System.getProperty;
 import static no.nav.fo.veilarbvedtakinfo.config.ApplicationConfig.APPLICATION_NAME;
+import static no.nav.testconfig.ApiAppTest.Config.builder;
 
 public class MainTest {
     private static final String PORT = "8800";
 
     public static void main(String[] args) throws Exception {
         String arguments[] = {PORT};
-        ApiAppTest.setupTestContext(ApiAppTest.Config.builder()
-                .applicationName(APPLICATION_NAME)
-                .build()
-        );
+
+        ApiAppTest.setupTestContext(builder().applicationName(APPLICATION_NAME).build());
         TestContext.setup();
-        DatabaseTestContext.setupContext("Q0");
+        DatabaseTestContext.setupContext(getProperty("database"));
+
+
+
         ApiApp.runApp(ApplicationTestConfig.class, arguments);
     }
 }

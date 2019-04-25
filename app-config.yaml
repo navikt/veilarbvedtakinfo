@@ -6,7 +6,6 @@ replicas:
   cpuThresholdPercentage: 50
 port: 8080
 webproxy: true
-leaderElection: true
 healthcheck:
   liveness:
     path: veilarbvedtakinfo/internal/isAlive
@@ -29,6 +28,8 @@ fasitResources:
   used:
   - alias: appdynamics
     resourceType: applicationproperties
+
+  # custom veilarbdirigent props
   - alias: loadbalancer:veilarbvedtakinfo
     resourceType: loadbalancerconfig
   - alias: srvveilarbvedtakinfo
@@ -36,9 +37,28 @@ fasitResources:
   - alias: veilarbvedtakinfoDB
     resourceType: datasource
 
+
+  # security resources
+  - alias: isso-rp-user
+    resourceType: credential
+  - alias: isso-host
+    resourceType: baseUrl
+  - alias: isso-jwks
+    resourceType: baseUrl
+  - alias: isso-issuer
+    resourceType: baseUrl
+  - alias: isso.isalive
+    resourceType: baseUrl
+  - alias: veilarblogin.redirect-url
+    resourceType: restservice
+  - alias: aad_b2c_clientid
+    resourceType: credential
+  - alias: aad_b2c_discovery
+    resourceType: baseurl
+
   exposed:
-    - alias: veilarbvedtakinfoAPI
-      resourceType: restservice
-      path: /veilarbvedtakinfo/api
+  - alias: veilarbvedtakinfoAPI
+    resourceType: restservice
+    path: /veilarbvedtakinfo/api
 alertProfiles:
   - common-java-modules

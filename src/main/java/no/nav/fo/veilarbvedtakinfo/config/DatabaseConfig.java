@@ -1,7 +1,6 @@
 package no.nav.fo.veilarbvedtakinfo.config;
 
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import no.nav.sbl.jdbc.DataSourceFactory;
 import no.nav.sbl.jdbc.Database;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,6 +11,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+import static no.nav.sbl.util.EnvironmentUtils.getOptionalProperty;
 import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 
 @Configuration
@@ -24,14 +24,11 @@ public class DatabaseConfig {
 
     @Bean
     public static DataSource getDataSource() {
-        HikariConfig config = new HikariConfig();
-        config.setJdbcUrl(getRequiredProperty(VEILARBVEDTAKINFODB_URL));
-        config.setUsername(getRequiredProperty(VEILARBVEDTAKINFODB_USERNAME));
-        config.setPassword(getRequiredProperty(VEILARBVEDTAKINFODB_PASSWORD));
-        config.setMaximumPoolSize(10);
-        config.setMinimumIdle(2);
-
-        return new HikariDataSource(config);
+        return DataSourceFactory.dataSource()
+                .url(getRequiredProperty(VEILARBVEDTAKINFODB_URL))
+                .username(getRequiredProperty(VEILARBVEDTAKINFODB_USERNAME))
+                .password(getOptionalProperty(VEILARBVEDTAKINFODB_PASSWORD).orElse(""))
+                .build();
     }
 
     @Bean(name = "transactionManager")

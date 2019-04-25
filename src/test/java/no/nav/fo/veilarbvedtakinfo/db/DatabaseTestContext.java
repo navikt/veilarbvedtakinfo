@@ -7,9 +7,8 @@ import no.nav.fasit.TestEnvironment;
 
 import java.util.Optional;
 
-import static no.nav.fo.veilarbvedtakinfo.config.ApplicationTestConfig.RUN_WITH_MOCKS;
-import static no.nav.fo.veilarbvedtakinfo.config.DatabaseConfig.*;
 import static no.nav.fo.veilarbvedtakinfo.config.ApplicationConfig.APPLICATION_NAME;
+import static no.nav.fo.veilarbvedtakinfo.config.DatabaseConfig.*;
 
 public class DatabaseTestContext {
 
@@ -18,11 +17,15 @@ public class DatabaseTestContext {
                 .map(TestEnvironment::valueOf)
                 .map(testEnvironment -> FasitUtils.getDbCredentials(testEnvironment, APPLICATION_NAME));
 
-        if (dbCredential.isPresent() && !RUN_WITH_MOCKS) {
+        if (dbCredential.isPresent()) {
             setDataSourceProperties(dbCredential.get());
         } else {
             setInMemoryDataSourceProperties();
         }
+    }
+
+    public static void setupInMemoryContext() {
+        setupContext(null);
     }
 
     private static void setDataSourceProperties(DbCredentials dbCredentials) {
