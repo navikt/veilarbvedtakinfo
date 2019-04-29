@@ -37,6 +37,12 @@ fasitResources:
   - alias: veilarbvedtakinfoDB
     resourceType: datasource
 
+  # external resources used
+  - alias: Aktoer_v2
+    resourceType: webserviceendpoint
+  - alias: abac.pdp.endpoint
+    resourceType: restservice
+
 
   # security resources
   - alias: isso-rp-user

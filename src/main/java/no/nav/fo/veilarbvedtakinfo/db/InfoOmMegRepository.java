@@ -42,7 +42,7 @@ public class InfoOmMegRepository {
     }
 
     public void lagreFremtidigSituasjonForAktorId(FremtidigSituasjonData fremtidigSituasjonData, AktorId aktorId, String endretAv) {
-        long id = nesteFraSekvens(FREMTIDIG_SITUASJON_SEQ);
+        long id = DatabaseUtils.nesteFraSekvens(db, FREMTIDIG_SITUASJON_SEQ);
         String alt = fremtidigSituasjonData.getAlternativId().toString();
         SqlUtils.insert(db, FREMTIDIG_SITUASJON)
                 .value(ID, id)
@@ -63,9 +63,5 @@ public class InfoOmMegRepository {
                 )
                 .setTekst(rs.getString(TEKST));
 
-    }
-
-    private long nesteFraSekvens(String sekvensNavn) {
-        return ((Long)this.db.queryForObject("select " + sekvensNavn + ".nextval from dual", Long.class)).longValue();
     }
 }
