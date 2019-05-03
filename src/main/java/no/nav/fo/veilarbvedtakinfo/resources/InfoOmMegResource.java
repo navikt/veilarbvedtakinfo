@@ -15,6 +15,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
+import java.util.List;
+
 import static no.nav.fo.veilarbvedtakinfo.service.UserService.getAktorIdOrElseThrow;
 
 @Component
@@ -49,6 +51,18 @@ public class InfoOmMegResource {
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
         return infoOmMegService.hentFremtidigSituasjon(aktorId);
+    }
+
+    @GET
+    @Path("/situasjonliste")
+    @ApiOperation(value = "Henter nyeste verdi for fremtidig situasjon.")
+    public List<FremtidigSituasjonData> hentSituasjonListe() {
+        String fnr = userService.hentFnrFraUrlEllerToken();
+        AktorId aktorId = getAktorIdOrElseThrow(aktorService, fnr);
+
+        pepClient.sjekkLeseTilgangTilFnr(fnr);
+
+        return infoOmMegService.hentSituasjonHistorikk(aktorId);
     }
 
     @POST

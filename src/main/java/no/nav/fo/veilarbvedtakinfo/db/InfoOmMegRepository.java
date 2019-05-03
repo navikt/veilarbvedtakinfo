@@ -11,6 +11,7 @@ import no.nav.sbl.sql.where.WhereClause;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
@@ -39,6 +40,14 @@ public class InfoOmMegRepository {
                 .limit(1)
                 .column("*")
                 .execute();
+    }
+
+    public List<FremtidigSituasjonData> hentSituasjonHistorikk(AktorId aktorId) {
+        return SqlUtils.select(db, FREMTIDIG_SITUASJON, InfoOmMegRepository::fremtidigSituasjonMapper)
+                .where(WhereClause.equals(AKTOR_ID, aktorId.getAktorId()))
+                .orderBy(OrderClause.desc(DATO))
+                .column("*")
+                .executeToList();
     }
 
     public void lagreFremtidigSituasjonForAktorId(FremtidigSituasjonData fremtidigSituasjonData, AktorId aktorId, String endretAv) {
