@@ -21,8 +21,10 @@ public class InfoOmMegService {
         return infoOmMegRepository.hentSituasjonHistorikk(aktorId);
     }
 
-    public void lagreFremtidigSituasjon(FremtidigSituasjonData fremtidigSituasjon, AktorId aktorId, String endretAv) {
-        infoOmMegRepository.lagreFremtidigSituasjonForAktorId(fremtidigSituasjon, aktorId, endretAv);
+    public FremtidigSituasjonData lagreFremtidigSituasjon(FremtidigSituasjonData fremtidigSituasjon, AktorId aktorId, String endretAv) {
+        long id = infoOmMegRepository.lagreFremtidigSituasjonForAktorId(fremtidigSituasjon, aktorId, endretAv);
+
+        return infoOmMegRepository.hentFremtidigSituasjonForId(id);
 
     }
 }

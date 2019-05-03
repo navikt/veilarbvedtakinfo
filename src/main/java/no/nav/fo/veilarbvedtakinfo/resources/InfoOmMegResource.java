@@ -68,13 +68,13 @@ public class InfoOmMegResource {
     @POST
     @Path("/fremtidigsituasjon")
     @ApiOperation(value = "Oppdaterer fremtidig situasjon")
-    public void oppdaterFremtidigSituasjon(FremtidigSituasjonData fremtidigSituasjonData) {
+    public FremtidigSituasjonData oppdaterFremtidigSituasjon(FremtidigSituasjonData fremtidigSituasjonData) {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = getAktorIdOrElseThrow(aktorService, fnr);
         String endretAv = userService.erEksternBruker()? aktorId.getAktorId() : userService.getUid();
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
-        infoOmMegService.lagreFremtidigSituasjon(fremtidigSituasjonData, aktorId, endretAv);
+        return infoOmMegService.lagreFremtidigSituasjon(fremtidigSituasjonData, aktorId, endretAv);
     }
 }

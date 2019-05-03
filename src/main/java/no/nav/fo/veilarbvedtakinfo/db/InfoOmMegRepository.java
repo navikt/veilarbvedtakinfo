@@ -42,6 +42,13 @@ public class InfoOmMegRepository {
                 .execute();
     }
 
+    public FremtidigSituasjonData hentFremtidigSituasjonForId(long id) {
+        return SqlUtils.select(db, FREMTIDIG_SITUASJON, InfoOmMegRepository::fremtidigSituasjonMapper)
+                .where(WhereClause.equals(ID, id))
+                .column("*")
+                .execute();
+    }
+
     public List<FremtidigSituasjonData> hentSituasjonHistorikk(AktorId aktorId) {
         return SqlUtils.select(db, FREMTIDIG_SITUASJON, InfoOmMegRepository::fremtidigSituasjonMapper)
                 .where(WhereClause.equals(AKTOR_ID, aktorId.getAktorId()))
@@ -50,7 +57,7 @@ public class InfoOmMegRepository {
                 .executeToList();
     }
 
-    public void lagreFremtidigSituasjonForAktorId(FremtidigSituasjonData fremtidigSituasjonData, AktorId aktorId, String endretAv) {
+    public long lagreFremtidigSituasjonForAktorId(FremtidigSituasjonData fremtidigSituasjonData, AktorId aktorId, String endretAv) {
         long id = DatabaseUtils.nesteFraSekvens(db, FREMTIDIG_SITUASJON_SEQ);
         String alt = fremtidigSituasjonData.getAlternativId().toString();
         SqlUtils.insert(db, FREMTIDIG_SITUASJON)
@@ -61,6 +68,8 @@ public class InfoOmMegRepository {
                 .value(ENDRET_AV, endretAv)
                 .value(DATO, DbConstants.CURRENT_TIMESTAMP)
                 .execute();
+
+        return id;
     }
 
     @SneakyThrows
