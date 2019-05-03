@@ -4,7 +4,6 @@ import lombok.SneakyThrows;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
-import no.nav.sbl.sql.DbConstants;
 import no.nav.sbl.sql.SqlUtils;
 import no.nav.sbl.sql.order.OrderClause;
 import no.nav.sbl.sql.where.WhereClause;
@@ -52,7 +51,7 @@ public class BehovsvurderingRepository {
                 .value(SPM_ID, svar.spmId)
                 .value(SVAR, svar.svar)
                 .value(SPM, svar.spm)
-                .value(DATO, DbConstants.CURRENT_TIMESTAMP)
+                .value(DATO, sistOppdatertDato)
                 .execute();
 
         SqlUtils.update(db, BESVARLSE_TABLE_NAME)
@@ -104,7 +103,7 @@ public class BehovsvurderingRepository {
     private static Besvarelse besvarelseMapper(ResultSet rs) {
         return new Besvarelse()
                 .setBesvarelseId(rs.getLong(BESVARELSE_ID))
-                .setSistOppdatert(rs.getDate(SIST_OPPDATERT));
+                .setSistOppdatert(rs.getTimestamp(SIST_OPPDATERT));
     }
 
     @SneakyThrows
@@ -114,6 +113,6 @@ public class BehovsvurderingRepository {
                 .setSpmId(rs.getString(SPM_ID))
                 .setSpm(rs.getString(SPM))
                 .setSvar(rs.getString(SVAR))
-                .setDato(rs.getDate(DATO));
+                .setDato(rs.getTimestamp(DATO));
     }
 }
