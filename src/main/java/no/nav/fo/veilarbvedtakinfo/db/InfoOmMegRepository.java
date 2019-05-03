@@ -70,7 +70,9 @@ public class InfoOmMegRepository {
                         ? FremtidigSituasjonSvar.valueOf(rs.getString(ALTERNATIV_ID))
                         : null
                 )
-                .setTekst(rs.getString(TEKST));
+                .setTekst(rs.getString(TEKST))
+                .setDato(rs.getDate(DATO))
+                .setEndretAv(rs.getString(ENDRET_AV));
 
     }
 }
