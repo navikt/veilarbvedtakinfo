@@ -1,10 +1,9 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonData;
 
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
 import java.util.List;
-
 
 public class InfoOmMegService {
     private final InfoOmMegRepository infoOmMegRepository;

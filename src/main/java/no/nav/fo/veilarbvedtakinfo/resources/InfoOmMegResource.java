@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import no.nav.apiapp.security.PepClient;
 import no.nav.dialogarena.aktor.AktorService;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
 import org.springframework.stereotype.Component;
@@ -76,4 +76,5 @@ public class InfoOmMegResource {
 
         return infoOmMegService.lagreFremtidigSituasjon(fremtidigSituasjonData, aktorId, endretAv);
     }
+
 }

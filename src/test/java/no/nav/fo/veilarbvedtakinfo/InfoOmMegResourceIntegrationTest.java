@@ -4,8 +4,8 @@ import no.nav.apiapp.security.PepClient;
 import no.nav.dialogarena.aktor.AktorService;
 import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonData;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonSvar;
 import no.nav.fo.veilarbvedtakinfo.resources.InfoOmMegResource;
 
 import no.nav.fo.veilarbvedtakinfo.service.UserService;

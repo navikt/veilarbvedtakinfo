@@ -1,4 +1,4 @@
-package no.nav.fo.veilarbvedtakinfo.domain;
+package no.nav.fo.veilarbvedtakinfo.domain.infoommeg;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

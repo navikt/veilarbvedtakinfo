@@ -1,4 +1,4 @@
-package no.nav.fo.veilarbvedtakinfo.domain;
+package no.nav.fo.veilarbvedtakinfo.domain.infoommeg;
 
 public enum FremtidigSituasjonSvar {
     SAMME_ARBEIDSGIVER,

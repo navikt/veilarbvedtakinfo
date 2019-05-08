@@ -5,8 +5,8 @@ import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
 
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonData;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonSvar;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

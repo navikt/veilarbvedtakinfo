@@ -2,8 +2,8 @@ package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonData;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonSvar;
 import no.nav.sbl.sql.DbConstants;
 import no.nav.sbl.sql.SqlUtils;
 import no.nav.sbl.sql.order.OrderClause;
