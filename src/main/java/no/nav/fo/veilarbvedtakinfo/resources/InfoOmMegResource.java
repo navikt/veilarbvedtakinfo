@@ -6,6 +6,8 @@ import no.nav.apiapp.security.PepClient;
 import no.nav.dialogarena.aktor.AktorService;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.InfoOmMegData;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
 import org.springframework.stereotype.Component;
@@ -38,6 +40,18 @@ public class InfoOmMegResource {
         this.userService = userService;
         this.aktorService = aktorService;
         this.pepClient = pepClient;
+    }
+
+    @GET
+    @Path("/sistesituasjon")
+    @ApiOperation(value = "Henter alle sist lagrede verdier.")
+    public InfoOmMegData hentSisteSituasjon() {
+        String fnr = userService.hentFnrFraUrlEllerToken();
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
+
+        pepClient.sjekkLeseTilgangTilFnr(fnr);
+
+        return infoOmMegService.hentSisteSituasjon(aktorId);
     }
 
     @GET
@@ -75,6 +89,54 @@ public class InfoOmMegResource {
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
         return infoOmMegService.lagreFremtidigSituasjon(fremtidigSituasjonData, aktorId, endretAv);
+    }
+
+    @GET
+    @Path("/helsehinder")
+    @ApiOperation(value = "Henter siste lagrede verdi av helsehinder.")
+    public HelseOgAndreHensynData hentHelseHinder() {
+        String fnr = userService.hentFnrFraUrlEllerToken();
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
+
+        pepClient.sjekkLeseTilgangTilFnr(fnr);
+
+        return infoOmMegService.hentHelseHinder(aktorId);
+    }
+
+    @POST
+    @Path("/helsehinder")
+    @ApiOperation(value = "Lagrer helsehinder.")
+    public HelseOgAndreHensynData lagreHelseHinder(HelseOgAndreHensynData helseOgAndreHensynData){
+        String fnr = userService.hentFnrFraUrlEllerToken();
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
+
+        pepClient.sjekkLeseTilgangTilFnr(fnr);
+
+        return infoOmMegService.lagreHelseHinder(helseOgAndreHensynData, aktorId);
+    }
+
+    @GET
+    @Path("/andrehinder")
+    @ApiOperation(value = "Henter siste lagrede verdi av andre hinder.")
+    public HelseOgAndreHensynData hentAndreHinder() {
+        String fnr = userService.hentFnrFraUrlEllerToken();
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
+
+        pepClient.sjekkLeseTilgangTilFnr(fnr);
+
+        return infoOmMegService.hentAndreHinder(aktorId);
+    }
+
+    @POST
+    @Path("/andrehinder")
+    @ApiOperation(value = "Lagrer andre hinder.")
+    public HelseOgAndreHensynData lagreAndreHinder(HelseOgAndreHensynData helseOgAndreHensynData){
+        String fnr = userService.hentFnrFraUrlEllerToken();
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
+
+        pepClient.sjekkLeseTilgangTilFnr(fnr);
+
+        return infoOmMegService.lagreAndreHinder(helseOgAndreHensynData, aktorId);
     }
 
 }
