@@ -16,8 +16,6 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import static no.nav.fo.veilarbvedtakinfo.service.UserService.getAktorIdOrElseThrow;
-
 @Component
 @Path("/behovsvurdering")
 @Produces("application/json")
@@ -46,7 +44,7 @@ public class BehovsvurderingResource {
     @ApiOperation(value = "Sender inn en behovsvurderings besvarelse")
     public Besvarelse nyttSvar(Svar svar) {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = getAktorIdOrElseThrow(aktorService, fnr);
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
@@ -58,7 +56,7 @@ public class BehovsvurderingResource {
     @ApiOperation(value = "Henter den siste behovsvurderings besvarelsen på bruker")
     public Besvarelse hentSisteBesvarelse() {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = getAktorIdOrElseThrow(aktorService, fnr);
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 

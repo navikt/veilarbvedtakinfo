@@ -17,7 +17,6 @@ import javax.ws.rs.Produces;
 
 import java.util.List;
 
-import static no.nav.fo.veilarbvedtakinfo.service.UserService.getAktorIdOrElseThrow;
 
 @Component
 @Path("/")
@@ -46,7 +45,7 @@ public class InfoOmMegResource {
     @ApiOperation(value = "Henter nyeste verdi for fremtidig situasjon.")
     public FremtidigSituasjonData hentFremtidigSituasjon() {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = getAktorIdOrElseThrow(aktorService, fnr);
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
@@ -58,7 +57,7 @@ public class InfoOmMegResource {
     @ApiOperation(value = "Henter nyeste verdi for fremtidig situasjon.")
     public List<FremtidigSituasjonData> hentSituasjonListe() {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = getAktorIdOrElseThrow(aktorService, fnr);
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
@@ -70,7 +69,7 @@ public class InfoOmMegResource {
     @ApiOperation(value = "Oppdaterer fremtidig situasjon")
     public FremtidigSituasjonData oppdaterFremtidigSituasjon(FremtidigSituasjonData fremtidigSituasjonData) {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = getAktorIdOrElseThrow(aktorService, fnr);
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
         String endretAv = userService.erEksternBruker()? aktorId.getAktorId() : userService.getUid();
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
