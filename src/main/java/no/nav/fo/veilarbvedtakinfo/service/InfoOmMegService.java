@@ -53,6 +53,6 @@ public class InfoOmMegService {
         return new InfoOmMegData()
                 .setFremtidigSituasjonData(hentFremtidigSituasjon(aktorId))
                 .setHelseHinder(hentHelseHinder(aktorId))
-                .setAndreHinder(hentHelseHinder(aktorId));
+                .setAndreHinder(hentAndreHinder(aktorId));
     }
 }
