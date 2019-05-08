@@ -157,4 +157,11 @@ public class InfoOmMegRepository {
                 .setDato(rs.getDate(DATO));
 
     }
+
+    //For tester
+    public void cleanUp(String aktorId){
+        SqlUtils.delete(db, FREMTIDIG_SITUASJON).where(WhereClause.equals(AKTOR_ID, aktorId)).execute();
+
+
+    }
 }

@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotEquals;
 public class InfoOmMegRepositoryTest {
     private static AnnotationConfigApplicationContext context;
     private static InfoOmMegRepository infoOmMegRepository;
+    private static String eksternIdent = "123";
 
     @BeforeEach
     public void setup() {
@@ -40,31 +41,31 @@ public class InfoOmMegRepositoryTest {
     @AfterEach
     public void tearDown() {
         context.stop();
+        infoOmMegRepository.cleanUp(eksternIdent);
     }
 
     @Test
     public void hentFremtidigSituasjon_empty_success() {
-       FremtidigSituasjonData data = infoOmMegRepository.hentFremtidigSituasjonForAktorId(new AktorId("123"));
+       FremtidigSituasjonData data = infoOmMegRepository.hentFremtidigSituasjonForAktorId(new AktorId(eksternIdent));
 
        assertEquals(null, data);
     }
 
     @Test
     public void hentSituasjonHistorikk_empty_success() {
-        List<FremtidigSituasjonData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId("123"));
+        List<FremtidigSituasjonData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId(eksternIdent));
 
         assertEquals(0, data.size());
     }
 
     @Test
     public void lagreFremtidigSituasjonForAktorId_success() {
-        String ident = "12345678901";
-        AktorId aktorId = new AktorId(ident);
+        AktorId aktorId = new AktorId(eksternIdent);
         FremtidigSituasjonData data = new FremtidigSituasjonData()
             .setAlternativId(FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER)
             .setTekst("Test");
 
-        long id = infoOmMegRepository.lagreFremtidigSituasjonForAktorId(data, aktorId, ident);
+        long id = infoOmMegRepository.lagreFremtidigSituasjonForAktorId(data, aktorId, eksternIdent);
         FremtidigSituasjonData actual = infoOmMegRepository.hentFremtidigSituasjonForId(id);
 
         assertEquals(data.getAlternativId(), actual.getAlternativId());
@@ -75,14 +76,13 @@ public class InfoOmMegRepositoryTest {
 
     @Test
     public void hentSituasjonHistorikk_non_empty_success() throws InterruptedException {
-        String ident = "09876543210";
-        FremtidigSituasjonData svar1 = lagreFremtidigSituasjon(FremtidigSituasjonSvar.NY_ARBEIDSGIVER, "Svar1", ident, ident);
+        FremtidigSituasjonData svar1 = lagreFremtidigSituasjon(FremtidigSituasjonSvar.NY_ARBEIDSGIVER, "Svar1", eksternIdent, eksternIdent);
 
         Thread.sleep(5); //For å unngå identisk dato
 
-        FremtidigSituasjonData svar2 = lagreFremtidigSituasjon(FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER_NY_STILLING, "Svar2", ident, ident);
+        FremtidigSituasjonData svar2 = lagreFremtidigSituasjon(FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER_NY_STILLING, "Svar2", eksternIdent, eksternIdent);
 
-        List<FremtidigSituasjonData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId(ident));
+        List<FremtidigSituasjonData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId(eksternIdent));
 
         assertEquals(svar2.getAlternativId(), data.get(0).getAlternativId());
         assertEquals(svar1.getAlternativId(), data.get(1).getAlternativId());
