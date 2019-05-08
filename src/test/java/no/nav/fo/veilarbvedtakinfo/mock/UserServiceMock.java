@@ -15,7 +15,13 @@ public class UserServiceMock extends UserService {
         return true;
     }
 
+    public String getFnrFromUrl() {
+        return "12345678910";
+    }
+
     public String getUid() {
         return "12345678910"; //TODO: Fjerne fnr
     }
+
+
 }

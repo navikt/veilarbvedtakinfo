@@ -15,7 +15,8 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-import static no.nav.fo.veilarbvedtakinfo.service.UserService.getAktorIdOrElseThrow;
+import java.util.List;
+
 
 @Component
 @Path("/")
@@ -44,23 +45,35 @@ public class InfoOmMegResource {
     @ApiOperation(value = "Henter nyeste verdi for fremtidig situasjon.")
     public FremtidigSituasjonData hentFremtidigSituasjon() {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = getAktorIdOrElseThrow(aktorService, fnr);
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
         return infoOmMegService.hentFremtidigSituasjon(aktorId);
     }
 
+    @GET
+    @Path("/situasjonliste")
+    @ApiOperation(value = "Henter nyeste verdi for fremtidig situasjon.")
+    public List<FremtidigSituasjonData> hentSituasjonListe() {
+        String fnr = userService.hentFnrFraUrlEllerToken();
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
+
+        pepClient.sjekkLeseTilgangTilFnr(fnr);
+
+        return infoOmMegService.hentSituasjonHistorikk(aktorId);
+    }
+
     @POST
     @Path("/fremtidigsituasjon")
     @ApiOperation(value = "Oppdaterer fremtidig situasjon")
-    public void oppdaterFremtidigSituasjon(FremtidigSituasjonData fremtidigSituasjonData) {
+    public FremtidigSituasjonData oppdaterFremtidigSituasjon(FremtidigSituasjonData fremtidigSituasjonData) {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = getAktorIdOrElseThrow(aktorService, fnr);
+        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
         String endretAv = userService.erEksternBruker()? aktorId.getAktorId() : userService.getUid();
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
-        infoOmMegService.lagreFremtidigSituasjon(fremtidigSituasjonData, aktorId, endretAv);
+        return infoOmMegService.lagreFremtidigSituasjon(fremtidigSituasjonData, aktorId, endretAv);
     }
 }

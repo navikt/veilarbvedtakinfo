@@ -44,7 +44,7 @@ public class UserService {
 
     }
 
-    public static AktorId getAktorIdOrElseThrow(AktorService aktorService, String fnr) {
+    public AktorId getAktorIdOrElseThrow(AktorService aktorService, String fnr) {
         return aktorService.getAktorId(fnr)
                 .map(AktorId::new)
                 .orElseThrow(() -> new IllegalArgumentException("Fant ikke aktør for fnr: " + fnr));
