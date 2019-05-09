@@ -3,9 +3,10 @@ package no.nav.fo.veilarbvedtakinfo;
 import no.nav.apiapp.security.PepClient;
 import no.nav.dialogarena.aktor.AktorService;
 import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
+import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonData;
-import no.nav.fo.veilarbvedtakinfo.domain.FremtidigSituasjonSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonSvar;
 import no.nav.fo.veilarbvedtakinfo.resources.InfoOmMegResource;
 
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
@@ -33,7 +34,10 @@ class InfoOmMegResourceIntegrationTest {
     private static AnnotationConfigApplicationContext context;
     private static InfoOmMegResource infoOmMegResource;
     private static UserService userService;
+    private static InfoOmMegRepository infoOmMegRepository;
 
+    public static String eksernIdent = "123";
+    public static String eksernIdent2 = "543";
 
     @BeforeEach
     public void setup() {
@@ -48,11 +52,16 @@ class InfoOmMegResourceIntegrationTest {
         DatabaseUtils.createTables((JdbcTemplate) context.getBean("jdbcTemplate"));
         infoOmMegResource = context.getBean(InfoOmMegResource.class);
         userService = context.getBean(UserService.class);
+        infoOmMegRepository = context.getBean(InfoOmMegRepository.class);
     }
 
     @AfterEach
     public void tearDown() {
+        infoOmMegRepository.cleanUp(eksernIdent);
+        infoOmMegRepository.cleanUp(eksernIdent2);
+
         context.stop();
+
     }
 
     @Test
@@ -62,7 +71,7 @@ class InfoOmMegResourceIntegrationTest {
                 .setTekst("Test1");
 
         when(userService.erEksternBruker()).thenReturn(true);
-        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId("123"));
+        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent));
 
         FremtidigSituasjonData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
 
@@ -80,7 +89,7 @@ class InfoOmMegResourceIntegrationTest {
 
         when(userService.erEksternBruker()).thenReturn(false);
         when(userService.getUid()).thenReturn("Z123");
-        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId("123"));
+        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent));
 
         FremtidigSituasjonData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
 
@@ -104,14 +113,14 @@ class InfoOmMegResourceIntegrationTest {
                 .setTekst("Test3");
 
         when(userService.erEksternBruker()).thenReturn(true);
-        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId("543"));
-        when(userService.hentFnrFraUrlEllerToken()).thenReturn("543");
+        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent));
+        when(userService.hentFnrFraUrlEllerToken()).thenReturn(eksernIdent);
 
         infoOmMegResource.oppdaterFremtidigSituasjon(svar1);
         infoOmMegResource.oppdaterFremtidigSituasjon(svar2);
 
-        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId("345"));
-        when(userService.hentFnrFraUrlEllerToken()).thenReturn("345");
+        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent2));
+        when(userService.hentFnrFraUrlEllerToken()).thenReturn(eksernIdent2);
 
         infoOmMegResource.oppdaterFremtidigSituasjon(svar3);
         List<FremtidigSituasjonData> data = infoOmMegResource.hentSituasjonListe();
