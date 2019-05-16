@@ -12,6 +12,7 @@ import static no.nav.dialogarena.aktor.AktorConfig.AKTOER_ENDPOINT_URL;
 import static no.nav.fasit.FasitUtils.Zone.FSS;
 import static no.nav.fasit.FasitUtils.*;
 import static no.nav.fo.veilarbvedtakinfo.config.ApplicationConfig.*;
+import static no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient.REGISTRERING_API_PROPERTY_NAME;
 import static no.nav.sbl.dialogarena.common.abac.pep.service.AbacServiceConfig.ABAC_ENDPOINT_URL_PROPERTY_NAME;
 import static no.nav.sbl.dialogarena.common.cxf.StsSecurityConstants.*;
 import static no.nav.sbl.util.EnvironmentUtils.Type.PUBLIC;
@@ -52,6 +53,9 @@ public class TestContext {
         setProperty(AZUREAD_B2C_DISCOVERY_URL_PROPERTY_NAME, getBaseUrl(AZURE_AD_B2C_DISCOVERY_ALIAS), PUBLIC);
         setProperty(AAD_B2C_CLIENTID_USERNAME_PROPERTY, aadB2cUser.getUsername(), PUBLIC);
         setProperty(AAD_B2C_CLIENTID_PASSWORD_PROPERTY, aadB2cUser.getPassword(), PUBLIC);
+
+        setProperty(REGISTRERING_API_PROPERTY_NAME, "http://localhost:8080/veilarbregistrering/api");
+
     }
 
     public static void setup() {
