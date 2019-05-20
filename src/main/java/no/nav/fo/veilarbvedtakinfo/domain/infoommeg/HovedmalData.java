@@ -23,9 +23,13 @@ public class HovedmalData {
         this.endretAv = endretAv;
         return this;
     }
-    //TODO: ikke mappe direkte ref FO-2178
+
     public HovedmalData setAlternativId(FremtidigSituasjonSvar fremtidigSituasjonSvar) {
-        if (fremtidigSituasjonSvar == null) alternativId = HovedmalSvar.IKKE_OPPGITT;
+        if (fremtidigSituasjonSvar == null ||
+                fremtidigSituasjonSvar == FremtidigSituasjonSvar.USIKKER ||
+                fremtidigSituasjonSvar == FremtidigSituasjonSvar.INGEN_PASSER) {
+            alternativId = HovedmalSvar.IKKE_OPPGITT;
+        }
         else alternativId = HovedmalSvar.valueOf(fremtidigSituasjonSvar.name());
         return this;
     }

@@ -17,6 +17,7 @@ import java.time.Instant;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -40,7 +41,7 @@ class InfoOmMegServiceTest {
         Date now = Date.from(Instant.now());
         EndretAvType endretAv = EndretAvType.VEILEDER;
         HovedmalData fremtidigSituasjon = new HovedmalData()
-                .setAlternativId(HovedmalSvar.USIKKER)
+                .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER)
                 .setTekst("Tekst")
                 .setDato(now)
                 .setEndretAv(endretAv);
@@ -86,7 +87,7 @@ class InfoOmMegServiceTest {
 
         HovedmalData hovedmal = infoOmMegService.hentFremtidigSituasjon(new AktorId(brukerIdent), brukerIdent);
 
-        assertEquals(hovedmal, null);
+        assertNull(hovedmal);
     }
 
     @Test
@@ -94,7 +95,7 @@ class InfoOmMegServiceTest {
         Date hovedmalDate = DateUtils.addMinutes(new Date(), -1);
         Date registreringDate = Date.from(Instant.now());
         HovedmalData hovedmal = new HovedmalData()
-                .setAlternativId(HovedmalSvar.USIKKER)
+                .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING)
                 .setDato(hovedmalDate);
 
         Besvarelse besvarelse = new Besvarelse()
@@ -116,12 +117,13 @@ class InfoOmMegServiceTest {
         assertEquals(registrering.getRegistrering().getOpprettetDato(), hovedmalData.getDato());
 
     }
+
     @Test
     void hentFremtidigSituasjon_nyereRegistrering_utenFremtidigSituasjon() {
         Date hovedmalDate = DateUtils.addMinutes(new Date(), -1);
         Date registreringDate = Date.from(Instant.now());
         HovedmalData hovedmal = new HovedmalData()
-                .setAlternativId(HovedmalSvar.USIKKER)
+                .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER)
                 .setDato(hovedmalDate);
 
         Besvarelse besvarelse = new Besvarelse()
@@ -145,11 +147,38 @@ class InfoOmMegServiceTest {
     }
 
     @Test
+    void hentFremtidigSituasjon_nyereRegistrering_USIKKER() {
+        Date hovedmalDate = DateUtils.addMinutes(new Date(), -1);
+        Date registreringDate = Date.from(Instant.now());
+        HovedmalData hovedmal = new HovedmalData()
+                .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING)
+                .setDato(hovedmalDate);
+
+        Besvarelse besvarelse = new Besvarelse()
+                .setFremtidigSituasjon(FremtidigSituasjonSvar.USIKKER);
+
+        BrukerRegistrering brukerRegistrering = new BrukerRegistrering()
+                .setBesvarelse(besvarelse)
+                .setOpprettetDato(registreringDate);
+
+        BrukerRegistreringWrapper registrering = new BrukerRegistreringWrapper()
+                .setRegistrering(brukerRegistrering);
+
+        when(registreringClient.hentSisteRegistrering(any())).thenReturn(registrering);
+        when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(hovedmal);
+
+        HovedmalData hovedmalData = infoOmMegService.hentFremtidigSituasjon(new AktorId(brukerIdent), brukerIdent);
+
+        assertEquals(HovedmalSvar.IKKE_OPPGITT, hovedmalData.getAlternativId());
+
+    }
+
+    @Test
     void hentSisteSituasjon() {
         Date now = Date.from(Instant.now());
         EndretAvType endretAv = EndretAvType.VEILEDER;
         HovedmalData fremtidigSituasjon = new HovedmalData()
-                .setAlternativId(HovedmalSvar.USIKKER)
+                .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER)
                 .setTekst("Tekst")
                 .setDato(now)
                 .setEndretAv(endretAv);
