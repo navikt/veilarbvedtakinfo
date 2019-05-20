@@ -8,5 +8,5 @@ import lombok.experimental.Accessors;
 public class InfoOmMegData {
     HelseOgAndreHensynData helseHinder;
     HelseOgAndreHensynData andreHinder;
-    FremtidigSituasjonData fremtidigSituasjonData;
+    HovedmalData fremtidigSituasjonData;
 }

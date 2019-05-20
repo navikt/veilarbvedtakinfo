@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import no.nav.apiapp.security.PepClient;
 import no.nav.dialogarena.aktor.AktorService;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.InfoOmMegData;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
@@ -51,25 +51,25 @@ public class InfoOmMegResource {
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
-        return infoOmMegService.hentSisteSituasjon(aktorId);
+        return infoOmMegService.hentSisteSituasjon(aktorId, fnr);
     }
 
     @GET
     @Path("/fremtidigsituasjon")
     @ApiOperation(value = "Henter nyeste verdi for fremtidig situasjon.")
-    public FremtidigSituasjonData hentFremtidigSituasjon() {
+    public HovedmalData hentFremtidigSituasjon() {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
-        return infoOmMegService.hentFremtidigSituasjon(aktorId);
+        return infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
     }
 
     @GET
     @Path("/situasjonliste")
     @ApiOperation(value = "Henter nyeste verdi for fremtidig situasjon.")
-    public List<FremtidigSituasjonData> hentSituasjonListe() {
+    public List<HovedmalData> hentSituasjonListe() {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
@@ -81,7 +81,7 @@ public class InfoOmMegResource {
     @POST
     @Path("/fremtidigsituasjon")
     @ApiOperation(value = "Oppdaterer fremtidig situasjon")
-    public FremtidigSituasjonData oppdaterFremtidigSituasjon(FremtidigSituasjonData fremtidigSituasjonData) {
+    public HovedmalData oppdaterFremtidigSituasjon(HovedmalData fremtidigSituasjonData) {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
         String endretAv = userService.erEksternBruker()? aktorId.getAktorId() : userService.getUid();

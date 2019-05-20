@@ -5,8 +5,9 @@ import no.nav.dialogarena.aktor.AktorService;
 import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.EndretAvType;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.resources.InfoOmMegResource;
 
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
@@ -66,50 +67,50 @@ class InfoOmMegResourceIntegrationTest {
 
     @Test
     public void oppdaterFremtidigSituasjon_skalSetteProperties() {
-        FremtidigSituasjonData data = new FremtidigSituasjonData()
-                .setAlternativId(FremtidigSituasjonSvar.NY_ARBEIDSGIVER)
+        HovedmalData data = new HovedmalData()
+                .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER)
                 .setTekst("Test1");
 
         when(userService.erEksternBruker()).thenReturn(true);
         when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent));
 
-        FremtidigSituasjonData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
+        HovedmalData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
 
 
         assertNotEquals(null, actualData.getDato());
         assertEquals(data.getAlternativId(), actualData.getAlternativId());
-        assertEquals("BRUKER", actualData.getEndretAv());
+        assertEquals(EndretAvType.BRUKER, actualData.getEndretAv());
         assertEquals(data.getTekst(), actualData.getTekst());
     }
 
     @Test
     public void oppdaterFremtidigSituasjon_veileder_skalSetteProperties() {
-        FremtidigSituasjonData data = new FremtidigSituasjonData()
-                .setAlternativId(FremtidigSituasjonSvar.NY_ARBEIDSGIVER);
+        HovedmalData data = new HovedmalData()
+                .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER);
 
         when(userService.erEksternBruker()).thenReturn(false);
         when(userService.getUid()).thenReturn("Z123");
         when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent));
 
-        FremtidigSituasjonData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
+        HovedmalData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
 
-        assertEquals("VEILEDER", actualData.getEndretAv());
+        assertEquals(EndretAvType.VEILEDER, actualData.getEndretAv());
 
     }
 
     @Test
     public void hentSituasjonHistorikk_flere_brukere_success() {
 
-        FremtidigSituasjonData svar1 = new FremtidigSituasjonData()
-                .setAlternativId(FremtidigSituasjonSvar.NY_ARBEIDSGIVER)
+        HovedmalData svar1 = new HovedmalData()
+                .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER)
                 .setTekst("Test1");
 
-        FremtidigSituasjonData svar2 = new FremtidigSituasjonData()
-                .setAlternativId(FremtidigSituasjonSvar.NY_ARBEIDSGIVER)
+        HovedmalData svar2 = new HovedmalData()
+                .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER)
                 .setTekst("Test2");
 
-        FremtidigSituasjonData svar3 = new FremtidigSituasjonData()
-                .setAlternativId(FremtidigSituasjonSvar.NY_ARBEIDSGIVER)
+        HovedmalData svar3 = new HovedmalData()
+                .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER)
                 .setTekst("Test3");
 
         when(userService.erEksternBruker()).thenReturn(true);
@@ -123,7 +124,7 @@ class InfoOmMegResourceIntegrationTest {
         when(userService.hentFnrFraUrlEllerToken()).thenReturn(eksernIdent2);
 
         infoOmMegResource.oppdaterFremtidigSituasjon(svar3);
-        List<FremtidigSituasjonData> data = infoOmMegResource.hentSituasjonListe();
+        List<HovedmalData> data = infoOmMegResource.hentSituasjonListe();
 
         assertEquals(1, data.size());
     }

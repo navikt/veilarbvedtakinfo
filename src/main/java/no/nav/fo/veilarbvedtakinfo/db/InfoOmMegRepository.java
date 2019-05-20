@@ -2,8 +2,8 @@ package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
 import no.nav.sbl.sql.DbConstants;
 import no.nav.sbl.sql.SqlUtils;
@@ -42,7 +42,7 @@ public class InfoOmMegRepository {
         this.db = db;
     }
 
-    public FremtidigSituasjonData hentFremtidigSituasjonForAktorId(AktorId aktorId) {
+    public HovedmalData hentFremtidigSituasjonForAktorId(AktorId aktorId) {
         return SqlUtils.select(db, FREMTIDIG_SITUASJON, InfoOmMegRepository::fremtidigSituasjonMapper)
                 .where(WhereClause.equals(AKTOR_ID, aktorId.getAktorId()))
                 .orderBy(OrderClause.desc(DATO))
@@ -51,14 +51,14 @@ public class InfoOmMegRepository {
                 .execute();
     }
 
-    public FremtidigSituasjonData hentFremtidigSituasjonForId(long id) {
+    public HovedmalData hentFremtidigSituasjonForId(long id) {
         return SqlUtils.select(db, FREMTIDIG_SITUASJON, InfoOmMegRepository::fremtidigSituasjonMapper)
                 .where(WhereClause.equals(FREMTIDIG_SITUASJON_ID, id))
                 .column("*")
                 .execute();
     }
 
-    public List<FremtidigSituasjonData> hentSituasjonHistorikk(AktorId aktorId) {
+    public List<HovedmalData> hentSituasjonHistorikk(AktorId aktorId) {
         return SqlUtils.select(db, FREMTIDIG_SITUASJON, InfoOmMegRepository::fremtidigSituasjonMapper)
                 .where(WhereClause.equals(AKTOR_ID, aktorId.getAktorId()))
                 .orderBy(OrderClause.desc(DATO))
@@ -66,7 +66,7 @@ public class InfoOmMegRepository {
                 .executeToList();
     }
 
-    public long lagreFremtidigSituasjonForAktorId(FremtidigSituasjonData fremtidigSituasjonData, AktorId aktorId, String endretAv) {
+    public long lagreFremtidigSituasjonForAktorId(HovedmalData fremtidigSituasjonData, AktorId aktorId, String endretAv) {
         long id = DatabaseUtils.nesteFraSekvens(db, FREMTIDIG_SITUASJON_SEQ);
         String alt = fremtidigSituasjonData.getAlternativId().toString();
         SqlUtils.insert(db, FREMTIDIG_SITUASJON)
@@ -82,10 +82,10 @@ public class InfoOmMegRepository {
     }
 
     @SneakyThrows
-    private static FremtidigSituasjonData fremtidigSituasjonMapper(ResultSet rs) {
-        return new FremtidigSituasjonData()
+    private static HovedmalData fremtidigSituasjonMapper(ResultSet rs) {
+        return new HovedmalData()
                 .setAlternativId(ofNullable(rs.getString(ALTERNATIV_ID)).isPresent()
-                        ? FremtidigSituasjonSvar.valueOf(rs.getString(ALTERNATIV_ID))
+                        ? HovedmalSvar.valueOf(rs.getString(ALTERNATIV_ID))
                         : null
                 )
                 .setTekst(rs.getString(TEKST))
