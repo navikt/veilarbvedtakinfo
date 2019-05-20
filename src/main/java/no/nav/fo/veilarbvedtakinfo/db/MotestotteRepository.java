@@ -5,6 +5,7 @@ import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.motestotte.Motestotte;
 import no.nav.sbl.sql.SqlUtils;
 import no.nav.sbl.sql.where.WhereClause;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.ResultSet;
@@ -22,11 +23,17 @@ public class MotestotteRepository {
     }
 
     public void oppdaterMotestotte(AktorId aktorId) {
-        SqlUtils.upsert(db, TABLE_NAME)
-                .set(DATO, new Date())
-                .set(AKTOR_ID, aktorId.getAktorId())
-                .where(WhereClause.equals(AKTOR_ID, aktorId.getAktorId()))
-                .execute();
+        try {
+            SqlUtils.insert(db, TABLE_NAME)
+                    .value(DATO, new Date())
+                    .value(AKTOR_ID, aktorId.getAktorId())
+                    .execute();
+        } catch (DuplicateKeyException e) {
+            SqlUtils.update(db, TABLE_NAME)
+                    .set(DATO, new Date())
+                    .whereEquals(AKTOR_ID, aktorId.getAktorId())
+                    .execute();
+        }
     }
 
 
