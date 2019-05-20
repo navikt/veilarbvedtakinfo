@@ -33,10 +33,7 @@ public class InfoOmMegService {
         else if (registrering.getDato().before(hovedmalData.getDato())) {
             return hovedmalData;
         }
-        else if (hovedmalData.getDato().before(registrering.getDato())) {
-            return registrering;
-        }
-        return null;
+        return registrering;
     }
 
     public HovedmalData hentFremtidigSituasjon(AktorId aktorId, String fnr) {
