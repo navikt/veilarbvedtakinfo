@@ -5,6 +5,7 @@ import no.nav.dialogarena.aktor.AktorService;
 import no.nav.fo.veilarbvedtakinfo.db.BehovsvurderingRepository;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.db.MotestotteRepository;
+import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.resources.BehovsvurderingResource;
 import no.nav.fo.veilarbvedtakinfo.resources.InfoOmMegResource;
 import no.nav.fo.veilarbvedtakinfo.resources.MotestotteResource;
@@ -20,10 +21,12 @@ import javax.servlet.http.HttpServletRequest;
 class ServiceBeans {
     @Bean
     InfoOmMegService infoOmMegService(
-            InfoOmMegRepository infoOmMegRepository
+            InfoOmMegRepository infoOmMegRepository,
+            RegistreringClient registreringClient
     ) {
         return new InfoOmMegService(
-                infoOmMegRepository
+                infoOmMegRepository,
+                registreringClient
         );
     }
 
@@ -45,7 +48,10 @@ class ServiceBeans {
         return new UserService(provider);
     }
 
-
+    @Bean
+    RegistreringClient registreringClient(Provider<HttpServletRequest> provider) {
+        return new RegistreringClient(provider);
+    }
     @Bean
     BehovsvurderingResource behovsvurderingResource(BehovsvurderingService behovsvurderingService,
                                                     UserService userService,

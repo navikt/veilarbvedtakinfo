@@ -5,8 +5,9 @@ import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
 
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonData;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.FremtidigSituasjonSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.EndretAvType;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,14 +47,14 @@ public class InfoOmMegRepositoryTest {
 
     @Test
     public void hentFremtidigSituasjon_empty_success() {
-       FremtidigSituasjonData data = infoOmMegRepository.hentFremtidigSituasjonForAktorId(new AktorId(eksternIdent));
+       HovedmalData data = infoOmMegRepository.hentFremtidigSituasjonForAktorId(new AktorId(eksternIdent));
 
        assertEquals(null, data);
     }
 
     @Test
     public void hentSituasjonHistorikk_empty_success() {
-        List<FremtidigSituasjonData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId(eksternIdent));
+        List<HovedmalData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId(eksternIdent));
 
         assertEquals(0, data.size());
     }
@@ -61,35 +62,35 @@ public class InfoOmMegRepositoryTest {
     @Test
     public void lagreFremtidigSituasjonForAktorId_success() {
         AktorId aktorId = new AktorId(eksternIdent);
-        FremtidigSituasjonData data = new FremtidigSituasjonData()
-            .setAlternativId(FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER)
+        HovedmalData data = new HovedmalData()
+            .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER)
             .setTekst("Test");
 
         long id = infoOmMegRepository.lagreFremtidigSituasjonForAktorId(data, aktorId, eksternIdent);
-        FremtidigSituasjonData actual = infoOmMegRepository.hentFremtidigSituasjonForId(id);
+        HovedmalData actual = infoOmMegRepository.hentFremtidigSituasjonForId(id);
 
         assertEquals(data.getAlternativId(), actual.getAlternativId());
         assertEquals(data.getTekst(), actual.getTekst());
-        assertEquals("BRUKER", actual.getEndretAv());
+        assertEquals(EndretAvType.BRUKER, actual.getEndretAv());
         assertNotEquals(null, actual.getDato());
     }
 
     @Test
     public void hentSituasjonHistorikk_non_empty_success() throws InterruptedException {
-        FremtidigSituasjonData svar1 = lagreFremtidigSituasjon(FremtidigSituasjonSvar.NY_ARBEIDSGIVER, "Svar1", eksternIdent, eksternIdent);
+        HovedmalData svar1 = lagreFremtidigSituasjon(HovedmalSvar.NY_ARBEIDSGIVER, "Svar1", eksternIdent, eksternIdent);
 
         Thread.sleep(5); //For å unngå identisk dato
 
-        FremtidigSituasjonData svar2 = lagreFremtidigSituasjon(FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER_NY_STILLING, "Svar2", eksternIdent, eksternIdent);
+        HovedmalData svar2 = lagreFremtidigSituasjon(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING, "Svar2", eksternIdent, eksternIdent);
 
-        List<FremtidigSituasjonData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId(eksternIdent));
+        List<HovedmalData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId(eksternIdent));
 
         assertEquals(svar2.getAlternativId(), data.get(0).getAlternativId());
         assertEquals(svar1.getAlternativId(), data.get(1).getAlternativId());
     }
 
-    private FremtidigSituasjonData lagreFremtidigSituasjon(FremtidigSituasjonSvar svarId, String tekst, String endretAv, String ident){
-        FremtidigSituasjonData data = new FremtidigSituasjonData()
+    private HovedmalData lagreFremtidigSituasjon(HovedmalSvar svarId, String tekst, String endretAv, String ident){
+        HovedmalData data = new HovedmalData()
                 .setAlternativId(svarId)
                 .setTekst(tekst);
 
