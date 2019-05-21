@@ -19,7 +19,7 @@ import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 @Slf4j
 public class RegistreringClient extends BaseClient {
 
-    public static final String REGISTRERING_API_PROPERTY_NAME = "VEILARBREGISTRERINGAPI_URL";
+    public static final String REGISTRERING_API_PROPERTY_NAME = "VEILARBREGISTRERINGSBS_URL";
 
     @Inject
     public RegistreringClient(Provider<HttpServletRequest> httpServletRequestProvider) {
