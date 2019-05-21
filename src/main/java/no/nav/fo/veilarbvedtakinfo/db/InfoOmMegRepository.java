@@ -5,6 +5,7 @@ import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
+import no.nav.fo.veilarbvedtakinfo.domain.registrering.HelseHinderSvar;
 import no.nav.sbl.sql.DbConstants;
 import no.nav.sbl.sql.SqlUtils;
 import no.nav.sbl.sql.order.OrderClause;
@@ -89,7 +90,7 @@ public class InfoOmMegRepository {
                         : null
                 )
                 .setTekst(rs.getString(TEKST))
-                .setDato(rs.getDate(DATO))
+                .setDato(rs.getTimestamp(DATO))
                 .setEndretAv(rs.getString(ENDRET_AV));
 
     }
@@ -131,7 +132,7 @@ public class InfoOmMegRepository {
         SqlUtils.insert(db, HELSEHINDER)
                 .value(HELSEHINDER_ID, id)
                 .value(AKTOR_ID, aktorId.getAktorId())
-                .value(SVAR, helseOgAndreHensynData.isVerdi())
+                .value(SVAR, helseOgAndreHensynData.getVerdi().toString())
                 .value(DATO, DbConstants.CURRENT_TIMESTAMP)
                 .execute();
 
@@ -143,7 +144,7 @@ public class InfoOmMegRepository {
         SqlUtils.insert(db, ANDREHINDER)
                 .value(ANDREHINDER_ID, id)
                 .value(AKTOR_ID, aktorId.getAktorId())
-                .value(SVAR, helseOgAndreHensynData.isVerdi())
+                .value(SVAR, helseOgAndreHensynData.getVerdi().toString())
                 .value(DATO, DbConstants.CURRENT_TIMESTAMP)
                 .execute();
 
@@ -153,8 +154,11 @@ public class InfoOmMegRepository {
     @SneakyThrows
     private static HelseOgAndreHensynData helseHensynMapper(ResultSet rs) {
         return new HelseOgAndreHensynData()
-                .setVerdi(rs.getBoolean(SVAR))
-                .setDato(rs.getDate(DATO));
+                .setVerdi(ofNullable(rs.getString(SVAR)).isPresent()
+                        ? HelseHinderSvar.valueOf(rs.getString(SVAR))
+                        : null
+                )
+                .setDato(rs.getTimestamp(DATO));
 
     }
 

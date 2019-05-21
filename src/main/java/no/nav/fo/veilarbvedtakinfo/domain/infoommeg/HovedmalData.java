@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Accessors(chain = true)
-public class HovedmalData {
+public class HovedmalData extends DataItem {
     HovedmalSvar alternativId;
     String tekst;
     EndretAvType endretAv;
