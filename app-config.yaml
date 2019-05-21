@@ -42,6 +42,8 @@ fasitResources:
     resourceType: webserviceendpoint
   - alias: abac.pdp.endpoint
     resourceType: restservice
+  - alias: veilarbregistreringSBS
+    resourceType: restservice
 
 
   # security resources
