@@ -100,7 +100,7 @@ public class InfoOmMegResource {
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
-        return infoOmMegService.hentHelseHinder(aktorId);
+        return infoOmMegService.hentHelseHinder(aktorId, fnr);
     }
 
     @POST
@@ -124,7 +124,7 @@ public class InfoOmMegResource {
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
-        return infoOmMegService.hentAndreHinder(aktorId);
+        return infoOmMegService.hentAndreHinder(aktorId, fnr);
     }
 
     @POST

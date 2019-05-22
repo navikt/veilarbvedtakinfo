@@ -6,8 +6,10 @@ import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.EndretAvType;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.registrering.HelseHinderSvar;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,8 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static no.nav.fo.veilarbvedtakinfo.db.DatabaseTestContext.setupInMemoryContext;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 
 public class InfoOmMegRepositoryTest {
     private static AnnotationConfigApplicationContext context;
@@ -49,7 +50,7 @@ public class InfoOmMegRepositoryTest {
     public void hentFremtidigSituasjon_empty_success() {
        HovedmalData data = infoOmMegRepository.hentFremtidigSituasjonForAktorId(new AktorId(eksternIdent));
 
-       assertEquals(null, data);
+       assertNull(data);
     }
 
     @Test
@@ -98,5 +99,32 @@ public class InfoOmMegRepositoryTest {
         return data;
     }
 
+    @Test
+    public void lagreHelseHinderForAktorId_success() {
+        AktorId aktorId = new AktorId(eksternIdent);
+
+        HelseOgAndreHensynData data = new HelseOgAndreHensynData()
+                .setVerdi(HelseHinderSvar.NEI);
+
+        long id = infoOmMegRepository.lagreHelseHinderForAktorId(data, aktorId);
+        HelseOgAndreHensynData actual = infoOmMegRepository.hentHelseHinderForId(id);
+
+        assertEquals(data.getVerdi(), actual.getVerdi());
+        assertNotNull(actual.getDato());
+    }
+
+    @Test
+    public void lagreAndreHinderForAktorId_success() {
+        AktorId aktorId = new AktorId(eksternIdent);
+
+        HelseOgAndreHensynData data = new HelseOgAndreHensynData()
+                .setVerdi(HelseHinderSvar.NEI);
+
+        long id = infoOmMegRepository.lagreAndreHinderForAktorId(data, aktorId);
+        HelseOgAndreHensynData actual = infoOmMegRepository.hentAndreHinderForId(id);
+
+        assertEquals(data.getVerdi(), actual.getVerdi());
+        assertNotNull(actual.getDato());
+    }
 
 }

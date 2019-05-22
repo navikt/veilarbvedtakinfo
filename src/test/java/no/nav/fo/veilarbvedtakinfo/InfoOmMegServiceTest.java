@@ -3,10 +3,7 @@ package no.nav.fo.veilarbvedtakinfo;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.*;
-import no.nav.fo.veilarbvedtakinfo.domain.registrering.Besvarelse;
-import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistrering;
-import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper;
-import no.nav.fo.veilarbvedtakinfo.domain.registrering.FremtidigSituasjonSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.registrering.*;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import org.apache.commons.lang3.time.DateUtils;
@@ -183,8 +180,8 @@ class InfoOmMegServiceTest {
                 .setDato(now)
                 .setEndretAv(endretAv);
 
-        HelseOgAndreHensynData helsehinder = new HelseOgAndreHensynData().setVerdi(true).setDato(now);
-        HelseOgAndreHensynData andrehinder = new HelseOgAndreHensynData().setVerdi(true).setDato(now);
+        HelseOgAndreHensynData helsehinder = new HelseOgAndreHensynData().setVerdi(HelseHinderSvar.JA).setDato(now);
+        HelseOgAndreHensynData andrehinder = new HelseOgAndreHensynData().setVerdi(HelseHinderSvar.JA).setDato(now);
 
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(null);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(fremtidigSituasjon);
@@ -195,11 +192,40 @@ class InfoOmMegServiceTest {
 
         assertEquals(fremtidigSituasjon.getAlternativId(), sisteSituasjon.getFremtidigSituasjonData().getAlternativId());
 
-        assertEquals(helsehinder.isVerdi(), sisteSituasjon.getHelseHinder().isVerdi());
+        assertEquals(helsehinder.getVerdi(), sisteSituasjon.getHelseHinder().getVerdi());
         assertEquals(helsehinder.getDato(), sisteSituasjon.getHelseHinder().getDato());
 
-        assertEquals(andrehinder.isVerdi(), sisteSituasjon.getAndreHinder().isVerdi());
+        assertEquals(andrehinder.getVerdi(), sisteSituasjon.getAndreHinder().getVerdi());
         assertEquals(andrehinder.getDato(), sisteSituasjon.getAndreHinder().getDato());
 
+    }
+
+    @Test
+    void hentHelsehinder() {
+        Date now = Date.from(Instant.now());
+        Date earlier = DateUtils.addMinutes(new Date(), -1);
+
+        HelseOgAndreHensynData helseHinder = new HelseOgAndreHensynData()
+                .setDato(earlier)
+                .setVerdi(HelseHinderSvar.NEI);
+
+        BrukerRegistreringWrapper registreringWrapper = byggRegistreringsWrapper(now, HelseHinderSvar.JA);
+
+        when(infoOmMegRepository.hentHelseHinderForAktorId(any())).thenReturn(helseHinder);
+        when(registreringClient.hentSisteRegistrering(any())).thenReturn(registreringWrapper);
+
+        HelseOgAndreHensynData helseHinderData = infoOmMegService.hentHelseHinder(new AktorId(brukerIdent), brukerIdent);
+
+        assertEquals(HelseHinderSvar.JA, helseHinderData.getVerdi());
+        assertEquals(now, helseHinderData.getDato());
+
+    }
+
+    private BrukerRegistreringWrapper byggRegistreringsWrapper(Date dato, HelseHinderSvar svar) {
+        Besvarelse besvarelse = new Besvarelse().setHelseHinder(svar);
+        BrukerRegistrering brukerRegistrering = new BrukerRegistrering()
+                .setBesvarelse(besvarelse)
+                .setOpprettetDato(dato);
+        return new BrukerRegistreringWrapper().setRegistrering(brukerRegistrering);
     }
 }
