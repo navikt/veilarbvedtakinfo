@@ -180,8 +180,8 @@ class InfoOmMegServiceTest {
                 .setDato(now)
                 .setEndretAv(endretAv);
 
-        HelseOgAndreHensynData helsehinder = new HelseOgAndreHensynData().setVerdi(HelseHinderSvar.JA).setDato(now);
-        HelseOgAndreHensynData andrehinder = new HelseOgAndreHensynData().setVerdi(HelseHinderSvar.JA).setDato(now);
+        HelseOgAndreHensynData helsehinder = new HelseOgAndreHensynData().setVerdi(HinderSvar.JA).setDato(now);
+        HelseOgAndreHensynData andrehinder = new HelseOgAndreHensynData().setVerdi(HinderSvar.JA).setDato(now);
 
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(null);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(fremtidigSituasjon);
@@ -207,21 +207,21 @@ class InfoOmMegServiceTest {
 
         HelseOgAndreHensynData helseHinder = new HelseOgAndreHensynData()
                 .setDato(earlier)
-                .setVerdi(HelseHinderSvar.NEI);
+                .setVerdi(HinderSvar.NEI);
 
-        BrukerRegistreringWrapper registreringWrapper = byggRegistreringsWrapper(now, HelseHinderSvar.JA);
+        BrukerRegistreringWrapper registreringWrapper = byggRegistreringsWrapper(now, HinderSvar.JA);
 
         when(infoOmMegRepository.hentHelseHinderForAktorId(any())).thenReturn(helseHinder);
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registreringWrapper);
 
         HelseOgAndreHensynData helseHinderData = infoOmMegService.hentHelseHinder(new AktorId(brukerIdent), brukerIdent);
 
-        assertEquals(HelseHinderSvar.JA, helseHinderData.getVerdi());
+        assertEquals(HinderSvar.JA, helseHinderData.getVerdi());
         assertEquals(now, helseHinderData.getDato());
 
     }
 
-    private BrukerRegistreringWrapper byggRegistreringsWrapper(Date dato, HelseHinderSvar svar) {
+    private BrukerRegistreringWrapper byggRegistreringsWrapper(Date dato, HinderSvar svar) {
         Besvarelse besvarelse = new Besvarelse().setHelseHinder(svar);
         BrukerRegistrering brukerRegistrering = new BrukerRegistrering()
                 .setBesvarelse(besvarelse)

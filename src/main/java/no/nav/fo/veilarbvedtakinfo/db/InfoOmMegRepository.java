@@ -5,7 +5,7 @@ import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
-import no.nav.fo.veilarbvedtakinfo.domain.registrering.HelseHinderSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.registrering.HinderSvar;
 import no.nav.sbl.sql.DbConstants;
 import no.nav.sbl.sql.SqlUtils;
 import no.nav.sbl.sql.order.OrderClause;
@@ -155,7 +155,7 @@ public class InfoOmMegRepository {
     private static HelseOgAndreHensynData helseHensynMapper(ResultSet rs) {
         return new HelseOgAndreHensynData()
                 .setVerdi(ofNullable(rs.getString(SVAR)).isPresent()
-                        ? HelseHinderSvar.valueOf(rs.getString(SVAR))
+                        ? HinderSvar.valueOf(rs.getString(SVAR))
                         : null
                 )
                 .setDato(rs.getTimestamp(DATO));
