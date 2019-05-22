@@ -13,8 +13,8 @@ public class Besvarelse {
     private String utdanning;
     private String utdanningBestatt;
     private String utdanningGodkjent;
-    private HelseHinderSvar helseHinder;
-    private AndreForholdSvar andreForhold;
+    private HinderSvar helseHinder;
+    private HinderSvar andreForhold;
     private String sisteStilling;
     private String dinSituasjon;
     private FremtidigSituasjonSvar fremtidigSituasjon;

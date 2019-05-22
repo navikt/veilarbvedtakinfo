@@ -9,7 +9,7 @@ import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
-import no.nav.fo.veilarbvedtakinfo.domain.registrering.HelseHinderSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.registrering.HinderSvar;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -104,7 +104,7 @@ public class InfoOmMegRepositoryTest {
         AktorId aktorId = new AktorId(eksternIdent);
 
         HelseOgAndreHensynData data = new HelseOgAndreHensynData()
-                .setVerdi(HelseHinderSvar.NEI);
+                .setVerdi(HinderSvar.NEI);
 
         long id = infoOmMegRepository.lagreHelseHinderForAktorId(data, aktorId);
         HelseOgAndreHensynData actual = infoOmMegRepository.hentHelseHinderForId(id);
@@ -118,7 +118,7 @@ public class InfoOmMegRepositoryTest {
         AktorId aktorId = new AktorId(eksternIdent);
 
         HelseOgAndreHensynData data = new HelseOgAndreHensynData()
-                .setVerdi(HelseHinderSvar.NEI);
+                .setVerdi(HinderSvar.NEI);
 
         long id = infoOmMegRepository.lagreAndreHinderForAktorId(data, aktorId);
         HelseOgAndreHensynData actual = infoOmMegRepository.hentAndreHinderForId(id);

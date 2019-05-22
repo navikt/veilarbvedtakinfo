@@ -20,8 +20,9 @@ public class RegistreringClientMock extends RegistreringClient {
 
         Besvarelse besvarelse = new Besvarelse()
                         .setFremtidigSituasjon(FremtidigSituasjonSvar.NY_ARBEIDSGIVER)
-                        .setHelseHinder(HelseHinderSvar.INGEN_SVAR)
-                        .setAndreForhold(AndreForholdSvar.JA);
+                        .setHelseHinder(HinderSvar.INGEN_SVAR)
+                        .setAndreForhold(HinderSvar.JA);
+
         return new BrukerRegistreringWrapper()
                 .setRegistrering(new BrukerRegistrering()
                         .setBesvarelse(besvarelse)

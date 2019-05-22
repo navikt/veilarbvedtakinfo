@@ -86,7 +86,7 @@ public class InfoOmMegService {
         if(registreringWrapper != null) {
             HelseOgAndreHensynData registrering = new HelseOgAndreHensynData()
                     .setDato(registreringWrapper.getRegistrering().getOpprettetDato())
-                    .setVerdi(registreringWrapper.getRegistrering().getBesvarelse().getHelseHinder());
+                    .setVerdi(registreringWrapper.getRegistrering().getBesvarelse().getAndreForhold());
 
             return (HelseOgAndreHensynData) hentNyeste(registrering, andreHinderData);
 
