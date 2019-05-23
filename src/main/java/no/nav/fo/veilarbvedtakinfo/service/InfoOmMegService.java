@@ -36,7 +36,8 @@ public class InfoOmMegService {
             HovedmalData registrering = new HovedmalData()
                     .setAlternativId(fremtidigSituasjon)
                     .setDato(brukerRegistrering.getOpprettetDato())
-                    .setEndretAv(fremtidigSituasjon == null? EndretAvType.IKKE_SATT: endretAv);
+                    .setEndretAv(fremtidigSituasjon == null? EndretAvType.IKKE_SATT: endretAv)
+                    .setTekst(brukerRegistrering.getSvarTekstForSpmId("fremtidigSituasjon"));
 
             return (HovedmalData) hentNyeste(registrering, hovedmalData);
         }
