@@ -38,6 +38,10 @@ public class InfoOmMegService {
                     .setDato(brukerRegistrering.getOpprettetDato())
                     .setEndretAv(fremtidigSituasjon == null? EndretAvType.IKKE_SATT: endretAv);
 
+            if(registrering.getAlternativId() != HovedmalSvar.IKKE_OPPGITT) {
+                registrering.setTekst(brukerRegistrering.getSvarTekstForSpmId("fremtidigSituasjon"));
+            }
+
             return (HovedmalData) hentNyeste(registrering, hovedmalData);
         }
 

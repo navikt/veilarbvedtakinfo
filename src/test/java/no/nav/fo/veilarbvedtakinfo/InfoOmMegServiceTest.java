@@ -11,7 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.Date;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -58,13 +58,8 @@ class InfoOmMegServiceTest {
     @Test
     void hentFremtidigSituasjon_manglerHovedmal() {
         Date now = Date.from(Instant.now());
-        Besvarelse besvarelse = new Besvarelse()
-                .setFremtidigSituasjon(FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER);
-        BrukerRegistrering brukerRegistrering = new BrukerRegistrering()
-                .setBesvarelse(besvarelse)
-                .setOpprettetDato(now);
-        BrukerRegistreringWrapper registrering = new BrukerRegistreringWrapper()
-                .setRegistrering(brukerRegistrering);
+
+        BrukerRegistreringWrapper registrering = byggRegistreringsWrapper(now, null, FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER);
 
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registrering);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(null);
@@ -95,15 +90,7 @@ class InfoOmMegServiceTest {
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING)
                 .setDato(hovedmalDate);
 
-        Besvarelse besvarelse = new Besvarelse()
-                .setFremtidigSituasjon(FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER);
-
-        BrukerRegistrering brukerRegistrering = new BrukerRegistrering()
-                .setBesvarelse(besvarelse)
-                .setOpprettetDato(registreringDate);
-
-        BrukerRegistreringWrapper registrering = new BrukerRegistreringWrapper()
-                .setRegistrering(brukerRegistrering);
+        BrukerRegistreringWrapper registrering = byggRegistreringsWrapper(registreringDate, null, FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER);
 
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registrering);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(hovedmal);
@@ -123,15 +110,7 @@ class InfoOmMegServiceTest {
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER)
                 .setDato(hovedmalDate);
 
-        Besvarelse besvarelse = new Besvarelse()
-                .setFremtidigSituasjon(null);
-
-        BrukerRegistrering brukerRegistrering = new BrukerRegistrering()
-                .setBesvarelse(besvarelse)
-                .setOpprettetDato(registreringDate);
-
-        BrukerRegistreringWrapper registrering = new BrukerRegistreringWrapper()
-                .setRegistrering(brukerRegistrering);
+        BrukerRegistreringWrapper registrering = byggRegistreringsWrapper(registreringDate, null, null);
 
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registrering);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(hovedmal);
@@ -151,15 +130,7 @@ class InfoOmMegServiceTest {
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING)
                 .setDato(hovedmalDate);
 
-        Besvarelse besvarelse = new Besvarelse()
-                .setFremtidigSituasjon(FremtidigSituasjonSvar.USIKKER);
-
-        BrukerRegistrering brukerRegistrering = new BrukerRegistrering()
-                .setBesvarelse(besvarelse)
-                .setOpprettetDato(registreringDate);
-
-        BrukerRegistreringWrapper registrering = new BrukerRegistreringWrapper()
-                .setRegistrering(brukerRegistrering);
+        BrukerRegistreringWrapper registrering = byggRegistreringsWrapper(registreringDate, null, FremtidigSituasjonSvar.USIKKER);
 
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registrering);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(hovedmal);
@@ -209,7 +180,7 @@ class InfoOmMegServiceTest {
                 .setDato(earlier)
                 .setVerdi(HinderSvar.NEI);
 
-        BrukerRegistreringWrapper registreringWrapper = byggRegistreringsWrapper(now, HinderSvar.JA);
+        BrukerRegistreringWrapper registreringWrapper = byggRegistreringsWrapper(now, HinderSvar.JA, null);
 
         when(infoOmMegRepository.hentHelseHinderForAktorId(any())).thenReturn(helseHinder);
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registreringWrapper);
@@ -221,11 +192,19 @@ class InfoOmMegServiceTest {
 
     }
 
-    private BrukerRegistreringWrapper byggRegistreringsWrapper(Date dato, HinderSvar svar) {
-        Besvarelse besvarelse = new Besvarelse().setHelseHinder(svar);
+    private BrukerRegistreringWrapper byggRegistreringsWrapper(Date dato, HinderSvar svar, FremtidigSituasjonSvar fremtidigSituasjonSvar) {
+        Besvarelse besvarelse = new Besvarelse()
+                .setHelseHinder(svar)
+                .setFremtidigSituasjon(fremtidigSituasjonSvar);
+        TekstForSporsmal tekst = new TekstForSporsmal("helsehinder", "helsehinder?", "ja");
+        List<TekstForSporsmal> tekster = new ArrayList<>();
+        tekster.add(tekst);
+
         BrukerRegistrering brukerRegistrering = new BrukerRegistrering()
                 .setBesvarelse(besvarelse)
-                .setOpprettetDato(dato);
+                .setOpprettetDato(dato)
+                .setTeksterForBesvarelse(tekster);
+
         return new BrukerRegistreringWrapper().setRegistrering(brukerRegistrering);
     }
 }
