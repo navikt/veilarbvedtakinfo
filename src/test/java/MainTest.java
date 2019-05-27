@@ -16,7 +16,7 @@ public class MainTest {
 
         ApiAppTest.setupTestContext(builder().applicationName(APPLICATION_NAME).build());
         TestContext.setup();
-        DatabaseTestContext.setupContext(getProperty("database"));
+        DatabaseTestContext.setupContext(null);
 
 
 

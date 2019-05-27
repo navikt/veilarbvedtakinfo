@@ -11,9 +11,11 @@ import no.nav.fo.veilarbvedtakinfo.resources.InfoOmMegResource;
 import no.nav.fo.veilarbvedtakinfo.resources.MotestotteResource;
 import no.nav.fo.veilarbvedtakinfo.service.BehovsvurderingService;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
+import no.nav.fo.veilarbvedtakinfo.service.OppdatertService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
@@ -22,12 +24,19 @@ class ServiceBeans {
     @Bean
     InfoOmMegService infoOmMegService(
             InfoOmMegRepository infoOmMegRepository,
-            RegistreringClient registreringClient
+            RegistreringClient registreringClient,
+            OppdatertService oppdatertService
     ) {
         return new InfoOmMegService(
                 infoOmMegRepository,
-                registreringClient
+                registreringClient,
+                oppdatertService
         );
+    }
+
+    @Bean
+    OppdatertService oppdatertService(KafkaTemplate kafkaTemplate) {
+        return new OppdatertService(kafkaTemplate);
     }
 
     @Bean

@@ -6,6 +6,7 @@ import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.*;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.*;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
+import no.nav.fo.veilarbvedtakinfo.service.OppdatertService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.when;
 class InfoOmMegServiceTest {
     private static InfoOmMegService infoOmMegService;
     private static InfoOmMegRepository infoOmMegRepository;
+    private static OppdatertService oppdatertService;
     private static RegistreringClient registreringClient;
     private final static String brukerIdent = "1234";
 
@@ -29,7 +31,8 @@ class InfoOmMegServiceTest {
     void setup() {
         infoOmMegRepository = mock(InfoOmMegRepository.class);
         registreringClient = mock(RegistreringClient.class);
-        infoOmMegService = new InfoOmMegService(infoOmMegRepository, registreringClient);
+        oppdatertService = mock(OppdatertService.class);
+        infoOmMegService = new InfoOmMegService(infoOmMegRepository, registreringClient, oppdatertService);
 
     }
 

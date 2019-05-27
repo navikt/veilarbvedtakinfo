@@ -2,6 +2,7 @@ package no.nav.fo.veilarbvedtakinfo.service;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 
+import no.nav.fo.veilarbvedtakinfo.domain.Oppdatertevent;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.*;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistrering;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper;
@@ -13,11 +14,12 @@ import java.util.List;
 public class InfoOmMegService {
     private final InfoOmMegRepository infoOmMegRepository;
     private final RegistreringClient registreringClient;
+    private final OppdatertService oppdatertService;
 
-    public InfoOmMegService(InfoOmMegRepository infoOmMegRepository,
-                            RegistreringClient registreringClient) {
+    public InfoOmMegService(InfoOmMegRepository infoOmMegRepository, RegistreringClient registreringClient, OppdatertService oppdatertService) {
         this.infoOmMegRepository = infoOmMegRepository;
         this.registreringClient = registreringClient;
+        this.oppdatertService = oppdatertService;
     }
 
     public HovedmalData hentFremtidigSituasjon(AktorId aktorId, String fnr) {
@@ -50,8 +52,10 @@ public class InfoOmMegService {
 
     public HovedmalData lagreFremtidigSituasjon(HovedmalData fremtidigSituasjon, AktorId aktorId, String endretAv) {
         long id = infoOmMegRepository.lagreFremtidigSituasjonForAktorId(fremtidigSituasjon, aktorId, endretAv);
+        HovedmalData hovedmalData = infoOmMegRepository.hentFremtidigSituasjonForId(id);
 
-        return infoOmMegRepository.hentFremtidigSituasjonForId(id);
+        oppdatertService.sendOppdatert(aktorId, hovedmalData.getDato(), Oppdatertevent.Oppdaterd.FREMTIDIG_SITUASJON);
+        return hovedmalData;
 
     }
 
@@ -76,7 +80,9 @@ public class InfoOmMegService {
 
     public HelseOgAndreHensynData lagreHelseHinder(HelseOgAndreHensynData helseOgAndreHensynData, AktorId aktorId){
         long id = infoOmMegRepository.lagreHelseHinderForAktorId(helseOgAndreHensynData, aktorId);
-        return infoOmMegRepository.hentHelseHinderForId(id);
+        HelseOgAndreHensynData hensyn = infoOmMegRepository.hentHelseHinderForId(id);
+        oppdatertService.sendOppdatert(aktorId, hensyn.getDato(), Oppdatertevent.Oppdaterd.HELSE_HIDER);
+        return hensyn;
     }
 
     public HelseOgAndreHensynData hentAndreHinder(AktorId aktorId, String fnr) {
@@ -100,7 +106,9 @@ public class InfoOmMegService {
 
     public HelseOgAndreHensynData lagreAndreHinder(HelseOgAndreHensynData helseOgAndreHensynData, AktorId aktorId){
         long id = infoOmMegRepository.lagreAndreHinderForAktorId(helseOgAndreHensynData, aktorId);
-        return infoOmMegRepository.hentAndreHinderForId(id);
+        HelseOgAndreHensynData hensyn = infoOmMegRepository.hentAndreHinderForId(id);
+        oppdatertService.sendOppdatert(aktorId, hensyn.getDato(), Oppdatertevent.Oppdaterd.ANDRE_HINDER);
+        return hensyn;
     }
 
     public InfoOmMegData hentSisteSituasjon(AktorId aktorId, String fnr) {

@@ -62,7 +62,7 @@ public class TestContext {
         setupSecurity();
 
         setProperty(ABAC_ENDPOINT_URL_PROPERTY_NAME, getRestService(ABAC_PDP_ENDPOINT_ALIAS, getDefaultEnvironment()).getUrl());
-        setProperty(AKTOER_ENDPOINT_URL, getWebServiceEndpoint(AKTOER_V2_ALIAS).getUrl(), PUBLIC);
+        setProperty(AKTOER_ENDPOINT_URL, "http://localhost:8080/", PUBLIC);
         setProperty(Constants.OIDC_REDIRECT_URL_PROPERTY_NAME, getRequiredProperty(VEILARBLOGIN_REDIRECT_URL_URL_PROPERTY));
     }
 }

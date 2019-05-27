@@ -5,6 +5,7 @@ import no.nav.apiapp.security.PepClient;
 import no.nav.dialogarena.aktor.AktorService;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.mock.*;
+import no.nav.fo.veilarbvedtakinfo.service.OppdatertService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
@@ -43,5 +44,10 @@ public class ApplicationTestConfig extends ApplicationConfig {
     @Conditional(Mock.class)
     public PepClient pepClient(){
         return new PepClientMock();
+    }
+
+    @Bean
+    public OppdatertService oppdatertService() {
+        return new OppdatertService(KafkaConfig.kafkaProducer());
     }
 }
