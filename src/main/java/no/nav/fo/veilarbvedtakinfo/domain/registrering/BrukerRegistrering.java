@@ -18,7 +18,7 @@ public class BrukerRegistrering {
 
     public String getSvarTekstForSpmId(String spmId){
          List<TekstForSporsmal> teksterForSpm = teksterForBesvarelse.stream()
-                 .filter(tekst -> tekst.getSporsmal().equals(spmId))
+                 .filter(tekst -> tekst.getSporsmalId().equals(spmId))
                  .collect(Collectors.toList());
          if (teksterForSpm.isEmpty()) return null;
          return teksterForSpm.get(0).getSvar();
