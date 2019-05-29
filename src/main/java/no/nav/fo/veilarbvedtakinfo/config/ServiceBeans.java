@@ -35,8 +35,8 @@ class ServiceBeans {
     }
 
     @Bean
-    OppdatertService oppdatertService(KafkaTemplate kafkaTemplate) {
-        return new OppdatertService(kafkaTemplate);
+    OppdatertService oppdatertService(KafkaTemplate kafkaProducer) {
+        return new OppdatertService(kafkaProducer);
     }
 
     @Bean
