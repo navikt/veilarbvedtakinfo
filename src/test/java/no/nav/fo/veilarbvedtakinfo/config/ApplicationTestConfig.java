@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 
+import static org.mockito.Mockito.mock;
+
 @Configuration
 public class ApplicationTestConfig extends ApplicationConfig {
     public static final boolean RUN_WITH_MOCKS = true;
@@ -48,6 +50,6 @@ public class ApplicationTestConfig extends ApplicationConfig {
 
     @Bean
     public OppdatertService oppdatertService() {
-        return new OppdatertService(KafkaConfig.kafkaProducer());
+        return mock(OppdatertService.class);
     }
 }
