@@ -15,6 +15,6 @@ public class OppdatertService {
     }
 
     public void sendOppdatert(AktorId aktorId, Date dato, Oppdatertevent.Oppdaterd opdatert) {
-        kafkaTemplate.send(KafkaConfig.KAFKA_TOPIC, aktorId, new Oppdatertevent(aktorId, dato, opdatert));
+        kafkaTemplate.send(KafkaConfig.KAFKA_TOPIC, aktorId.getAktorId(), new Oppdatertevent(aktorId, dato, opdatert));
     }
 }

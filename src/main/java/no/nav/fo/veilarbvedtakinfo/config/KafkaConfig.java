@@ -8,17 +8,19 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import java.util.Properties;
 
 import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
+import static no.nav.sbl.util.EnvironmentUtils.requireEnvironmentName;
 
 public class KafkaConfig {
 
-    public static final String KAFKA_TOPIC = "privat-fo-brukerInfoEndret-q0";
+    public static final String KAFKA_TOPIC = "privat-fo-vedtaksinfooppdatert-" + requireEnvironmentName();
     private static final String KAFKA_BROKERS_URL_PROPERTY = "KAFKA_BROKERS_URL";
 
-    private static final String KAFKA_BROKERS = "10.184.160.37:8443";
+    private static final String KAFKA_BROKERS = getRequiredProperty(KAFKA_BROKERS_URL_PROPERTY);
     private static final String USERNAME = getRequiredProperty(StsSecurityConstants.SYSTEMUSER_USERNAME);
     private static final String PASSWORD = getRequiredProperty(StsSecurityConstants.SYSTEMUSER_PASSWORD);
 
@@ -29,10 +31,10 @@ public class KafkaConfig {
         props.put(SaslConfigs.SASL_MECHANISM, "PLAIN");
         props.put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"" + USERNAME + "\" password=\"" + PASSWORD + "\";");
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_BROKERS);
-        props.put(ProducerConfig.CLIENT_ID_CONFIG, "kafkatest-producer");
+        props.put(ProducerConfig.CLIENT_ID_CONFIG, "veilarbvedtakinfo");
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+        props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
         return props;
     }
 

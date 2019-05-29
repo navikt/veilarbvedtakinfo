@@ -5,17 +5,17 @@ import java.util.Date;
 public class Oppdatertevent {
     public final Date tidspunkt;
     public final Oppdaterd oppdaterd;
-    public final AktorId aktorId;
+    public final String aktorId;
 
 
     public Oppdatertevent(AktorId aktorId, Date dato, Oppdaterd oppdaterd) {
         this.tidspunkt = dato;
         this.oppdaterd = oppdaterd;
-        this.aktorId = aktorId;
+        this.aktorId = aktorId.getAktorId();
     }
 
     public enum Oppdaterd {
-        HELSE_HIDER,
+        HELSE_HINDER,
         ANDRE_HINDER,
         FREMTIDIG_SITUASJON
     }

@@ -65,6 +65,8 @@ fasitResources:
     resourceType: baseurl
   - alias: securityTokenService
     resourceType: baseUrl
+  - alias: kafka-brokers
+    resourceType: baseurl
 
   exposed:
   - alias: veilarbvedtakinfoAPI

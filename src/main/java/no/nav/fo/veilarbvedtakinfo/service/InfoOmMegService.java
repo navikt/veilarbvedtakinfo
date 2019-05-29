@@ -81,7 +81,7 @@ public class InfoOmMegService {
     public HelseOgAndreHensynData lagreHelseHinder(HelseOgAndreHensynData helseOgAndreHensynData, AktorId aktorId){
         long id = infoOmMegRepository.lagreHelseHinderForAktorId(helseOgAndreHensynData, aktorId);
         HelseOgAndreHensynData hensyn = infoOmMegRepository.hentHelseHinderForId(id);
-        oppdatertService.sendOppdatert(aktorId, hensyn.getDato(), Oppdatertevent.Oppdaterd.HELSE_HIDER);
+        oppdatertService.sendOppdatert(aktorId, hensyn.getDato(), Oppdatertevent.Oppdaterd.HELSE_HINDER);
         return hensyn;
     }
 
