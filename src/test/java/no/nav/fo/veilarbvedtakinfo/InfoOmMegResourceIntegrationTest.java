@@ -10,6 +10,7 @@ import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.resources.InfoOmMegResource;
 
+import no.nav.fo.veilarbvedtakinfo.service.OppdatertService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -147,6 +148,9 @@ class InfoOmMegResourceIntegrationTest {
         UserService userService() {
             return mock(UserService.class);
         }
+
+        @Bean
+        OppdatertService oppdatertService() { return  mock(OppdatertService.class);}
 
     }
 

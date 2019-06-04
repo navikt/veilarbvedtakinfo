@@ -8,11 +8,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import java.util.Date;
 
 public class OppdatertService {
-    private KafkaTemplate kafkaTemplate;
-
-    public OppdatertService(KafkaTemplate kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
-    }
+    private KafkaTemplate kafkaTemplate = KafkaConfig.kafkaProducer();
 
     public void sendOppdatert(AktorId aktorId, Date dato, Oppdatertevent.Oppdaterd opdatert) {
         kafkaTemplate.send(KafkaConfig.KAFKA_TOPIC, aktorId.getAktorId(), new Oppdatertevent(aktorId, dato, opdatert));
