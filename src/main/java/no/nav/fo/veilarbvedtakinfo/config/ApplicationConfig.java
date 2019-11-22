@@ -14,17 +14,17 @@ import javax.servlet.ServletContext;
 
 
 @Configuration
-@Import({ServiceBeans.class,
-        DatabaseConfig.class,
-        AktorConfig.class,
-        PepConfig.class
+@Import({
+    ServiceBeans.class,
+    DatabaseConfig.class,
+    AktorConfig.class,
+    PepConfig.class
 })
-
 public class ApplicationConfig implements ApiApplication {
 
     public static final String APPLICATION_NAME = "veilarbvedtakinfo";
-    public static final String AKTOER_V2_URL_PROPERTY = "AKTOER_V2_ENDPOINTURL";
-    public static final String VEILARBLOGIN_REDIRECT_URL_URL_PROPERTY = "VEILARBLOGIN_REDIRECT_URL_URL";
+    public static final String AKTOER_V2_URL_PROPERTY_NAME = "AKTOER_V2_ENDPOINTURL";
+    public static final String SECURITYTOKENSERVICE_URL_PROPERTY_NAME = "SECURITYTOKENSERVICE_URL";
 
     @Inject
     private JdbcTemplate jdbcTemplate;
