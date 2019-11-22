@@ -12,7 +12,7 @@ public class MainTest {
     private static final String PORT = "8800";
 
     public static void main(String[] args) {
-        String arguments[] = {PORT};
+        String[] arguments = {PORT};
 
         ApiAppTest.setupTestContext(builder().applicationName(APPLICATION_NAME).build());
         TestContext.setup();

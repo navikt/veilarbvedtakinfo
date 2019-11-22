@@ -19,18 +19,18 @@ import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 @Slf4j
 public class RegistreringClient extends BaseClient {
 
-    public static final String REGISTRERING_API_PROPERTY_NAME = "VEILARBREGISTRERINGSBS_URL";
+    public static final String VEILARBREGISTRERING_URL_PROPERTY_NAME = "VEILARBREGISTRERING_URL";
 
     @Inject
     public RegistreringClient(Provider<HttpServletRequest> httpServletRequestProvider) {
-        super(getRequiredProperty(REGISTRERING_API_PROPERTY_NAME), httpServletRequestProvider);
+        super(getRequiredProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME), httpServletRequestProvider);
     }
 
     public BrukerRegistreringWrapper hentSisteRegistrering(String fnr) {
         String cookies = httpServletRequestProvider.get().getHeader(COOKIE);
         try {
             return withClient(builder().readTimeout(HTTP_READ_TIMEOUT).build(),
-                    c -> c.target(baseUrl + "/registrering?fnr=" + fnr)
+                    c -> c.target(baseUrl + "/veilarbregistrering/api/registrering?fnr=" + fnr)
                             .request()
                             .header(COOKIE, cookies)
                             .get(BrukerRegistreringWrapper.class));
