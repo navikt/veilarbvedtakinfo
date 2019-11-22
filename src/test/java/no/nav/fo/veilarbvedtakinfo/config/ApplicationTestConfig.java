@@ -29,8 +29,8 @@ public class ApplicationTestConfig extends ApplicationConfig {
 
     @Bean
     @Conditional(Mock.class)
-    public RegistreringClient registreringClient(Provider<HttpServletRequest> requestProvider){
-        return new RegistreringClientMock(requestProvider);
+    public RegistreringClient registreringClient(){
+        return new RegistreringClientMock();
     }
 
     @Bean

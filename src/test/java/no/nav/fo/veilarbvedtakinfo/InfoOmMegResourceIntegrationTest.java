@@ -3,27 +3,28 @@ package no.nav.fo.veilarbvedtakinfo;
 import no.nav.apiapp.security.PepClient;
 import no.nav.dialogarena.aktor.AktorService;
 import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
+import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
+import no.nav.fo.veilarbvedtakinfo.mock.RegistreringClientMock;
 import no.nav.fo.veilarbvedtakinfo.resources.InfoOmMegResource;
 
+import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static no.nav.fo.veilarbvedtakinfo.db.DatabaseTestContext.setupInMemoryContext;
+import static java.lang.System.setProperty;
+import static no.nav.fo.veilarbvedtakinfo.db.DbTestUtils.setupInMemoryContext;
+import static no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient.VEILARBREGISTRERING_URL_PROPERTY_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,10 +33,9 @@ import static org.mockito.Mockito.when;
 
 class InfoOmMegResourceIntegrationTest {
 
-    private static AnnotationConfigApplicationContext context;
+    private static JdbcTemplate db;
     private static InfoOmMegResource infoOmMegResource;
     private static UserService userService;
-    private static InfoOmMegRepository infoOmMegRepository;
 
     public static String eksernIdent = "123";
     public static String eksernIdent2 = "543";
@@ -43,26 +43,25 @@ class InfoOmMegResourceIntegrationTest {
     @BeforeEach
     public void setup() {
         setupInMemoryContext();
-        TestContext.setup();
-        context = new AnnotationConfigApplicationContext(
-                InfoOmMegConfigTest.class
+
+        setProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME, "MOCKED_URL");
+
+        db = DbTestUtils.getTestDb();
+        DatabaseUtils.createTables(db);
+
+        userService = mock(UserService.class);
+        infoOmMegResource = new InfoOmMegResource(
+                new InfoOmMegService(new InfoOmMegRepository(db), new RegistreringClientMock()),
+                userService,
+                mock(AktorService.class),
+                mock(PepClient.class)
         );
-
-        context.start();
-
-        DatabaseUtils.createTables((JdbcTemplate) context.getBean("jdbcTemplate"));
-        infoOmMegResource = context.getBean(InfoOmMegResource.class);
-        userService = context.getBean(UserService.class);
-        infoOmMegRepository = context.getBean(InfoOmMegRepository.class);
     }
 
     @AfterEach
     public void tearDown() {
-        infoOmMegRepository.cleanUp(eksernIdent);
-        infoOmMegRepository.cleanUp(eksernIdent2);
-
-        context.stop();
-
+        DbTestUtils.cleanUp(db, eksernIdent);
+        DbTestUtils.cleanUp(db, eksernIdent2);
     }
 
     @Test
@@ -127,27 +126,6 @@ class InfoOmMegResourceIntegrationTest {
         List<HovedmalData> data = infoOmMegResource.hentSituasjonListe();
 
         assertEquals(1, data.size());
-    }
-
-    @Configuration
-    @ComponentScan
-    public static class InfoOmMegConfigTest {
-
-        @Bean
-        public AktorService aktoerService() {
-            return mock(AktorService.class);
-        }
-
-        @Bean
-        PepClient pepClient() {
-            return mock(PepClient.class);
-        }
-
-        @Bean
-        UserService userService() {
-            return mock(UserService.class);
-        }
-
     }
 
 }

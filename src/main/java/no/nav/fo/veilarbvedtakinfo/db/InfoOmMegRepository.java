@@ -20,24 +20,24 @@ import static java.util.Optional.ofNullable;
 
 public class InfoOmMegRepository {
     private JdbcTemplate db;
-    private final static String FREMTIDIG_SITUASJON = "FREMTIDIG_SITUASJON";
-    private final static String FREMTIDIG_SITUASJON_SEQ = "FREMTIDIG_SITUASJON_SEQ";
+    public final static String FREMTIDIG_SITUASJON = "FREMTIDIG_SITUASJON";
+    public final static String FREMTIDIG_SITUASJON_SEQ = "FREMTIDIG_SITUASJON_SEQ";
 
-    private final static String AKTOR_ID = "AKTOR_ID";
-    private final static String ALTERNATIV_ID = "ALTERNATIV_ID";
-    private final static String FREMTIDIG_SITUASJON_ID = "FREMTIDIG_SITUASJON_ID";
+    public final static String AKTOR_ID = "AKTOR_ID";
+    public final static String ALTERNATIV_ID = "ALTERNATIV_ID";
+    public final static String FREMTIDIG_SITUASJON_ID = "FREMTIDIG_SITUASJON_ID";
 
-    private final static String TEKST = "TEKST";
-    private final static String ENDRET_AV = "ENDRET_AV";
-    private final static String DATO = "DATO";
+    public final static String TEKST = "TEKST";
+    public final static String ENDRET_AV = "ENDRET_AV";
+    public final static String DATO = "DATO";
 
-    private final static String HELSEHINDER = "HELSEHINDER";
-    private final static String HELSEHINDER_SEQ = "HELSEHINDER_SEQ";
-    private final static String ANDREHINDER = "ANDREHINDER";
-    private final static String ANDREHINDER_SEQ = "ANDREHINDER_SEQ";
-    private final static String ANDREHINDER_ID = "ANDREHINDER_ID";
-    private final static String HELSEHINDER_ID = "HELSEHINDER_ID";
-    private final static String SVAR = "SVAR";
+    public final static String HELSEHINDER = "HELSEHINDER";
+    public final static String HELSEHINDER_SEQ = "HELSEHINDER_SEQ";
+    public final static String ANDREHINDER = "ANDREHINDER";
+    public final static String ANDREHINDER_SEQ = "ANDREHINDER_SEQ";
+    public final static String ANDREHINDER_ID = "ANDREHINDER_ID";
+    public final static String HELSEHINDER_ID = "HELSEHINDER_ID";
+    public final static String SVAR = "SVAR";
 
     public InfoOmMegRepository(JdbcTemplate db) {
         this.db = db;
@@ -165,7 +165,5 @@ public class InfoOmMegRepository {
     //For tester
     public void cleanUp(String aktorId){
         SqlUtils.delete(db, FREMTIDIG_SITUASJON).where(WhereClause.equals(AKTOR_ID, aktorId)).execute();
-
-
     }
 }

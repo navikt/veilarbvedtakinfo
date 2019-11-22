@@ -27,7 +27,7 @@ public class DatabaseConfig {
         return DataSourceFactory.dataSource()
                 .url(getRequiredProperty(VEILARBVEDTAKINFODB_URL))
                 .username(getRequiredProperty(VEILARBVEDTAKINFODB_USERNAME))
-                .password(getOptionalProperty(VEILARBVEDTAKINFODB_PASSWORD).orElse(""))
+                .password(getRequiredProperty(VEILARBVEDTAKINFODB_PASSWORD))
                 .build();
     }
 

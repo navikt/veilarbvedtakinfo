@@ -12,8 +12,8 @@ import java.util.Date;
 public class RegistreringClientMock extends RegistreringClient {
     private Date now;
 
-    public RegistreringClientMock(Provider<HttpServletRequest> requestProvider) {
-        super(requestProvider);
+    public RegistreringClientMock() {
+        super(null);
         now = Date.from(Instant.now());
     }
     public BrukerRegistreringWrapper hentSisteRegistrering(String fnr) {

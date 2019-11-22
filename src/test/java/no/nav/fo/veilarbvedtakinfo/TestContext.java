@@ -59,6 +59,6 @@ public class TestContext {
         setProperty(EXTERNAL_USERS_AZUREAD_B2C_DISCOVERY_URL, getBaseUrl(AZURE_AD_B2C_DISCOVERY_ALIAS), PUBLIC);
         setProperty(EXTERNAL_USERS_AZUREAD_B2C_EXPECTED_AUDIENCE, aadB2cUser.getUsername(), PUBLIC);
 
-        setProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME, "http://localhost:8080/veilarbregistrering/api");
+        setProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME, "http://localhost:8080");
     }
 }

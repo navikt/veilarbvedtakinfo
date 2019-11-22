@@ -1,8 +1,8 @@
 package no.nav.fo.veilarbvedtakinfo;
 
-import no.nav.fo.veilarbvedtakinfo.config.ApplicationTestConfig;
 import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
 
+import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.EndretAvType;
@@ -13,37 +13,32 @@ import no.nav.fo.veilarbvedtakinfo.domain.registrering.HinderSvar;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static no.nav.fo.veilarbvedtakinfo.db.DatabaseTestContext.setupInMemoryContext;
+import static no.nav.fo.veilarbvedtakinfo.db.DbTestUtils.setupInMemoryContext;
 import static org.junit.Assert.*;
 
 public class InfoOmMegRepositoryTest {
-    private static AnnotationConfigApplicationContext context;
+
+    private static JdbcTemplate db;
     private static InfoOmMegRepository infoOmMegRepository;
     private static String eksternIdent = "123";
 
     @BeforeEach
     public void setup() {
         setupInMemoryContext();
-        TestContext.setup();
-        context = new AnnotationConfigApplicationContext(
-                ApplicationTestConfig.class
-        );
 
-        context.start();
+        db = DbTestUtils.getTestDb();
 
-        DatabaseUtils.createTables((JdbcTemplate) context.getBean("jdbcTemplate"));
-        infoOmMegRepository = context.getBean(InfoOmMegRepository.class);
+        DatabaseUtils.createTables(db);
+        infoOmMegRepository = new InfoOmMegRepository(db);
     }
 
     @AfterEach
     public void tearDown() {
-        context.stop();
-        infoOmMegRepository.cleanUp(eksternIdent);
+        DbTestUtils.cleanUp(db, eksternIdent);
     }
 
     @Test

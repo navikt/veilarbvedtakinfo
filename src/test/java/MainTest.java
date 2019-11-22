@@ -1,7 +1,7 @@
 import no.nav.apiapp.ApiApp;
 import no.nav.fo.veilarbvedtakinfo.TestContext;
 import no.nav.fo.veilarbvedtakinfo.config.ApplicationTestConfig;
-import no.nav.fo.veilarbvedtakinfo.db.DatabaseTestContext;
+import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
 import no.nav.testconfig.ApiAppTest;
 
 import static java.lang.System.getProperty;
@@ -16,7 +16,7 @@ public class MainTest {
 
         ApiAppTest.setupTestContext(builder().applicationName(APPLICATION_NAME).build());
         TestContext.setup();
-        DatabaseTestContext.setupContext(getProperty("database"));
+        DbTestUtils.setupContext(getProperty("database"));
 
         ApiApp.runApp(ApplicationTestConfig.class, arguments);
     }

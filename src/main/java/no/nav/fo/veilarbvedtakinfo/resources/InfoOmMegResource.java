@@ -84,7 +84,7 @@ public class InfoOmMegResource {
     public HovedmalData oppdaterFremtidigSituasjon(HovedmalData fremtidigSituasjonData) {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
-        String endretAv = userService.erEksternBruker()? aktorId.getAktorId() : userService.getUid();
+        String endretAv = userService.erEksternBruker() ? aktorId.getAktorId() : userService.getUid();
 
         pepClient.sjekkLeseTilgangTilFnr(fnr);
 
