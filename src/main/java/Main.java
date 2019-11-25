@@ -57,7 +57,6 @@ public class Main {
                 "ISSO_ISSUER_URL",
                 "ISSO_ISALIVE_URL",
                 SECURITYTOKENSERVICE_URL_PROPERTY_NAME,
-                "SECURITYTOKENSERVICE_URL",
                 "UNLEASH_API_URL",
                 "VEILARBLOGIN_REDIRECT_URL_DESCRIPTION",
                 "OIDC_REDIRECT_URL",
