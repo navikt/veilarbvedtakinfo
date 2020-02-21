@@ -2,6 +2,8 @@ package no.nav.fo.veilarbvedtakinfo.config;
 
 import no.nav.apiapp.ApiApplication;
 import no.nav.apiapp.config.ApiAppConfigurator;
+import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.common.oidc.auth.OidcAuthenticatorConfig;
 import no.nav.dialogarena.aktor.AktorConfig;
 import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
+
+import static no.nav.brukerdialog.security.Constants.*;
+import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
 
 
 @Configuration
@@ -29,12 +34,37 @@ public class ApplicationConfig implements ApiApplication {
     @Inject
     private JdbcTemplate jdbcTemplate;
 
+    private OidcAuthenticatorConfig createOpenAmAuthenticatorConfig() {
+        String discoveryUrl = getRequiredProperty("OPENAM_DISCOVERY_URL");
+        String clientId = getRequiredProperty("VEILARBLOGIN_OPENAM_CLIENT_ID");
+        String refreshUrl = getRequiredProperty("VEILARBLOGIN_OPENAM_REFRESH_URL");
+
+        return new OidcAuthenticatorConfig()
+                .withDiscoveryUrl(discoveryUrl)
+                .withClientId(clientId)
+                .withRefreshUrl(refreshUrl)
+                .withRefreshTokenCookieName(REFRESH_TOKEN_COOKIE_NAME)
+                .withIdTokenCookieName(ID_TOKEN_COOKIE_NAME)
+                .withIdentType(IdentType.InternBruker);
+    }
+
+    private OidcAuthenticatorConfig createAzureAdB2CConfig() {
+        String discoveryUrl = getRequiredProperty("AAD_B2C_DISCOVERY_URL");
+        String clientId = getRequiredProperty("AAD_B2C_CLIENTID_USERNAME");
+
+        return new OidcAuthenticatorConfig()
+                .withDiscoveryUrl(discoveryUrl)
+                .withClientId(clientId)
+                .withIdTokenCookieName(AZUREADB2C_OIDC_COOKIE_NAME_SBS)
+                .withIdentType(IdentType.EksternBruker);
+    }
+
     @Override
     public void configure(ApiAppConfigurator apiAppConfigurator) {
         apiAppConfigurator
-                .sts()
-                .azureADB2CLogin()
-                .issoLogin();
+                .addOidcAuthenticator(createOpenAmAuthenticatorConfig())
+                .addOidcAuthenticator(createAzureAdB2CConfig())
+                .sts();
     }
 
     @Transactional

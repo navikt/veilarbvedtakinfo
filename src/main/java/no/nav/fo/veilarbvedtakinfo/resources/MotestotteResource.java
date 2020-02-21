@@ -44,7 +44,7 @@ public class MotestotteResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLeseTilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilFnr(fnr);
 
         msRepo.oppdaterMotestotte(aktorId);
     }
@@ -56,7 +56,7 @@ public class MotestotteResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLeseTilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilFnr(fnr);
 
         return msRepo.hentMoteStotte(aktorId);
 

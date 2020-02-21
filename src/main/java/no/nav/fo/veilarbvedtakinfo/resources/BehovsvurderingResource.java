@@ -46,7 +46,7 @@ public class BehovsvurderingResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLeseTilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilFnr(fnr);
 
         return bvService.nyBesvarlse(aktorId, svar);
     }
@@ -58,7 +58,7 @@ public class BehovsvurderingResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLeseTilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilFnr(fnr);
 
         return bvService.hentBesvarelse(aktorId);
 

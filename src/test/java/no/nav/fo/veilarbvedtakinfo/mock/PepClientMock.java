@@ -10,7 +10,7 @@ public class PepClientMock extends PepClient {
       super(null, null, null);
     }
 
-    public String sjekkLeseTilgangTilFnr(String fnr) {
+    public String sjekkLesetilgangTilFnr(String fnr) {
         return "";
     }
 
