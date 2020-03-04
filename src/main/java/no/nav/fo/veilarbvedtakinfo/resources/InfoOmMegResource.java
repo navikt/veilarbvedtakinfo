@@ -49,7 +49,7 @@ public class InfoOmMegResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLesetilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
 
         return infoOmMegService.hentSisteSituasjon(aktorId, fnr);
     }
@@ -61,7 +61,7 @@ public class InfoOmMegResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLesetilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
 
         return infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
     }
@@ -73,7 +73,7 @@ public class InfoOmMegResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLesetilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
 
         return infoOmMegService.hentSituasjonHistorikk(aktorId);
     }
@@ -86,7 +86,7 @@ public class InfoOmMegResource {
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
         String endretAv = userService.erEksternBruker() ? aktorId.getAktorId() : userService.getUid();
 
-        pepClient.sjekkLesetilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
 
         return infoOmMegService.lagreFremtidigSituasjon(fremtidigSituasjonData, aktorId, endretAv);
     }
@@ -98,7 +98,7 @@ public class InfoOmMegResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLesetilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
 
         return infoOmMegService.hentHelseHinder(aktorId, fnr);
     }
@@ -110,7 +110,7 @@ public class InfoOmMegResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLesetilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
 
         return infoOmMegService.lagreHelseHinder(helseOgAndreHensynData, aktorId);
     }
@@ -122,7 +122,7 @@ public class InfoOmMegResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLesetilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
 
         return infoOmMegService.hentAndreHinder(aktorId, fnr);
     }
@@ -134,7 +134,7 @@ public class InfoOmMegResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
 
-        pepClient.sjekkLesetilgangTilFnr(fnr);
+        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
 
         return infoOmMegService.lagreAndreHinder(helseOgAndreHensynData, aktorId);
     }
