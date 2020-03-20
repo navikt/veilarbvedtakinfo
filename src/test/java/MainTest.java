@@ -1,4 +1,5 @@
 import no.nav.apiapp.ApiApp;
+import no.nav.fo.veilarbvedtakinfo.TestContext;
 import no.nav.fo.veilarbvedtakinfo.config.ApplicationTestConfig;
 import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
 import no.nav.testconfig.ApiAppTest;
@@ -14,6 +15,7 @@ public class MainTest {
         String[] arguments = {PORT};
 
         ApiAppTest.setupTestContext(builder().applicationName(APPLICATION_NAME).build());
+        TestContext.setup();
         DbTestUtils.setupContext(getProperty("database"));
 
         ApiApp.runApp(ApplicationTestConfig.class, arguments);

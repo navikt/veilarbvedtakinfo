@@ -14,8 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.inject.Inject;
 import javax.servlet.ServletContext;
 
-import static no.nav.common.oidc.Constants.*;
+import static no.nav.brukerdialog.security.Constants.*;
 import static no.nav.sbl.util.EnvironmentUtils.getRequiredProperty;
+
 
 @Configuration
 @Import({
@@ -43,7 +44,7 @@ public class ApplicationConfig implements ApiApplication {
                 .withClientId(clientId)
                 .withRefreshUrl(refreshUrl)
                 .withRefreshTokenCookieName(REFRESH_TOKEN_COOKIE_NAME)
-                .withIdTokenCookieName(OPEN_AM_ID_TOKEN_COOKIE_NAME)
+                .withIdTokenCookieName(ID_TOKEN_COOKIE_NAME)
                 .withIdentType(IdentType.InternBruker);
     }
 
@@ -54,7 +55,7 @@ public class ApplicationConfig implements ApiApplication {
         return new OidcAuthenticatorConfig()
                 .withDiscoveryUrl(discoveryUrl)
                 .withClientId(clientId)
-                .withIdTokenCookieName(AZURE_AD_B2C_ID_TOKEN_COOKIE_NAME)
+                .withIdTokenCookieName(AZUREADB2C_OIDC_COOKIE_NAME_SBS)
                 .withIdentType(IdentType.EksternBruker);
     }
 
