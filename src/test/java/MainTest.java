@@ -3,6 +3,7 @@ import no.nav.fo.veilarbvedtakinfo.config.ApplicationTestConfig;
 import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
 import no.nav.testconfig.ApiAppTest;
 
+import static java.lang.System.getProperty;
 import static no.nav.fo.veilarbvedtakinfo.config.ApplicationConfig.APPLICATION_NAME;
 import static no.nav.testconfig.ApiAppTest.Config.builder;
 
@@ -13,7 +14,7 @@ public class MainTest {
         String[] arguments = {PORT};
 
         ApiAppTest.setupTestContext(builder().applicationName(APPLICATION_NAME).build());
-        DbTestUtils.setupInMemoryContext();
+        DbTestUtils.setupContext(getProperty("database"));
 
         ApiApp.runApp(ApplicationTestConfig.class, arguments);
     }
