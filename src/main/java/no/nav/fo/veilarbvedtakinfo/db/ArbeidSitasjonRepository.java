@@ -59,9 +59,9 @@ public class ArbeidSitasjonRepository {
     private static ArbeidSituasjon fremtidigSituasjonMapper(ResultSet rs) {
         return new ArbeidSituasjon()
                 .setOprettet(rs.getString(OPRETTET))
-                .setOprettet(rs.getString(ENDRET_AV))
-                .setOprettet(rs.getString(SVAR_ID))
-                .setOprettet(rs.getString(SVAR_TEXT));
+                .setEndretAv(rs.getString(ENDRET_AV))
+                .setSvarId(rs.getString(SVAR_ID))
+                .setSvarTekst(rs.getString(SVAR_TEXT));
     }
 
 }
