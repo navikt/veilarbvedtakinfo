@@ -18,6 +18,7 @@ public class ArbeidSitasjonRepository {
     private JdbcTemplate db;
 
     private final static String MIN_SITUASJON = "MIN_SITUASJON";
+    private final static String ID = "ID";
     private final static String AKTOR_ID = "AKTOR_ID";
     private final static String OPRETTET = "OPRETTET";
     private final static String ENDRET_AV = "ENDRET_AV";
@@ -34,9 +35,10 @@ public class ArbeidSitasjonRepository {
         long id = DatabaseUtils.nesteFraSekvens(db, MIN_SITUASJON_SEQ);
 
         SqlUtils.insert(db, MIN_SITUASJON)
+                .value(ID, id)
                 .value(AKTOR_ID, aktorId)
                 .value(OPRETTET, DbConstants.CURRENT_TIMESTAMP)
-                .value(ENDRET_AV, endretAv)
+                .value(ENDRET_AV, endretAv.toString())
                 .value(SVAR_ID, svar.svarId)
                 .value(SVAR_TEXT, svar.svarText)
                 .execute();
