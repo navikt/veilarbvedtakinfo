@@ -23,7 +23,7 @@ public class ArbeidSitasjonRepository {
     private final static String ENDRET_AV = "ENDRET_AV";
     private final static String SVAR_ID = "SVAR_ID";
     private final static String SVAR_TEXT = "SVAR_TEXT";
-    private final static String ENDRET_AV_TYPE = "ENDRET_AV_TYPE";
+    private final static String MIN_SITUASJON_SEQ = "MIN_SITUASJON_SEQ";
 
     public ArbeidSitasjonRepository(JdbcTemplate db) {
         this.db = db;
@@ -31,7 +31,7 @@ public class ArbeidSitasjonRepository {
 
 
     public long lagreSitasjon(AktorId aktorId, EndretAvType endretAv, ArbeidSituasjonSvar svar) {
-        long id = DatabaseUtils.nesteFraSekvens(db, MIN_SITUASJON);
+        long id = DatabaseUtils.nesteFraSekvens(db, MIN_SITUASJON_SEQ);
 
         SqlUtils.insert(db, MIN_SITUASJON)
                 .value(AKTOR_ID, aktorId)
