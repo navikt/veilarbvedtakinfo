@@ -2,6 +2,7 @@ package no.nav.fo.veilarbvedtakinfo;
 
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
+import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.*;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.*;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;

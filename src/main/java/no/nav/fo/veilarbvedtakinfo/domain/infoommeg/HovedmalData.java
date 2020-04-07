@@ -2,6 +2,7 @@ package no.nav.fo.veilarbvedtakinfo.domain.infoommeg;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.FremtidigSituasjonSvar;
 
 import java.util.Date;

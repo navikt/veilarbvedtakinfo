@@ -1,4 +1,4 @@
-package no.nav.fo.veilarbvedtakinfo.domain.infoommeg;
+package no.nav.fo.veilarbvedtakinfo.domain;
 
 public enum EndretAvType {
     BRUKER,
