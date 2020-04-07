@@ -40,7 +40,7 @@ public class ArbeidSitasjonRepository {
                 .value(OPRETTET, DbConstants.CURRENT_TIMESTAMP)
                 .value(ENDRET_AV, endretAv.toString())
                 .value(SVAR_ID, svar.svarId)
-                .value(SVAR_TEXT, svar.svarText)
+                .value(SVAR_TEXT, svar.svarTekst)
                 .execute();
 
         return id;

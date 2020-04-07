@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class ArbeidSituasjonSvar {
     public String svarId;
-    public String svarText;
+    public String svarTekst;
 }
 
