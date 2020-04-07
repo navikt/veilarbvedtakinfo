@@ -25,7 +25,7 @@ public class ArbeidsSituasjonResource {
     private final PepClient pepClient;
     private final ArbeidSitasjonService service;
 
-    public ArbeidsSituasjonResource(UserService userService, AktorService aktorService, PepClient pepClient, ArbeidSitasjonService service) {
+    public ArbeidsSituasjonResource(ArbeidSitasjonService service, UserService userService, AktorService aktorService, PepClient pepClient) {
         this.userService = userService;
         this.aktorService = aktorService;
         this.pepClient = pepClient;
