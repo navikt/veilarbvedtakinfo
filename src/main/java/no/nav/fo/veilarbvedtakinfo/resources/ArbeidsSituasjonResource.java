@@ -16,7 +16,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
 @Component
-@Path("/arbeidsSituasjon")
+@Path("/situasjon")
 @Produces("application/json")
 @Api(value = "ArbeidsSituasjonResource")
 public class ArbeidsSituasjonResource {
