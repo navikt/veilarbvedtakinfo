@@ -12,7 +12,3 @@ create table MIN_SITUASJON
 
     CONSTRAINT "MIN_SITUASJON_ID_PK" PRIMARY KEY ("ID")
 );
-
-create index SituasjonIndex on MIN_SITUASJON(ENDRET_AV, AKTOR_ID);
-
-select * from MIN_SITUASJON where AKTOR_ID = ? order by OPRETTET desc;
