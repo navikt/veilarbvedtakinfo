@@ -36,7 +36,7 @@ public class ArbeidSitasjonRepository {
 
         SqlUtils.insert(db, MIN_SITUASJON)
                 .value(ID, id)
-                .value(AKTOR_ID, aktorId)
+                .value(AKTOR_ID, aktorId.getAktorId())
                 .value(OPRETTET, DbConstants.CURRENT_TIMESTAMP)
                 .value(ENDRET_AV, endretAv.toString())
                 .value(SVAR_ID, svar.svarId)
