@@ -38,10 +38,11 @@ public class ArbeidsSituasjonResource {
         String fnr = userService.hentFnrFraUrlEllerToken();
         AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
         boolean erEksternBruker = userService.erEksternBruker();
+        String avsenderID = userService.getUid();
 
         pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
 
-        service.nytSvar(svar, aktorId, erEksternBruker);
+        service.nytSvar(svar, aktorId, avsenderID, erEksternBruker);
     }
 
     @GET

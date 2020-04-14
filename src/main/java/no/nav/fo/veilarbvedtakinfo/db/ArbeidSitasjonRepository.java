@@ -21,9 +21,10 @@ public class ArbeidSitasjonRepository {
     private final static String ID = "ID";
     private final static String AKTOR_ID = "AKTOR_ID";
     private final static String OPRETTET = "OPRETTET";
-    private final static String ENDRET_AV = "ENDRET_AV";
+    private final static String ENDRET_AV_TYPE = "ENDRET_AV_TYPE";
     private final static String SVAR_ID = "SVAR_ID";
     private final static String SVAR_TEXT = "SVAR_TEXT";
+    private final static String ENDRET_AV_ID = "ENDRET_AV_ID";
     private final static String MIN_SITUASJON_SEQ = "MIN_SITUASJON_SEQ";
 
     public ArbeidSitasjonRepository(JdbcTemplate db) {
@@ -31,14 +32,15 @@ public class ArbeidSitasjonRepository {
     }
 
 
-    public long lagreSitasjon(AktorId aktorId, EndretAvType endretAv, ArbeidSituasjonSvar svar) {
+    public long lagreSitasjon(AktorId aktorId, EndretAvType endretAv, String avsenderID, ArbeidSituasjonSvar svar) {
         long id = DatabaseUtils.nesteFraSekvens(db, MIN_SITUASJON_SEQ);
 
         SqlUtils.insert(db, MIN_SITUASJON)
                 .value(ID, id)
                 .value(AKTOR_ID, aktorId.getAktorId())
                 .value(OPRETTET, DbConstants.CURRENT_TIMESTAMP)
-                .value(ENDRET_AV, endretAv.toString())
+                .value(ENDRET_AV_ID, avsenderID)
+                .value(ENDRET_AV_TYPE, endretAv.toString())
                 .value(SVAR_ID, svar.svarId)
                 .value(SVAR_TEXT, svar.svarTekst)
                 .execute();
@@ -59,7 +61,8 @@ public class ArbeidSitasjonRepository {
     private static ArbeidSituasjon fremtidigSituasjonMapper(ResultSet rs) {
         return new ArbeidSituasjon()
                 .setOprettet(rs.getString(OPRETTET))
-                .setEndretAv(rs.getString(ENDRET_AV))
+                .setEndretAvType(rs.getString(ENDRET_AV_TYPE))
+                .setEndretAvId(rs.getString(ENDRET_AV_ID))
                 .setSvarId(rs.getString(SVAR_ID))
                 .setSvarTekst(rs.getString(SVAR_TEXT));
     }

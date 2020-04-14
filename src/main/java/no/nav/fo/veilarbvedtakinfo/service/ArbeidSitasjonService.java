@@ -13,9 +13,9 @@ public class ArbeidSitasjonService {
         this.repository = repository;
     }
 
-    public void nytSvar(ArbeidSituasjonSvar svar, AktorId aktorId, boolean erEksternBruker) {
+    public void nytSvar(ArbeidSituasjonSvar svar, AktorId aktorId, String avsenderID, boolean erEksternBruker) {
         EndretAvType endretAv = erEksternBruker ? EndretAvType.BRUKER : EndretAvType.VEILEDER;
-        repository.lagreSitasjon(aktorId, endretAv, svar);
+        repository.lagreSitasjon(aktorId, endretAv, avsenderID, svar);
     }
 
     public ArbeidSituasjon fetchSvar(AktorId aktorId) {
