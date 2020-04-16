@@ -6,7 +6,7 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class ArbeidSituasjon {
-    public String oprettet;
+    public String opprettet;
     public String endretAvType;
     public String endretAvId;
     public String svarId;

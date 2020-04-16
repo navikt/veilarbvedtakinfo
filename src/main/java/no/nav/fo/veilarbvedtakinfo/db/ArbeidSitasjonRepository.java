@@ -60,7 +60,7 @@ public class ArbeidSitasjonRepository {
     @SneakyThrows
     private static ArbeidSituasjon fremtidigSituasjonMapper(ResultSet rs) {
         return new ArbeidSituasjon()
-                .setOprettet(rs.getString(OPRETTET))
+                .setOpprettet(rs.getString(OPRETTET))
                 .setEndretAvType(rs.getString(ENDRET_AV_TYPE))
                 .setEndretAvId(rs.getString(ENDRET_AV_ID))
                 .setSvarId(rs.getString(SVAR_ID))
