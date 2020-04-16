@@ -5,7 +5,7 @@ import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
 import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.EndretAvType;
+import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;

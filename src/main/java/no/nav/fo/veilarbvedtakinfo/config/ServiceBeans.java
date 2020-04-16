@@ -2,13 +2,16 @@ package no.nav.fo.veilarbvedtakinfo.config;
 
 import no.nav.apiapp.security.PepClient;
 import no.nav.dialogarena.aktor.AktorService;
+import no.nav.fo.veilarbvedtakinfo.db.ArbeidSitasjonRepository;
 import no.nav.fo.veilarbvedtakinfo.db.BehovsvurderingRepository;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.db.MotestotteRepository;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
+import no.nav.fo.veilarbvedtakinfo.resources.ArbeidsSituasjonResource;
 import no.nav.fo.veilarbvedtakinfo.resources.BehovsvurderingResource;
 import no.nav.fo.veilarbvedtakinfo.resources.InfoOmMegResource;
 import no.nav.fo.veilarbvedtakinfo.resources.MotestotteResource;
+import no.nav.fo.veilarbvedtakinfo.service.ArbeidSitasjonService;
 import no.nav.fo.veilarbvedtakinfo.service.BehovsvurderingService;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
@@ -84,4 +87,21 @@ class ServiceBeans {
         return new MotestotteRepository(db);
     }
 
+    @Bean
+    ArbeidSitasjonRepository arbeidSitasjonRepository(JdbcTemplate db) {
+        return new ArbeidSitasjonRepository(db);
+    }
+
+    @Bean
+    ArbeidSitasjonService arbeidSitasjonService(ArbeidSitasjonRepository repository) {
+        return new ArbeidSitasjonService(repository);
+    }
+
+    @Bean
+    ArbeidsSituasjonResource arbeidsSituasjonResource(ArbeidSitasjonService arbeidSitasjonService,
+                                          UserService userService,
+                                          AktorService aktorService,
+                                          PepClient pepClient) {
+        return new ArbeidsSituasjonResource(arbeidSitasjonService, userService, aktorService, pepClient);
+    }
 }
