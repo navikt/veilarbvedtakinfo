@@ -1,64 +1,59 @@
-package no.nav.fo.veilarbvedtakinfo.resources;
+package no.nav.fo.veilarbvedtakinfo.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import no.nav.apiapp.security.PepClient;
-import no.nav.dialogarena.aktor.AktorService;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
+import no.nav.common.abac.Pep;
+import no.nav.common.client.aktorregister.AktorregisterClient;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
 import no.nav.fo.veilarbvedtakinfo.service.BehovsvurderingService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-@Component
-@Path("/behovsvurdering")
+@RestController
+@RequestMapping("/behovsvurdering")
 @Produces("application/json")
 @Api(value = "BehovsvurderingResource", description = "Tjenester for deling behovsvurdering besvarelse")
 
 public class BehovsvurderingResource {
     private final BehovsvurderingService bvService;
     private final UserService userService;
-    private final AktorService aktorService;
-    private final PepClient pepClient;
+    private final AktorregisterClient aktorregisterClient;
+    private final Pep pep;
 
     public BehovsvurderingResource(
             BehovsvurderingService bvService,
             UserService userService,
-            AktorService aktorService,
-            PepClient pepClient) {
+            AktorregisterClient aktorregisterClient,
+            Pep pep) {
 
         this.bvService = bvService;
         this.userService = userService;
-        this.aktorService = aktorService;
-        this.pepClient = pepClient;
+        this.aktorregisterClient = aktorregisterClient;
+        this.pep = pep;
     }
 
-    @POST
-    @Path("/svar")
+    @PostMapping("/svar")
     @ApiOperation(value = "Sender inn en behovsvurderings besvarelse")
     public Besvarelse nyttSvar(Svar svar) {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
-
-        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
+        String aktorId = aktorregisterClient.hentAktorId(fnr);
+        userService.sjekkLeseTilgangTilPerson(aktorId);
 
         return bvService.nyBesvarlse(aktorId, svar);
     }
 
-    @GET
-    @Path("/besvarelse")
+    @GetMapping("/besvarelse")
     @ApiOperation(value = "Henter den siste behovsvurderings besvarelsen på bruker")
     public Besvarelse hentSisteBesvarelse() {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
-
-        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
+        String aktorId = aktorregisterClient.hentAktorId(fnr);
+        userService.sjekkLeseTilgangTilPerson(aktorId);
 
         return bvService.hentBesvarelse(aktorId);
 

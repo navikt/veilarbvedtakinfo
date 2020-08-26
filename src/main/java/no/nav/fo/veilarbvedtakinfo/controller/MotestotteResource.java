@@ -1,62 +1,57 @@
-package no.nav.fo.veilarbvedtakinfo.resources;
+package no.nav.fo.veilarbvedtakinfo.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import no.nav.apiapp.security.PepClient;
-import no.nav.dialogarena.aktor.AktorService;
+import no.nav.common.abac.Pep;
+import no.nav.common.client.aktorregister.AktorregisterClient;
 import no.nav.fo.veilarbvedtakinfo.db.MotestotteRepository;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.motestotte.Motestotte;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
-import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 
-@Component
-@Path("/motestotte")
+@RestController
+@RequestMapping("/motestotte")
 @Produces("application/json")
 @Api(value = "MotestotteResource", description = "Tjenester for deling motestotte")
 public class MotestotteResource {
     private final MotestotteRepository msRepo;
     private final UserService userService;
-    private final AktorService aktorService;
-    private final PepClient pepClient;
+    private final AktorregisterClient aktorregisterClient;
+    private final Pep pep;
 
     public MotestotteResource(
             MotestotteRepository msRepo,
             UserService userService,
-            AktorService aktorService,
-            PepClient pepClient) {
+            AktorregisterClient aktorregisterClient,
+            Pep pep) {
 
         this.msRepo = msRepo;
         this.userService = userService;
-        this.aktorService = aktorService;
-        this.pepClient = pepClient;
+        this.aktorregisterClient = aktorregisterClient;
+        this.pep = pep;
     }
 
-    @POST
-    @Path("/")
+    @PostMapping("/")
     @ApiOperation(value = "Sender inn en motestotte besvarelse")
     public void nyttSvar() {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
-
-        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
-
+        String aktorId = aktorregisterClient.hentAktorId(fnr);
+        userService.sjekkLeseTilgangTilPerson(aktorId);
         msRepo.oppdaterMotestotte(aktorId);
     }
 
-    @GET
-    @Path("/")
+    @GetMapping("/")
     @ApiOperation(value = "Henter den siste motestotte på bruker")
     public Motestotte hent() {
         String fnr = userService.hentFnrFraUrlEllerToken();
-        AktorId aktorId = userService.getAktorIdOrElseThrow(aktorService, fnr);
+        String aktorId = aktorregisterClient.hentAktorId(fnr);
 
-        pepClient.sjekkLesetilgangTilAktorId(aktorId.getAktorId());
+        userService.sjekkLeseTilgangTilPerson(aktorId);
 
         return msRepo.hentMoteStotte(aktorId);
 

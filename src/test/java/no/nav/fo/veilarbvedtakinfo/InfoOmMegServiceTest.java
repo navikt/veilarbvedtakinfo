@@ -1,15 +1,15 @@
 package no.nav.fo.veilarbvedtakinfo;
 
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.*;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.*;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
-import org.apache.commons.lang3.time.DateUtils;
+import no.nav.fo.veilarbvedtakinfo.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 
 import java.time.Instant;
 import java.util.*;
@@ -24,7 +24,8 @@ class InfoOmMegServiceTest {
     private static InfoOmMegService infoOmMegService;
     private static InfoOmMegRepository infoOmMegRepository;
     private static RegistreringClient registreringClient;
-    private final static String brukerIdent = "1234";
+    private final static String fnr = "1234";
+    private final static String aktorId = "5689";
 
     @BeforeEach
     void setup() {
@@ -47,7 +48,7 @@ class InfoOmMegServiceTest {
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(null);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(fremtidigSituasjon);
 
-        HovedmalData hovedmal = infoOmMegService.hentFremtidigSituasjon(new AktorId(brukerIdent), brukerIdent);
+        HovedmalData hovedmal = infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
 
         assertEquals(fremtidigSituasjon.getAlternativId(), hovedmal.getAlternativId());
         assertEquals(fremtidigSituasjon.getTekst(), hovedmal.getTekst());
@@ -65,7 +66,7 @@ class InfoOmMegServiceTest {
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registrering);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(null);
 
-        HovedmalData hovedmal = infoOmMegService.hentFremtidigSituasjon(new AktorId(brukerIdent), brukerIdent);
+        HovedmalData hovedmal = infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
 
         assertEquals(registrering.getRegistrering().getBesvarelse().getFremtidigSituasjon().name(), hovedmal.getAlternativId().name());
         assertEquals(registrering.getRegistrering().getOpprettetDato(), hovedmal.getDato());
@@ -78,14 +79,14 @@ class InfoOmMegServiceTest {
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(null);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(null);
 
-        HovedmalData hovedmal = infoOmMegService.hentFremtidigSituasjon(new AktorId(brukerIdent), brukerIdent);
+        HovedmalData hovedmal = infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
 
         assertNull(hovedmal);
     }
 
     @Test
     void hentFremtidigSituasjon_nyereRegistrering_medFremtidigSituasjon() {
-        Date hovedmalDate = DateUtils.addMinutes(new Date(), -1);
+        Date hovedmalDate = DateUtils.addMinutesToDate(new Date(), -1);
         Date registreringDate = Date.from(Instant.now());
         HovedmalData hovedmal = new HovedmalData()
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING)
@@ -96,7 +97,7 @@ class InfoOmMegServiceTest {
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registrering);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(hovedmal);
 
-        HovedmalData hovedmalData = infoOmMegService.hentFremtidigSituasjon(new AktorId(brukerIdent), brukerIdent);
+        HovedmalData hovedmalData = infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
 
         assertEquals(registrering.getRegistrering().getBesvarelse().getFremtidigSituasjon().name(), hovedmalData.getAlternativId().name());
         assertEquals(registrering.getRegistrering().getOpprettetDato(), hovedmalData.getDato());
@@ -105,7 +106,7 @@ class InfoOmMegServiceTest {
 
     @Test
     void hentFremtidigSituasjon_nyereRegistrering_utenFremtidigSituasjon() {
-        Date hovedmalDate = DateUtils.addMinutes(new Date(), -1);
+        Date hovedmalDate = DateUtils.addMinutesToDate(new Date(), -1);
         Date registreringDate = Date.from(Instant.now());
         HovedmalData hovedmal = new HovedmalData()
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER)
@@ -116,7 +117,7 @@ class InfoOmMegServiceTest {
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registrering);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(hovedmal);
 
-        HovedmalData hovedmalData = infoOmMegService.hentFremtidigSituasjon(new AktorId(brukerIdent), brukerIdent);
+        HovedmalData hovedmalData = infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
 
         assertEquals(HovedmalSvar.IKKE_OPPGITT, hovedmalData.getAlternativId());
         assertEquals(registreringDate, hovedmalData.getDato());
@@ -125,7 +126,7 @@ class InfoOmMegServiceTest {
 
     @Test
     void hentFremtidigSituasjon_nyereRegistrering_USIKKER() {
-        Date hovedmalDate = DateUtils.addMinutes(new Date(), -1);
+        Date hovedmalDate = DateUtils.addMinutesToDate(new Date(), -1);
         Date registreringDate = Date.from(Instant.now());
         HovedmalData hovedmal = new HovedmalData()
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING)
@@ -136,7 +137,7 @@ class InfoOmMegServiceTest {
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registrering);
         when(infoOmMegRepository.hentFremtidigSituasjonForAktorId(any())).thenReturn(hovedmal);
 
-        HovedmalData hovedmalData = infoOmMegService.hentFremtidigSituasjon(new AktorId(brukerIdent), brukerIdent);
+        HovedmalData hovedmalData = infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
 
         assertEquals(HovedmalSvar.IKKE_OPPGITT, hovedmalData.getAlternativId());
 
@@ -160,7 +161,7 @@ class InfoOmMegServiceTest {
         when(infoOmMegRepository.hentHelseHinderForAktorId(any())).thenReturn(helsehinder);
         when(infoOmMegRepository.hentAndreHinderForAktorId(any())).thenReturn(andrehinder);
 
-        InfoOmMegData sisteSituasjon = infoOmMegService.hentSisteSituasjon(new AktorId(brukerIdent), brukerIdent);
+        InfoOmMegData sisteSituasjon = infoOmMegService.hentSisteSituasjon(aktorId, fnr);
 
         assertEquals(fremtidigSituasjon.getAlternativId(), sisteSituasjon.getFremtidigSituasjonData().getAlternativId());
 
@@ -175,7 +176,7 @@ class InfoOmMegServiceTest {
     @Test
     void hentHelsehinder() {
         Date now = Date.from(Instant.now());
-        Date earlier = DateUtils.addMinutes(new Date(), -1);
+        Date earlier = DateUtils.addMinutesToDate(new Date(), -1);
 
         HelseOgAndreHensynData helseHinder = new HelseOgAndreHensynData()
                 .setDato(earlier)
@@ -186,11 +187,10 @@ class InfoOmMegServiceTest {
         when(infoOmMegRepository.hentHelseHinderForAktorId(any())).thenReturn(helseHinder);
         when(registreringClient.hentSisteRegistrering(any())).thenReturn(registreringWrapper);
 
-        HelseOgAndreHensynData helseHinderData = infoOmMegService.hentHelseHinder(new AktorId(brukerIdent), brukerIdent);
+        HelseOgAndreHensynData helseHinderData = infoOmMegService.hentHelseHinder(aktorId, fnr);
 
         assertEquals(HinderSvar.JA, helseHinderData.getVerdi());
         assertEquals(now, helseHinderData.getDato());
-
     }
 
     private BrukerRegistreringWrapper byggRegistreringsWrapper(Date dato, HinderSvar svar, FremtidigSituasjonSvar fremtidigSituasjonSvar) {

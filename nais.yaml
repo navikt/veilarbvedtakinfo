@@ -15,7 +15,7 @@ spec:
     - https://veilarbvedtakinfo.nais.adeo.no
   prometheus:
     enabled: true
-    path: veilarbvedtakinfo/internal/metrics
+    path: veilarbvedtakinfo/internal/prometheus
   readiness:
     path: veilarbvedtakinfo/internal/isReady
     initialDelay: 30

@@ -1,113 +1,160 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>no.nav.common</groupId>
-        <artifactId>mor-pom</artifactId>
-        <version>1.2020.02.21_09.07-69c044da9255</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.0.RELEASE</version>
+        <relativePath/>
     </parent>
 
     <groupId>no.nav.fo</groupId>
     <artifactId>veilarbvedtakinfo</artifactId>
     <version>1</version>
-    <packaging>war</packaging>
+    <name>veilarbvedtakinfo</name>
+    <description>Applikasjon for lagring av informasjon relatert til paragraf §14a vedtak</description>
 
-    <build>
-        <finalName>veilarbvedtakinfo</finalName>
-    </build>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>no.nav.common</groupId>
-                <artifactId>bom</artifactId>
-                <version>${project.parent.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>com.oracle.ojdbc</groupId>
-                <artifactId>ojdbc8</artifactId>
-                <version>19.3.0.0</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-
+    <properties>
+        <java.version>11</java.version>
+        <common.version>2.2020.08.03_12.26-bf51ea003411</common.version>
+        <springfox.version>2.9.2</springfox.version>
+    </properties>
 
     <dependencies>
+
+        <!-- spring boot bibliotek -->
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>oidc-security</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>rest</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jdbc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- felles bibliotek -->
+        <dependency>
             <groupId>no.nav.common</groupId>
-            <artifactId>api-app</artifactId>
+            <artifactId>feature-toggle</artifactId>
+            <version>${common.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>util</artifactId>
+            <version>${common.version}</version>
         </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>client</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>abac</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>sts</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>auth</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+
+        <!-- Misc -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
         </dependency>
+
+        <!-- Database -->
         <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <scope>compile</scope>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>3.2.0</version>
         </dependency>
         <dependency>
             <groupId>com.oracle.ojdbc</groupId>
             <artifactId>ojdbc8</artifactId>
+            <version>19.3.0.0</version>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>jdbc</artifactId>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>6.5.3</version>
+        </dependency>
+
+        <!-- Test -->
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.12.3</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>aktor-klient</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-        </dependency>
-        <!-- test -->
-        <dependency>
-            <groupId>no.nav.common</groupId>
-            <artifactId>test-config</artifactId>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>1.4.200</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

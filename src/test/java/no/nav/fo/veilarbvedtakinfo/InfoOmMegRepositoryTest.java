@@ -1,10 +1,7 @@
 package no.nav.fo.veilarbvedtakinfo;
 
-import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
-
 import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
@@ -17,7 +14,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static no.nav.fo.veilarbvedtakinfo.db.DbTestUtils.setupInMemoryContext;
 import static org.junit.Assert.*;
 
 public class InfoOmMegRepositoryTest {
@@ -28,11 +24,7 @@ public class InfoOmMegRepositoryTest {
 
     @BeforeEach
     public void setup() {
-        setupInMemoryContext();
-
         db = DbTestUtils.getTestDb();
-
-        DatabaseUtils.createTables(db);
         infoOmMegRepository = new InfoOmMegRepository(db);
     }
 
@@ -43,21 +35,19 @@ public class InfoOmMegRepositoryTest {
 
     @Test
     public void hentFremtidigSituasjon_empty_success() {
-       HovedmalData data = infoOmMegRepository.hentFremtidigSituasjonForAktorId(new AktorId(eksternIdent));
-
+       HovedmalData data = infoOmMegRepository.hentFremtidigSituasjonForAktorId(eksternIdent);
        assertNull(data);
     }
 
     @Test
     public void hentSituasjonHistorikk_empty_success() {
-        List<HovedmalData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId(eksternIdent));
-
+        List<HovedmalData> data = infoOmMegRepository.hentSituasjonHistorikk(eksternIdent);
         assertEquals(0, data.size());
     }
 
     @Test
     public void lagreFremtidigSituasjonForAktorId_success() {
-        AktorId aktorId = new AktorId(eksternIdent);
+        String aktorId = eksternIdent;
         HovedmalData data = new HovedmalData()
             .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER)
             .setTekst("Test");
@@ -73,35 +63,33 @@ public class InfoOmMegRepositoryTest {
 
     @Test
     public void hentSituasjonHistorikk_non_empty_success() throws InterruptedException {
-        HovedmalData svar1 = lagreFremtidigSituasjon(HovedmalSvar.NY_ARBEIDSGIVER, "Svar1", eksternIdent, eksternIdent);
+        HovedmalData svar1 = lagreFremtidigSituasjon(HovedmalSvar.NY_ARBEIDSGIVER, "Svar1", eksternIdent);
 
         Thread.sleep(5); //For å unngå identisk dato
 
-        HovedmalData svar2 = lagreFremtidigSituasjon(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING, "Svar2", eksternIdent, eksternIdent);
+        HovedmalData svar2 = lagreFremtidigSituasjon(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING, "Svar2", eksternIdent);
 
-        List<HovedmalData> data = infoOmMegRepository.hentSituasjonHistorikk(new AktorId(eksternIdent));
+        List<HovedmalData> data = infoOmMegRepository.hentSituasjonHistorikk(eksternIdent);
 
         assertEquals(svar2.getAlternativId(), data.get(0).getAlternativId());
         assertEquals(svar1.getAlternativId(), data.get(1).getAlternativId());
     }
 
-    private HovedmalData lagreFremtidigSituasjon(HovedmalSvar svarId, String tekst, String endretAv, String ident){
+    private HovedmalData lagreFremtidigSituasjon(HovedmalSvar svarId, String tekst, String endretAv){
         HovedmalData data = new HovedmalData()
                 .setAlternativId(svarId)
                 .setTekst(tekst);
 
-        infoOmMegRepository.lagreFremtidigSituasjonForAktorId(data, new AktorId(ident), endretAv);
+        infoOmMegRepository.lagreFremtidigSituasjonForAktorId(data, eksternIdent, endretAv);
         return data;
     }
 
     @Test
     public void lagreHelseHinderForAktorId_success() {
-        AktorId aktorId = new AktorId(eksternIdent);
-
         HelseOgAndreHensynData data = new HelseOgAndreHensynData()
                 .setVerdi(HinderSvar.NEI);
 
-        long id = infoOmMegRepository.lagreHelseHinderForAktorId(data, aktorId);
+        long id = infoOmMegRepository.lagreHelseHinderForAktorId(data, eksternIdent);
         HelseOgAndreHensynData actual = infoOmMegRepository.hentHelseHinderForId(id);
 
         assertEquals(data.getVerdi(), actual.getVerdi());
@@ -110,12 +98,10 @@ public class InfoOmMegRepositoryTest {
 
     @Test
     public void lagreAndreHinderForAktorId_success() {
-        AktorId aktorId = new AktorId(eksternIdent);
-
         HelseOgAndreHensynData data = new HelseOgAndreHensynData()
                 .setVerdi(HinderSvar.NEI);
 
-        long id = infoOmMegRepository.lagreAndreHinderForAktorId(data, aktorId);
+        long id = infoOmMegRepository.lagreAndreHinderForAktorId(data, eksternIdent);
         HelseOgAndreHensynData actual = infoOmMegRepository.hentAndreHinderForId(id);
 
         assertEquals(data.getVerdi(), actual.getVerdi());

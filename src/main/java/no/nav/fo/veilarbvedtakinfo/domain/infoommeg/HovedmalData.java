@@ -10,10 +10,10 @@ import java.util.Date;
 @Data
 @Accessors(chain = true)
 public class HovedmalData extends DataItem {
-    HovedmalSvar alternativId;
-    String tekst;
-    EndretAvType endretAv;
-    Date dato;
+    private HovedmalSvar alternativId;
+    private String tekst;
+    private EndretAvType endretAv;
+    private Date dato;
 
     public HovedmalData setEndretAv(String endretAv) {
         this.endretAv =  isNumeric(endretAv)? EndretAvType.BRUKER: EndretAvType.VEILEDER;
