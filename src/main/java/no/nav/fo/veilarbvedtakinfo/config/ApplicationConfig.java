@@ -3,6 +3,7 @@ package no.nav.fo.veilarbvedtakinfo.config;
 import no.nav.apiapp.ApiApplication;
 import no.nav.apiapp.config.ApiAppConfigurator;
 import no.nav.brukerdialog.security.domain.IdentType;
+import no.nav.common.oidc.Constants;
 import no.nav.common.oidc.auth.OidcAuthenticatorConfig;
 import no.nav.dialogarena.aktor.AktorConfig;
 import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
@@ -34,6 +35,17 @@ public class ApplicationConfig implements ApiApplication {
     @Inject
     private JdbcTemplate jdbcTemplate;
 
+    private OidcAuthenticatorConfig createVeilarbloginAADConfig() {
+        String discoveryUrl = getRequiredProperty("AAD_DISCOVERY_URL");
+        String clientId = getRequiredProperty("VEILARBLOGIN_AAD_CLIENT_ID");
+
+        return new OidcAuthenticatorConfig()
+                .withDiscoveryUrl(discoveryUrl)
+                .withClientId(clientId)
+                .withIdTokenCookieName(Constants.ISSO_ID_TOKEN_COOKIE_NAME)
+                .withIdentType(IdentType.InternBruker);
+    }
+
     private OidcAuthenticatorConfig createOpenAmAuthenticatorConfig() {
         String discoveryUrl = getRequiredProperty("OPENAM_DISCOVERY_URL");
         String clientId = getRequiredProperty("VEILARBLOGIN_OPENAM_CLIENT_ID");
@@ -64,6 +76,7 @@ public class ApplicationConfig implements ApiApplication {
         apiAppConfigurator
                 .addOidcAuthenticator(createOpenAmAuthenticatorConfig())
                 .addOidcAuthenticator(createAzureAdB2CConfig())
+                .addOidcAuthenticator(createVeilarbloginAADConfig())
                 .sts();
     }
 
