@@ -1,6 +1,8 @@
 package no.nav.fo.veilarbvedtakinfo.config;
 
-import no.nav.fo.veilarbvedtakinfo.service.*;
+import no.nav.fo.veilarbvedtakinfo.service.ArbeidSitasjonService;
+import no.nav.fo.veilarbvedtakinfo.service.BehovsvurderingService;
+import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -8,7 +10,6 @@ import org.springframework.context.annotation.Import;
 @Import({
         ArbeidSitasjonService.class,
         BehovsvurderingService.class,
-        InfoOmMegService.class,
-        UserService.class
+        InfoOmMegService.class
 })
 public class ServiceTestConfig { }

@@ -1,11 +1,12 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
+import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
+import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 
 import java.sql.ResultSet;
 import java.util.Date;
@@ -34,13 +35,13 @@ public class BehovsvurderingRepository {
         this.db = db;
     }
 
-    public long lagNyBesvarlse(String aktorId) {
+    public long lagNyBesvarlse(AktorId aktorId) {
         long id = DatabaseUtils.nesteFraSekvens(db, SEQ);
         String sql = format(
                 "INSERT INTO %s (%s, %s, %s) VALUES (?,?,?)",
                 BESVARLSE_TABLE_NAME, BESVARELSE_ID, AKTOR_ID, SIST_OPPDATERT
         );
-        db.update(sql, id, aktorId, new Date());
+        db.update(sql, id, aktorId.get(), new Date());
         return  id;
     }
 
@@ -71,9 +72,9 @@ public class BehovsvurderingRepository {
         return bv;
     }
 
-    public Besvarelse hentSisteBesvarelse(String aktorId) {
-        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %d ORDER BY SIST_OPPDATERT DESC) WHERE ROWNUM <=1",
-                            BESVARLSE_TABLE_NAME, AKTOR_ID, aktorId);
+    public Besvarelse hentSisteBesvarelse(AktorId aktorId) {
+        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %s ORDER BY SIST_OPPDATERT DESC) WHERE ROWNUM <=1",
+                            BESVARLSE_TABLE_NAME, AKTOR_ID, aktorId.get());
 
         Besvarelse bv =  db.query(sql, BehovsvurderingRepository::besvarelseMapper);
         if (bv == null) {

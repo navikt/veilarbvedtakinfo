@@ -1,48 +1,45 @@
 package no.nav.fo.veilarbvedtakinfo.controller;
 
 import io.swagger.annotations.Api;
-import no.nav.common.abac.Pep;
-import no.nav.common.client.aktorregister.AktorregisterClient;
+import no.nav.common.types.identer.AktorId;
+import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjon;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjonSvar;
 import no.nav.fo.veilarbvedtakinfo.service.ArbeidSitasjonService;
-import no.nav.fo.veilarbvedtakinfo.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import no.nav.fo.veilarbvedtakinfo.service.AuthService;
+import no.nav.fo.veilarbvedtakinfo.utils.FnrUtils;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/situasjon")
 @Api(value = "ArbeidsSituasjonController")
 public class ArbeidsSituasjonController {
-    private final UserService userService;
-    private final AktorregisterClient aktorregisterClient;
-    private final Pep pep;
+
+    private final AuthService authService;
     private final ArbeidSitasjonService service;
 
-    public ArbeidsSituasjonController(ArbeidSitasjonService service, UserService userService, AktorregisterClient aktorregisterClient, Pep pep) {
-        this.userService = userService;
-        this.aktorregisterClient = aktorregisterClient;
-        this.pep = pep;
+    public ArbeidsSituasjonController(AuthService authService, ArbeidSitasjonService service) {
+        this.authService = authService;
         this.service = service;
     }
 
     @PostMapping
-    public void besvarelse(ArbeidSituasjonSvar svar) {
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
-        userService.sjekkLeseTilgangTilPerson(aktorId);
-        boolean erEksternBruker = userService.erEksternBruker();
-        String avsenderID = userService.getUid();
-        service.nytSvar(svar, aktorId, avsenderID, erEksternBruker);
+    public void besvarelse(@RequestBody ArbeidSituasjonSvar svar, @RequestParam(required = false, name = "fnr") Fnr fnr) {
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
+
+        authService.sjekkLeseTilgangTilPerson(aktorId);
+
+        service.nytSvar(svar, aktorId, authService.hentInnloggetSubject(), authService.erEksternBruker());
     }
 
     @GetMapping
-    public ArbeidSituasjon hentBesvarelse() {
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
-        userService.sjekkLeseTilgangTilPerson(aktorId);
+    public ArbeidSituasjon hentBesvarelse(@RequestParam(required = false, name = "fnr") Fnr fnr) {
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
+
+        authService.sjekkLeseTilgangTilPerson(aktorId);
+
         return service.fetchSvar(aktorId);
     }
 

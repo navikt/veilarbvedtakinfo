@@ -6,9 +6,11 @@ import no.nav.common.health.HealthCheckUtils;
 import no.nav.common.rest.client.RestClient;
 import no.nav.common.rest.client.RestUtils;
 import no.nav.common.sts.SystemUserTokenProvider;
+import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.InternalServerErrorException;
 
@@ -38,11 +40,12 @@ public class RegistreringClientImpl implements RegistreringClient {
         this.baseUrl = getRequiredProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME);
     }
 
-    public BrukerRegistreringWrapper hentSisteRegistrering(String fnr) {
+    @Override
+    public BrukerRegistreringWrapper hentSisteRegistrering(Fnr fnr) {
         String cookies = httpServletRequest.getHeader(COOKIE);
 
         Request request = new Request.Builder()
-                .url(joinPaths(baseUrl, format("/veilarbregistrering/api/registrering?fnr==%d", fnr)))
+                .url(joinPaths(baseUrl, format("/veilarbregistrering/api/registrering?fnr=%s", fnr.get())))
                 .header(COOKIE, cookies)
                 .header(AUTHORIZATION, "Bearer " + systemUserTokenProvider.getSystemUserToken())
                 .build();

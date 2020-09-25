@@ -1,6 +1,5 @@
 package no.nav.fo.veilarbvedtakinfo.test;
 
-import no.nav.common.abac.Pep;
 import no.nav.common.client.aktorregister.AktorregisterClient;
 import no.nav.fo.veilarbvedtakinfo.controller.InfoOmMegController;
 import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
@@ -9,13 +8,11 @@ import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.mock.RegistreringClientMock;
-
+import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
-import no.nav.fo.veilarbvedtakinfo.service.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
@@ -32,7 +29,6 @@ class InfoOmMegControllerIntegrationTest {
 
     private static JdbcTemplate db;
     private static InfoOmMegController infoOmMegController;
-    private static UserService userService;
     private static AktorregisterClient aktorregisterClient;
 
     public static String eksernIdent = "123";
@@ -44,13 +40,10 @@ class InfoOmMegControllerIntegrationTest {
 
         db = DbTestUtils.getTestDb();
 
-        userService = mock(UserService.class);
         aktorregisterClient = mock(AktorregisterClient.class);
         infoOmMegController = new InfoOmMegController(
                 new InfoOmMegService(new InfoOmMegRepository(db), new RegistreringClientMock()),
-                userService,
-                aktorregisterClient,
-                mock(Pep.class)
+                mock(AuthService.class)
         );
     }
 

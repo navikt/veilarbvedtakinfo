@@ -1,12 +1,15 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
+import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.motestotte.Motestotte;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
 import java.sql.ResultSet;
 import java.util.Date;
+
 import static java.lang.String.format;
 
 @Repository
@@ -21,7 +24,7 @@ public class MotestotteRepository {
         this.db = db;
     }
 
-    public void oppdaterMotestotte(String aktorId) {
+    public void oppdaterMotestotte(AktorId aktorId) {
         try {
             String sql = format(
                     "INSERT INTO %s (%s, %s) VALUES (?,?)",
@@ -29,6 +32,7 @@ public class MotestotteRepository {
             );
             db.update(sql, new Date(), aktorId);
         } catch (DuplicateKeyException e) {
+            // TODO: Her mangler det vel litt SQL?
                 format(
                       "UPDATE " + TABLE_NAME +
                       " SET " + DATO + " = " + new Date() +
@@ -37,9 +41,9 @@ public class MotestotteRepository {
         }
     }
 
-    public Motestotte hentMoteStotte(String aktorId) {
-        String sql = format("SELECT * FROM %s WHERE %s = %d",
-                TABLE_NAME, AKTOR_ID, aktorId);
+    public Motestotte hentMoteStotte(AktorId aktorId) {
+        String sql = format("SELECT * FROM %s WHERE %s = %s",
+                TABLE_NAME, AKTOR_ID, aktorId.get());
         return db.query(sql, MotestotteRepository::motestotteMapper);
     }
 

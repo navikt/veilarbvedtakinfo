@@ -1,12 +1,13 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
+import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjon;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjonSvar;
+import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 
 import java.sql.ResultSet;
 
@@ -32,19 +33,19 @@ public class ArbeidSitasjonRepository {
     }
 
 
-    public long lagreSitasjon(String aktorId, EndretAvType endretAv, String avsenderID, ArbeidSituasjonSvar svar) {
+    public long lagreSitasjon(AktorId aktorId, EndretAvType endretAv, String avsenderID, ArbeidSituasjonSvar svar) {
         long id = DatabaseUtils.nesteFraSekvens(db, MIN_SITUASJON_SEQ);
         String sql = format(
-                "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?)",
+                "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?,?)",
                 MIN_SITUASJON, ID, AKTOR_ID, OPRETTET, ENDRET_AV_ID, ENDRET_AV_TYPE, SVAR_ID, SVAR_TEXT
         );
-        db.update(sql, id, aktorId, "CURRENT_TIMESTAMP", avsenderID, endretAv.toString(), svar.svarId, svar.svarTekst);
+        db.update(sql, id, aktorId.get(), "CURRENT_TIMESTAMP", avsenderID, endretAv.toString(), svar.svarId, svar.svarTekst);
         return id;
     }
 
-    public ArbeidSituasjon hentSituasjon(String aktorId) {
+    public ArbeidSituasjon hentSituasjon(AktorId aktorId) {
         String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %d ORDER BY OPRETTET DESC) WHERE ROWNUM <=1 ",
-                            MIN_SITUASJON, AKTOR_ID, aktorId, OPRETTET
+                            MIN_SITUASJON, AKTOR_ID, aktorId.get(), OPRETTET
         );
         return db.query(sql, ArbeidSitasjonRepository::fremtidigSituasjonMapper);
     }

@@ -1,13 +1,15 @@
 package no.nav.fo.veilarbvedtakinfo.service;
-import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 
+import no.nav.common.types.identer.AktorId;
+import no.nav.common.types.identer.Fnr;
+import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.*;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistrering;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.FremtidigSituasjonSvar;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,18 +19,18 @@ public class InfoOmMegService {
     private final InfoOmMegRepository infoOmMegRepository;
     private final RegistreringClient registreringClient;
 
-    public InfoOmMegService(InfoOmMegRepository infoOmMegRepository,
-                            RegistreringClient registreringClient) {
+    @Autowired
+    public InfoOmMegService(InfoOmMegRepository infoOmMegRepository, RegistreringClient registreringClient) {
         this.infoOmMegRepository = infoOmMegRepository;
         this.registreringClient = registreringClient;
     }
 
-    public HovedmalData hentFremtidigSituasjon(String aktorId, String fnr) {
+    public HovedmalData hentFremtidigSituasjon(AktorId aktorId, Fnr fnr) {
         BrukerRegistreringWrapper registreringWrapper = registreringClient.hentSisteRegistrering(fnr);
         return hentFremtidigSituasjon(aktorId, registreringWrapper);
     }
 
-    private HovedmalData hentFremtidigSituasjon(String aktorId, BrukerRegistreringWrapper registreringWrapper) {
+    private HovedmalData hentFremtidigSituasjon(AktorId aktorId, BrukerRegistreringWrapper registreringWrapper) {
         HovedmalData hovedmalData = infoOmMegRepository.hentFremtidigSituasjonForAktorId(aktorId);
 
         if (registreringWrapper != null) {
@@ -51,19 +53,19 @@ public class InfoOmMegService {
         return hovedmalData;
     }
 
-    public HovedmalData lagreFremtidigSituasjon(HovedmalData fremtidigSituasjon, String aktorId, String endretAv) {
+    public HovedmalData lagreFremtidigSituasjon(HovedmalData fremtidigSituasjon, AktorId aktorId, String endretAv) {
         long id = infoOmMegRepository.lagreFremtidigSituasjonForAktorId(fremtidigSituasjon, aktorId, endretAv);
 
         return infoOmMegRepository.hentFremtidigSituasjonForId(id);
 
     }
 
-    public HelseOgAndreHensynData hentHelseHinder(String aktorId, String fnr) {
+    public HelseOgAndreHensynData hentHelseHinder(AktorId aktorId, Fnr fnr) {
         BrukerRegistreringWrapper registreringWrapper = registreringClient.hentSisteRegistrering(fnr);
         return hentHelseHinder(aktorId, registreringWrapper);
     }
 
-    private HelseOgAndreHensynData hentHelseHinder(String aktorId, BrukerRegistreringWrapper registreringWrapper) {
+    private HelseOgAndreHensynData hentHelseHinder(AktorId aktorId, BrukerRegistreringWrapper registreringWrapper) {
         HelseOgAndreHensynData helseData = infoOmMegRepository.hentHelseHinderForAktorId(aktorId);
 
         if(registreringWrapper != null) {
@@ -77,17 +79,17 @@ public class InfoOmMegService {
         return helseData;
     }
 
-    public HelseOgAndreHensynData lagreHelseHinder(HelseOgAndreHensynData helseOgAndreHensynData, String aktorId){
+    public HelseOgAndreHensynData lagreHelseHinder(HelseOgAndreHensynData helseOgAndreHensynData, AktorId aktorId){
         long id = infoOmMegRepository.lagreHelseHinderForAktorId(helseOgAndreHensynData, aktorId);
         return infoOmMegRepository.hentHelseHinderForId(id);
     }
 
-    public HelseOgAndreHensynData hentAndreHinder(String aktorId, String fnr) {
+    public HelseOgAndreHensynData hentAndreHinder(AktorId aktorId, Fnr fnr) {
         BrukerRegistreringWrapper registreringWrapper = registreringClient.hentSisteRegistrering(fnr);
         return hentAndreHinder(aktorId, registreringWrapper);
     }
 
-    private HelseOgAndreHensynData hentAndreHinder(String aktorId, BrukerRegistreringWrapper registreringWrapper) {
+    private HelseOgAndreHensynData hentAndreHinder(AktorId aktorId, BrukerRegistreringWrapper registreringWrapper) {
         HelseOgAndreHensynData andreHinderData = infoOmMegRepository.hentAndreHinderForAktorId(aktorId);
 
         if(registreringWrapper != null) {
@@ -101,12 +103,12 @@ public class InfoOmMegService {
         return andreHinderData;
     }
 
-    public HelseOgAndreHensynData lagreAndreHinder(HelseOgAndreHensynData helseOgAndreHensynData, String aktorId){
+    public HelseOgAndreHensynData lagreAndreHinder(HelseOgAndreHensynData helseOgAndreHensynData, AktorId aktorId){
         long id = infoOmMegRepository.lagreAndreHinderForAktorId(helseOgAndreHensynData, aktorId);
         return infoOmMegRepository.hentAndreHinderForId(id);
     }
 
-    public InfoOmMegData hentSisteSituasjon(String aktorId, String fnr) {
+    public InfoOmMegData hentSisteSituasjon(AktorId aktorId, Fnr fnr) {
         BrukerRegistreringWrapper registreringWrapper = registreringClient.hentSisteRegistrering(fnr);
 
         return new InfoOmMegData()
@@ -115,7 +117,7 @@ public class InfoOmMegService {
                 .setAndreHinder(hentAndreHinder(aktorId, registreringWrapper));
     }
 
-    public List<HovedmalData> hentSituasjonHistorikk(String aktorId) {
+    public List<HovedmalData> hentSituasjonHistorikk(AktorId aktorId) {
         return infoOmMegRepository.hentSituasjonHistorikk(aktorId);
     }
 

@@ -1,7 +1,7 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 
+import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.db.BehovsvurderingRepository;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class BehovsvurderingService {
         this.behovsvurderingRepository = behovsvurderingRepository;
     }
 
-    public Besvarelse nyBesvarlse(String aktorId, Svar svar) {
+    public Besvarelse nyBesvarlse(AktorId aktorId, Svar svar) {
         Long besvarsleId = Optional.ofNullable(svar.besvarelseId)
                 .orElse(behovsvurderingRepository.lagNyBesvarlse(aktorId));
         behovsvurderingRepository.leggTilNyttSvarPaBesvarelsen(besvarsleId, svar);
@@ -27,7 +27,7 @@ public class BehovsvurderingService {
         return behovsvurderingRepository.hentBesvarelse(besvarlseId);
     }
 
-    public Besvarelse hentBesvarelse(String aktorId) {
+    public Besvarelse hentBesvarelse(AktorId aktorId) {
         return behovsvurderingRepository.hentSisteBesvarelse(aktorId);
     }
 }
