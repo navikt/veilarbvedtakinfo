@@ -24,6 +24,15 @@
         <springfox.version>2.9.2</springfox.version>
     </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+        <finalName>veilarbvedtakinfo</finalName>
+    </build>
 
     <dependencies>
         <!-- spring boot bibliotek -->
