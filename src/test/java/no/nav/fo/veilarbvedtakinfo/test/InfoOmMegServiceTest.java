@@ -10,7 +10,6 @@ import no.nav.fo.veilarbvedtakinfo.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import java.time.Instant;
 import java.util.*;
 
