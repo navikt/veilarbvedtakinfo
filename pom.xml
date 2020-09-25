@@ -24,8 +24,8 @@
         <springfox.version>2.9.2</springfox.version>
     </properties>
 
-    <dependencies>
 
+    <dependencies>
         <!-- spring boot bibliotek -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
