@@ -13,20 +13,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.Produces;
-
 @RestController
 @RequestMapping("/api/behovsvurdering")
-@Produces("application/json")
-@Api(value = "BehovsvurderingResource", description = "Tjenester for deling behovsvurdering besvarelse")
-
-public class BehovsvurderingResource {
+@Api(value = "BehovsvurderingController", description = "Tjenester for deling behovsvurdering besvarelse")
+public class BehovsvurderingController {
     private final BehovsvurderingService bvService;
     private final UserService userService;
     private final AktorregisterClient aktorregisterClient;
     private final Pep pep;
 
-    public BehovsvurderingResource(
+    public BehovsvurderingController(
             BehovsvurderingService bvService,
             UserService userService,
             AktorregisterClient aktorregisterClient,

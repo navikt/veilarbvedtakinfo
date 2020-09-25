@@ -52,7 +52,7 @@ public class FilterConfig {
     public FilterRegistrationBean logFilterRegistrationBean() {
         FilterRegistrationBean<LogFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new LogFilter(requireApplicationName(), isDevelopment().orElse(false)));
-        registration.setOrder(3);
+        registration.setOrder(1);
         registration.addUrlPatterns("/*");
         return registration;
     }
@@ -61,7 +61,7 @@ public class FilterConfig {
     public FilterRegistrationBean setStandardHeadersFilterRegistrationBean() {
         FilterRegistrationBean<SetStandardHttpHeadersFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new SetStandardHttpHeadersFilter());
-        registration.setOrder(4);
+        registration.setOrder(3);
         registration.addUrlPatterns("/*");
         return registration;
     }

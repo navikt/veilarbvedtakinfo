@@ -12,7 +12,6 @@ public class EnvironmentProperties {
     private String aktorregisterUrl;
     private String stsDiscoveryUrl;
     private String dbUrl;
-    private String cxfStsUrl;
     private String openAmDiscoveryUrl;
     private String openAmRedirectUrl;
     private String openAmClientId;

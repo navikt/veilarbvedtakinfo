@@ -19,7 +19,7 @@ import static no.nav.common.utils.UrlUtils.joinPaths;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 @Slf4j
-public class RegistreringClientImpl extends BaseClient implements RegistreringClient {
+public class RegistreringClientImpl implements RegistreringClient {
 
     public static final String VEILARBREGISTRERING_URL_PROPERTY_NAME = "VEILARBREGISTRERING_URL";
 
@@ -29,11 +29,13 @@ public class RegistreringClientImpl extends BaseClient implements RegistreringCl
 
     private final OkHttpClient client;
 
+    private final String baseUrl;
+
     public RegistreringClientImpl(HttpServletRequest httpServletRequest, SystemUserTokenProvider systemUserTokenProvider) {
-        super(getRequiredProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME), httpServletRequest);
         this.httpServletRequest = httpServletRequest;
         this.systemUserTokenProvider = systemUserTokenProvider;
         this.client = RestClient.baseClient();
+        this.baseUrl = getRequiredProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME);
     }
 
     public BrukerRegistreringWrapper hentSisteRegistrering(String fnr) {

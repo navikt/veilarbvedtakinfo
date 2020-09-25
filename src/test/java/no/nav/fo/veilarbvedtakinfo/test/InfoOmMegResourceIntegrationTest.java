@@ -2,13 +2,13 @@ package no.nav.fo.veilarbvedtakinfo.test;
 
 import no.nav.common.abac.Pep;
 import no.nav.common.client.aktorregister.AktorregisterClient;
+import no.nav.fo.veilarbvedtakinfo.controller.InfoOmMegController;
 import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.mock.RegistreringClientMock;
-import no.nav.fo.veilarbvedtakinfo.controller.InfoOmMegResource;
 
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
@@ -28,10 +28,10 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class InfoOmMegResourceIntegrationTest {
+class InfoOmMegControllerIntegrationTest {
 
     private static JdbcTemplate db;
-    private static InfoOmMegResource infoOmMegResource;
+    private static InfoOmMegController infoOmMegController;
     private static UserService userService;
     private static AktorregisterClient aktorregisterClient;
 
@@ -46,7 +46,7 @@ class InfoOmMegResourceIntegrationTest {
 
         userService = mock(UserService.class);
         aktorregisterClient = mock(AktorregisterClient.class);
-        infoOmMegResource = new InfoOmMegResource(
+        infoOmMegController = new InfoOmMegController(
                 new InfoOmMegService(new InfoOmMegRepository(db), new RegistreringClientMock()),
                 userService,
                 aktorregisterClient,
@@ -69,7 +69,7 @@ class InfoOmMegResourceIntegrationTest {
         when(userService.erEksternBruker()).thenReturn(true);
         when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent);
 
-        HovedmalData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
+        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data);
 
 
         assertNotEquals(null, actualData.getDato());
@@ -87,7 +87,7 @@ class InfoOmMegResourceIntegrationTest {
         when(userService.getUid()).thenReturn("Z123");
         when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent);
 
-        HovedmalData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
+        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data);
 
         assertEquals(EndretAvType.VEILEDER, actualData.getEndretAv());
 
@@ -112,14 +112,14 @@ class InfoOmMegResourceIntegrationTest {
         when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent);
         when(userService.hentFnrFraUrlEllerToken()).thenReturn(eksernIdent);
 
-        infoOmMegResource.oppdaterFremtidigSituasjon(svar1);
-        infoOmMegResource.oppdaterFremtidigSituasjon(svar2);
+        infoOmMegController.oppdaterFremtidigSituasjon(svar1);
+        infoOmMegController.oppdaterFremtidigSituasjon(svar2);
 
         when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent2);
         when(userService.hentFnrFraUrlEllerToken()).thenReturn(eksernIdent2);
 
-        infoOmMegResource.oppdaterFremtidigSituasjon(svar3);
-        List<HovedmalData> data = infoOmMegResource.hentSituasjonListe();
+        infoOmMegController.oppdaterFremtidigSituasjon(svar3);
+        List<HovedmalData> data = infoOmMegController.hentSituasjonListe();
 
         assertEquals(1, data.size());
     }

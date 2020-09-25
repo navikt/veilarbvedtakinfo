@@ -1,7 +1,6 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 
 import no.nav.fo.veilarbvedtakinfo.db.ArbeidSitasjonRepository;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjon;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjonSvar;

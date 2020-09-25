@@ -3,15 +3,15 @@ package no.nav.fo.veilarbvedtakinfo.config;
 import no.nav.common.abac.Pep;
 import no.nav.common.client.aktorregister.AktorregisterClient;
 import no.nav.common.sts.SystemUserTokenProvider;
+import no.nav.fo.veilarbvedtakinfo.controller.ArbeidsSituasjonController;
+import no.nav.fo.veilarbvedtakinfo.controller.BehovsvurderingController;
+import no.nav.fo.veilarbvedtakinfo.controller.InfoOmMegController;
 import no.nav.fo.veilarbvedtakinfo.db.ArbeidSitasjonRepository;
 import no.nav.fo.veilarbvedtakinfo.db.BehovsvurderingRepository;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.db.MotestotteRepository;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
-import no.nav.fo.veilarbvedtakinfo.controller.ArbeidsSituasjonResource;
-import no.nav.fo.veilarbvedtakinfo.controller.BehovsvurderingResource;
-import no.nav.fo.veilarbvedtakinfo.controller.InfoOmMegResource;
-import no.nav.fo.veilarbvedtakinfo.controller.MotestotteResource;
+import no.nav.fo.veilarbvedtakinfo.controller.MotestotteController;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClientImpl;
 import no.nav.fo.veilarbvedtakinfo.service.ArbeidSitasjonService;
 import no.nav.fo.veilarbvedtakinfo.service.BehovsvurderingService;
@@ -34,11 +34,11 @@ class ServiceBeans {
     }
 
     @Bean
-    InfoOmMegResource infoOmMegResource(InfoOmMegService infoOmMegService,
-                                        UserService userService,
-                                        AktorregisterClient aktorregisterClient,
-                                        Pep pep) {
-        return new InfoOmMegResource(infoOmMegService, userService, aktorregisterClient, pep);
+    InfoOmMegController infoOmMegController(InfoOmMegService infoOmMegService,
+                                          UserService userService,
+                                          AktorregisterClient aktorregisterClient,
+                                          Pep pep) {
+        return new InfoOmMegController(infoOmMegService, userService, aktorregisterClient, pep);
     }
 
     @Bean
@@ -57,11 +57,11 @@ class ServiceBeans {
     }
 
     @Bean
-    BehovsvurderingResource behovsvurderingResource(BehovsvurderingService behovsvurderingService,
-                                                    UserService userService,
-                                                    AktorregisterClient aktorregisterClient,
-                                                    Pep pep) {
-        return new BehovsvurderingResource(behovsvurderingService, userService, aktorregisterClient, pep);
+    BehovsvurderingController behovsvurderingController(BehovsvurderingService behovsvurderingService,
+                                                        UserService userService,
+                                                        AktorregisterClient aktorregisterClient,
+                                                        Pep pep) {
+        return new BehovsvurderingController(behovsvurderingService, userService, aktorregisterClient, pep);
     }
 
     @Bean
@@ -80,11 +80,11 @@ class ServiceBeans {
     }
 
     @Bean
-    MotestotteResource motestotteResource(MotestotteRepository motestotteRepository,
+    MotestotteController motestotteController(MotestotteRepository motestotteRepository,
                                           UserService userService,
                                           AktorregisterClient aktorregisterClient,
                                           Pep pep) {
-        return new MotestotteResource(motestotteRepository, userService, aktorregisterClient, pep);
+        return new MotestotteController(motestotteRepository, userService, aktorregisterClient, pep);
     }
 
     @Bean
@@ -98,10 +98,10 @@ class ServiceBeans {
     }
 
     @Bean
-    ArbeidsSituasjonResource arbeidsSituasjonResource(ArbeidSitasjonService arbeidSitasjonService,
+    ArbeidsSituasjonController arbeidsSituasjonController(ArbeidSitasjonService arbeidSitasjonService,
                                           UserService userService,
                                           AktorregisterClient aktorregisterClient,
                                           Pep pep) {
-        return new ArbeidsSituasjonResource(arbeidSitasjonService, userService, aktorregisterClient, pep);
+        return new ArbeidsSituasjonController(arbeidSitasjonService, userService, aktorregisterClient, pep);
     }
 }

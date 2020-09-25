@@ -4,8 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import no.nav.common.abac.Pep;
 import no.nav.common.client.aktorregister.AktorregisterClient;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.InfoOmMegData;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
@@ -14,21 +14,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.Produces;
-
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Produces("application/json")
-@Api(value = "InfoOmMegResource", description = "Tjenester for deling av arbeidssøkerstatus.")
-public class InfoOmMegResource {
+@Api(value = "InfoOmMegController", description = "Tjenester for deling av arbeidssøkerstatus.")
+public class InfoOmMegController {
     private final InfoOmMegService infoOmMegService;
     private final UserService userService;
     private final AktorregisterClient aktorregisterClient;
     private final Pep pep;
 
-    public InfoOmMegResource(InfoOmMegService infoOmMegService,
+    public InfoOmMegController(InfoOmMegService infoOmMegService,
                              UserService userService,
                              AktorregisterClient aktorregisterClient,
                              Pep pep){

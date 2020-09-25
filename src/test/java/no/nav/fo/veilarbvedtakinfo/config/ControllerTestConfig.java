@@ -6,9 +6,9 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({
-        ArbeidsSituasjonResource.class,
-        BehovsvurderingResource.class,
-        InfoOmMegResource.class,
-        MotestotteResource.class,
+        ArbeidsSituasjonController.class,
+        BehovsvurderingController.class,
+        InfoOmMegController.class,
+        MotestotteController.class,
 })
 public class ControllerTestConfig {}
