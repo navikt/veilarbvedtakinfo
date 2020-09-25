@@ -1,16 +1,15 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.motestotte.Motestotte;
-import no.nav.sbl.sql.SqlUtils;
-import no.nav.sbl.sql.where.WhereClause;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
-
+import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.util.Date;
+import static java.lang.String.format;
 
+@Repository
 public class MotestotteRepository {
 
     private JdbcTemplate db;
@@ -22,28 +21,27 @@ public class MotestotteRepository {
         this.db = db;
     }
 
-    public void oppdaterMotestotte(AktorId aktorId) {
+    public void oppdaterMotestotte(String aktorId) {
         try {
-            SqlUtils.insert(db, TABLE_NAME)
-                    .value(DATO, new Date())
-                    .value(AKTOR_ID, aktorId.getAktorId())
-                    .execute();
+            String sql = format(
+                    "INSERT INTO %s (%s, %s) VALUES (?,?)",
+                    TABLE_NAME, DATO, AKTOR_ID
+            );
+            db.update(sql, new Date(), aktorId);
         } catch (DuplicateKeyException e) {
-            SqlUtils.update(db, TABLE_NAME)
-                    .set(DATO, new Date())
-                    .whereEquals(AKTOR_ID, aktorId.getAktorId())
-                    .execute();
+                format(
+                      "UPDATE " + TABLE_NAME +
+                      " SET " + DATO + " = " + new Date() +
+                      " WHERE " + AKTOR_ID + " = " + aktorId
+                );
         }
     }
 
-
-    public Motestotte hentMoteStotte(AktorId aktorId) {
-        return SqlUtils.select(db, TABLE_NAME, MotestotteRepository::motestotteMapper)
-                .where(WhereClause.equals(AKTOR_ID, aktorId.getAktorId()))
-                .column("*")
-                .execute();
+    public Motestotte hentMoteStotte(String aktorId) {
+        String sql = format("SELECT * FROM %s WHERE %s = %d",
+                TABLE_NAME, AKTOR_ID, aktorId);
+        return db.query(sql, MotestotteRepository::motestotteMapper);
     }
-
 
     @SneakyThrows
     private static Motestotte motestotteMapper(ResultSet rs) {

@@ -1,18 +1,19 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
-import no.nav.sbl.sql.SqlUtils;
-import no.nav.sbl.sql.order.OrderClause;
-import no.nav.sbl.sql.where.WhereClause;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 
 import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.String.format;
+
+@Repository
 public class BehovsvurderingRepository {
 
     private JdbcTemplate db;
@@ -33,68 +34,54 @@ public class BehovsvurderingRepository {
         this.db = db;
     }
 
-    public long lagNyBesvarlse(AktorId aktorId) {
+    public long lagNyBesvarlse(String aktorId) {
         long id = DatabaseUtils.nesteFraSekvens(db, SEQ);
-        SqlUtils.insert(db, BESVARLSE_TABLE_NAME)
-                .value(BESVARELSE_ID, id)
-                .value(AKTOR_ID, aktorId.getAktorId())
-                .value(SIST_OPPDATERT, new Date())
-                .execute();
-
-        return id;
+        String sql = format(
+                "INSERT INTO %s (%s, %s, %s) VALUES (?,?,?)",
+                BESVARLSE_TABLE_NAME, BESVARELSE_ID, AKTOR_ID, SIST_OPPDATERT
+        );
+        db.update(sql, id, aktorId, new Date());
+        return  id;
     }
 
     public void leggTilNyttSvarPaBesvarelsen(long besvarlseId, Svar svar) {
         Date sistOppdatertDato = new Date();
-        SqlUtils.insert(db, SPM_SVAR_TABLE_NAME)
-                .value(BESVARELSE_ID, besvarlseId)
-                .value(SPM_ID, svar.spmId)
-                .value(SVAR, svar.svar)
-                .value(SPM, svar.spm)
-                .value(DATO, sistOppdatertDato)
-                .execute();
+        String sql = format(
+                "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?)",
+                SPM_SVAR_TABLE_NAME, BESVARELSE_ID, SPM_ID, SVAR, SPM, DATO
+        );
+        db.update(sql, besvarlseId, svar.spmId, svar.svar, svar.spm, sistOppdatertDato);
 
-        SqlUtils.update(db, BESVARLSE_TABLE_NAME)
-                .whereEquals(BESVARELSE_ID, besvarlseId)
-                .set(SIST_OPPDATERT, sistOppdatertDato)
-                .execute();
-
+        String sql1 = format(
+                "UPDATE " + BESVARLSE_TABLE_NAME +
+                        " SET " + BESVARELSE_ID + " = ?, " +
+                                  SIST_OPPDATERT + " = ? "
+        );
+        db.update(sql1, besvarlseId, sistOppdatertDato);
     }
 
     public Besvarelse hentBesvarelse(Long besvarlseId) {
+        String sql = format("SELECT * FROM %s WHERE %s = %d", BESVARLSE_TABLE_NAME, BESVARELSE_ID, besvarlseId);
+        Besvarelse bv =  db.query(sql, BehovsvurderingRepository::besvarelseMapper);
 
-        Besvarelse bv = SqlUtils.select(db, BESVARLSE_TABLE_NAME, BehovsvurderingRepository::besvarelseMapper)
-                .where(WhereClause.equals(BESVARELSE_ID, besvarlseId))
-                .column("*")
-                .execute();
+        String sql1 = format("SELECT * FROM %s WHERE %s = %d", SPM_SVAR_TABLE_NAME, BESVARELSE_ID, besvarlseId);
+        List<Svar> svar = List.of(db.query(sql1, BehovsvurderingRepository::svarMapper));
 
-        List<Svar> svar = SqlUtils.select(db, SPM_SVAR_TABLE_NAME, BehovsvurderingRepository::svarMapper)
-                .where(WhereClause.equals(BESVARELSE_ID, besvarlseId))
-                .column("*")
-                .executeToList();
         bv.setSvar(svar);
         return bv;
     }
 
+    public Besvarelse hentSisteBesvarelse(String aktorId) {
+        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %d ORDER BY SIST_OPPDATERT DESC) WHERE ROWNUM <=1",
+                            BESVARLSE_TABLE_NAME, AKTOR_ID, aktorId);
 
-    public Besvarelse hentSisteBesvarelse(AktorId aktorId) {
-
-        Besvarelse bv = SqlUtils.select(db, BESVARLSE_TABLE_NAME, BehovsvurderingRepository::besvarelseMapper)
-                .where(WhereClause.equals(AKTOR_ID, aktorId.getAktorId()))
-                .orderBy(OrderClause.desc(SIST_OPPDATERT))
-                .limit(1)
-                .column("*")
-                .execute();
-
+        Besvarelse bv =  db.query(sql, BehovsvurderingRepository::besvarelseMapper);
         if (bv == null) {
             return null;
         }
 
-        List<Svar> svar = SqlUtils.select(db, SPM_SVAR_TABLE_NAME, BehovsvurderingRepository::svarMapper)
-                .where(WhereClause.equals(BESVARELSE_ID, bv.besvarelseId))
-                .column("*")
-                .executeToList();
-
+        String sql1 = format("SELECT * FROM %s WHERE %s = %d", SPM_SVAR_TABLE_NAME, BESVARELSE_ID, bv.besvarelseId);
+        List<Svar> svar = List.of(db.query(sql1, BehovsvurderingRepository::svarMapper));
         bv.setSvar(svar);
         return bv;
     }

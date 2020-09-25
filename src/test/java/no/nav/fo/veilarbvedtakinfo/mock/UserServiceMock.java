@@ -1,14 +1,15 @@
 package no.nav.fo.veilarbvedtakinfo.mock;
 
+import no.nav.common.abac.Pep;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
+import org.springframework.beans.factory.ObjectProvider;
 
-import javax.inject.Provider;
 import javax.servlet.http.HttpServletRequest;
 
 public class UserServiceMock extends UserService {
 
-    public UserServiceMock(Provider<HttpServletRequest> requestProvider) {
-        super(requestProvider);
+    public UserServiceMock(ObjectProvider<HttpServletRequest> requestProvider, Pep pep) {
+        super(requestProvider, pep);
     }
 
     public boolean erEksternBruker() {

@@ -4,9 +4,11 @@ import no.nav.fo.veilarbvedtakinfo.db.BehovsvurderingRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class BehovsvurderingService {
     private final BehovsvurderingRepository behovsvurderingRepository;
 
@@ -14,7 +16,7 @@ public class BehovsvurderingService {
         this.behovsvurderingRepository = behovsvurderingRepository;
     }
 
-    public Besvarelse nyBesvarlse(AktorId aktorId, Svar svar) {
+    public Besvarelse nyBesvarlse(String aktorId, Svar svar) {
         Long besvarsleId = Optional.ofNullable(svar.besvarelseId)
                 .orElse(behovsvurderingRepository.lagNyBesvarlse(aktorId));
         behovsvurderingRepository.leggTilNyttSvarPaBesvarelsen(besvarsleId, svar);
@@ -25,7 +27,7 @@ public class BehovsvurderingService {
         return behovsvurderingRepository.hentBesvarelse(besvarlseId);
     }
 
-    public Besvarelse hentBesvarelse(AktorId aktorId) {
+    public Besvarelse hentBesvarelse(String aktorId) {
         return behovsvurderingRepository.hentSisteBesvarelse(aktorId);
     }
 }

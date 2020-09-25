@@ -1,18 +1,18 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjon;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjonSvar;
-import no.nav.sbl.sql.DbConstants;
-import no.nav.sbl.sql.SqlUtils;
-import no.nav.sbl.sql.order.OrderClause;
-import no.nav.sbl.sql.where.WhereClause;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 
 import java.sql.ResultSet;
 
+import static java.lang.String.format;
+
+@Repository
 public class ArbeidSitasjonRepository {
 
     private JdbcTemplate db;
@@ -32,29 +32,21 @@ public class ArbeidSitasjonRepository {
     }
 
 
-    public long lagreSitasjon(AktorId aktorId, EndretAvType endretAv, String avsenderID, ArbeidSituasjonSvar svar) {
+    public long lagreSitasjon(String aktorId, EndretAvType endretAv, String avsenderID, ArbeidSituasjonSvar svar) {
         long id = DatabaseUtils.nesteFraSekvens(db, MIN_SITUASJON_SEQ);
-
-        SqlUtils.insert(db, MIN_SITUASJON)
-                .value(ID, id)
-                .value(AKTOR_ID, aktorId.getAktorId())
-                .value(OPRETTET, DbConstants.CURRENT_TIMESTAMP)
-                .value(ENDRET_AV_ID, avsenderID)
-                .value(ENDRET_AV_TYPE, endretAv.toString())
-                .value(SVAR_ID, svar.svarId)
-                .value(SVAR_TEXT, svar.svarTekst)
-                .execute();
-
+        String sql = format(
+                "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?)",
+                MIN_SITUASJON, ID, AKTOR_ID, OPRETTET, ENDRET_AV_ID, ENDRET_AV_TYPE, SVAR_ID, SVAR_TEXT
+        );
+        db.update(sql, id, aktorId, "CURRENT_TIMESTAMP", avsenderID, endretAv.toString(), svar.svarId, svar.svarTekst);
         return id;
     }
 
-    public ArbeidSituasjon hentSituasjon(AktorId aktorId) {
-        return SqlUtils.select(db, MIN_SITUASJON, ArbeidSitasjonRepository::fremtidigSituasjonMapper)
-                .where(WhereClause.equals(AKTOR_ID, aktorId.getAktorId()))
-                .orderBy(OrderClause.desc(OPRETTET))
-                .column("*")
-                .limit(1)
-                .execute();
+    public ArbeidSituasjon hentSituasjon(String aktorId) {
+        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %d ORDER BY OPRETTET DESC) WHERE ROWNUM <=1 ",
+                            MIN_SITUASJON, AKTOR_ID, aktorId, OPRETTET
+        );
+        return db.query(sql, ArbeidSitasjonRepository::fremtidigSituasjonMapper);
     }
 
     @SneakyThrows

@@ -1,16 +1,14 @@
-package no.nav.fo.veilarbvedtakinfo;
+package no.nav.fo.veilarbvedtakinfo.test;
 
-import no.nav.apiapp.security.PepClient;
-import no.nav.dialogarena.aktor.AktorService;
-import no.nav.fo.veilarbvedtakinfo.db.DatabaseUtils;
+import no.nav.common.abac.Pep;
+import no.nav.common.client.aktorregister.AktorregisterClient;
+import no.nav.fo.veilarbvedtakinfo.controller.InfoOmMegController;
 import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.mock.RegistreringClientMock;
-import no.nav.fo.veilarbvedtakinfo.resources.InfoOmMegResource;
 
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.service.UserService;
@@ -23,38 +21,36 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static java.lang.System.setProperty;
-import static no.nav.fo.veilarbvedtakinfo.db.DbTestUtils.setupInMemoryContext;
-import static no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient.VEILARBREGISTRERING_URL_PROPERTY_NAME;
+import static no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClientImpl.VEILARBREGISTRERING_URL_PROPERTY_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-class InfoOmMegResourceIntegrationTest {
+class InfoOmMegControllerIntegrationTest {
 
     private static JdbcTemplate db;
-    private static InfoOmMegResource infoOmMegResource;
+    private static InfoOmMegController infoOmMegController;
     private static UserService userService;
+    private static AktorregisterClient aktorregisterClient;
 
     public static String eksernIdent = "123";
     public static String eksernIdent2 = "543";
 
     @BeforeEach
     public void setup() {
-        setupInMemoryContext();
-
         setProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME, "MOCKED_URL");
 
         db = DbTestUtils.getTestDb();
-        DatabaseUtils.createTables(db);
 
         userService = mock(UserService.class);
-        infoOmMegResource = new InfoOmMegResource(
+        aktorregisterClient = mock(AktorregisterClient.class);
+        infoOmMegController = new InfoOmMegController(
                 new InfoOmMegService(new InfoOmMegRepository(db), new RegistreringClientMock()),
                 userService,
-                mock(AktorService.class),
-                mock(PepClient.class)
+                aktorregisterClient,
+                mock(Pep.class)
         );
     }
 
@@ -71,9 +67,9 @@ class InfoOmMegResourceIntegrationTest {
                 .setTekst("Test1");
 
         when(userService.erEksternBruker()).thenReturn(true);
-        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent));
+        when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent);
 
-        HovedmalData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
+        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data);
 
 
         assertNotEquals(null, actualData.getDato());
@@ -89,9 +85,9 @@ class InfoOmMegResourceIntegrationTest {
 
         when(userService.erEksternBruker()).thenReturn(false);
         when(userService.getUid()).thenReturn("Z123");
-        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent));
+        when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent);
 
-        HovedmalData actualData = infoOmMegResource.oppdaterFremtidigSituasjon(data);
+        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data);
 
         assertEquals(EndretAvType.VEILEDER, actualData.getEndretAv());
 
@@ -113,17 +109,17 @@ class InfoOmMegResourceIntegrationTest {
                 .setTekst("Test3");
 
         when(userService.erEksternBruker()).thenReturn(true);
-        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent));
+        when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent);
         when(userService.hentFnrFraUrlEllerToken()).thenReturn(eksernIdent);
 
-        infoOmMegResource.oppdaterFremtidigSituasjon(svar1);
-        infoOmMegResource.oppdaterFremtidigSituasjon(svar2);
+        infoOmMegController.oppdaterFremtidigSituasjon(svar1);
+        infoOmMegController.oppdaterFremtidigSituasjon(svar2);
 
-        when(userService.getAktorIdOrElseThrow(any(), any())).thenReturn(new AktorId(eksernIdent2));
+        when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent2);
         when(userService.hentFnrFraUrlEllerToken()).thenReturn(eksernIdent2);
 
-        infoOmMegResource.oppdaterFremtidigSituasjon(svar3);
-        List<HovedmalData> data = infoOmMegResource.hentSituasjonListe();
+        infoOmMegController.oppdaterFremtidigSituasjon(svar3);
+        List<HovedmalData> data = infoOmMegController.hentSituasjonListe();
 
         assertEquals(1, data.size());
     }

@@ -1,35 +1,40 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 
-import no.nav.brukerdialog.security.domain.IdentType;
-import no.nav.dialogarena.aktor.AktorService;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
-
-import javax.inject.Provider;
+import no.nav.common.abac.Pep;
+import no.nav.common.abac.domain.AbacPersonId;
+import no.nav.common.abac.domain.request.ActionId;
+import no.nav.common.auth.subject.IdentType;
+import no.nav.common.auth.subject.Subject;
+import no.nav.common.auth.subject.SubjectHandler;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import javax.servlet.http.HttpServletRequest;
 
-import static no.nav.common.auth.SubjectHandler.getIdent;
-import static no.nav.common.auth.SubjectHandler.getIdentType;
-
+@Service
 public class UserService {
 
-    private Provider<HttpServletRequest> requestProvider;
+    private Pep pep;
+    private ObjectProvider<HttpServletRequest> requestProvider;
 
-    public UserService(Provider<HttpServletRequest> requestProvider) {
+    public UserService(ObjectProvider<HttpServletRequest> requestProvider, Pep pep) {
         this.requestProvider = requestProvider;
+        this.pep = pep;
     }
 
     public boolean erEksternBruker() {
-        return getIdentType()
+        return SubjectHandler.getIdentType()
                 .map(identType -> IdentType.EksternBruker == identType)
                 .orElse(false);
     }
 
     public String getUid() {
-        return getIdent().orElseThrow(IllegalArgumentException::new);
+        return SubjectHandler.getIdent().orElseThrow(IllegalArgumentException::new);
     }
 
     public String getFnrFromUrl() {
-        return requestProvider.get().getParameter("fnr");
+        return requestProvider.getIfAvailable().getParameter("fnr");
     }
 
     public String hentFnrFraUrlEllerToken() {
@@ -41,13 +46,20 @@ public class UserService {
         }
 
         return fnr;
-
     }
 
-    public AktorId getAktorIdOrElseThrow(AktorService aktorService, String fnr) {
-        return aktorService.getAktorId(fnr)
-                .map(AktorId::new)
-                .orElseThrow(() -> new IllegalArgumentException("Fant ikke aktør for fnr: " + fnr));
+    public String getInnloggetVeilederIdent() {
+        return SubjectHandler
+                .getSubject()
+                .filter(subject -> IdentType.InternBruker.equals(subject.getIdentType()))
+                .map(Subject::getUid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fant ikke ident for innlogget veileder"));
     }
 
+    public void sjekkLeseTilgangTilPerson(String aktorId) {
+        boolean harTilgang = pep.harVeilederTilgangTilPerson(getInnloggetVeilederIdent(), ActionId.READ, AbacPersonId.aktorId(aktorId));
+        if (!harTilgang) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+    }
 }
