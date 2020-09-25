@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.ws.rs.Produces;
 
 @RestController
-@RequestMapping("/behovsvurdering")
+@RequestMapping("/api/behovsvurdering")
 @Produces("application/json")
 @Api(value = "BehovsvurderingResource", description = "Tjenester for deling behovsvurdering besvarelse")
 

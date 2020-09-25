@@ -12,6 +12,7 @@ import no.nav.fo.veilarbvedtakinfo.controller.ArbeidsSituasjonResource;
 import no.nav.fo.veilarbvedtakinfo.controller.BehovsvurderingResource;
 import no.nav.fo.veilarbvedtakinfo.controller.InfoOmMegResource;
 import no.nav.fo.veilarbvedtakinfo.controller.MotestotteResource;
+import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClientImpl;
 import no.nav.fo.veilarbvedtakinfo.service.ArbeidSitasjonService;
 import no.nav.fo.veilarbvedtakinfo.service.BehovsvurderingService;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
@@ -52,7 +53,7 @@ class ServiceBeans {
 
     @Bean
     RegistreringClient registreringClient(HttpServletRequest httpServletRequest, SystemUserTokenProvider systemUserTokenProvider) {
-        return new RegistreringClient(httpServletRequest, systemUserTokenProvider);
+        return new RegistreringClientImpl(httpServletRequest, systemUserTokenProvider);
     }
 
     @Bean
@@ -85,7 +86,6 @@ class ServiceBeans {
                                           Pep pep) {
         return new MotestotteResource(motestotteRepository, userService, aktorregisterClient, pep);
     }
-
 
     @Bean
     ArbeidSitasjonRepository arbeidSitasjonRepository(JdbcTemplate db) {

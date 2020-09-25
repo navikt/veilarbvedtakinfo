@@ -19,7 +19,7 @@ import javax.ws.rs.Produces;
 import java.util.List;
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api")
 @Produces("application/json")
 @Api(value = "InfoOmMegResource", description = "Tjenester for deling av arbeidssøkerstatus.")
 public class InfoOmMegResource {

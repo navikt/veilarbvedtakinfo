@@ -14,8 +14,11 @@ public class EnvironmentProperties {
     private String dbUrl;
     private String cxfStsUrl;
     private String openAmDiscoveryUrl;
+    private String openAmRedirectUrl;
     private String openAmClientId;
     private String openAmRefreshUrl;
     private String aadB2cDiscoveryUrl;
     private String aadB2cClientId;
+    private String openAmIssoRpUsername;
+    private String openAmIssoRpPassword;
 }

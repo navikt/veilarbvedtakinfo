@@ -1,11 +1,14 @@
 package no.nav.fo.veilarbvedtakinfo.config;
 
+import no.nav.common.abac.Pep;
+import no.nav.common.abac.VeilarbPep;
+import no.nav.common.abac.audit.SpringAuditRequestInfoSupplier;
 import no.nav.common.client.aktorregister.AktorregisterClient;
 import no.nav.common.client.aktorregister.AktorregisterHttpClient;
 import no.nav.common.client.aktorregister.CachedAktorregisterClient;
-import no.nav.common.sts.NaisSystemUserTokenProvider;
-import no.nav.common.sts.SystemUserTokenProvider;
+import no.nav.common.sts.OpenAmSystemUserTokenProvider;
 import no.nav.common.utils.Credentials;
+import no.nav.common.utils.NaisUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,16 +27,27 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public SystemUserTokenProvider systemUserTokenProvider(EnvironmentProperties properties, Credentials serviceUserCredentials) {
-        return new NaisSystemUserTokenProvider(properties.getStsDiscoveryUrl(), serviceUserCredentials.username, serviceUserCredentials.password);
+    public OpenAmSystemUserTokenProvider OpenAmsystemUserTokenProvider(EnvironmentProperties properties, Credentials serviceUserCredentials) {
+        return new OpenAmSystemUserTokenProvider(
+                properties.getOpenAmDiscoveryUrl(), properties.getOpenAmRedirectUrl(),
+                new Credentials(properties.getOpenAmIssoRpUsername(), properties.getOpenAmIssoRpPassword()), serviceUserCredentials
+        );
     }
 
     @Bean
-    public AktorregisterClient aktorregisterClient(EnvironmentProperties properties, SystemUserTokenProvider tokenProvider) {
+    public AktorregisterClient aktorregisterClient(EnvironmentProperties properties, OpenAmSystemUserTokenProvider tokenProvider) {
         AktorregisterClient aktorregisterClient = new AktorregisterHttpClient(
                 properties.getAktorregisterUrl(), APPLICATION_NAME, tokenProvider::getSystemUserToken
         );
         return new CachedAktorregisterClient(aktorregisterClient);
     }
 
+    @Bean
+    public Pep pep(EnvironmentProperties properties) {
+        Credentials serviceUserCredentials = NaisUtils.getCredentials("service_user");
+        return new VeilarbPep(
+                properties.getAbacUrl(), serviceUserCredentials.username,
+                serviceUserCredentials.password, new SpringAuditRequestInfoSupplier()
+        );
+    }
 }

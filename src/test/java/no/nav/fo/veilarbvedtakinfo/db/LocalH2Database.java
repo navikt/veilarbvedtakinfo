@@ -1,11 +1,11 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.h2.jdbcx.JdbcDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.support.TransactionTemplate;
 
+@Slf4j
 public class LocalH2Database {
 
     private static JdbcTemplate db;
@@ -23,6 +23,7 @@ public class LocalH2Database {
     }
 
     private static void initDb(JdbcTemplate db) {
+        log.info("Starting database migration...");
         Flyway.configure().dataSource(db.getDataSource()).load().migrate();
     }
 

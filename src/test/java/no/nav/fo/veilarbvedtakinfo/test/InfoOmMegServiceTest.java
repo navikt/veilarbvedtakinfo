@@ -1,4 +1,4 @@
-package no.nav.fo.veilarbvedtakinfo;
+package no.nav.fo.veilarbvedtakinfo.test;
 
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;

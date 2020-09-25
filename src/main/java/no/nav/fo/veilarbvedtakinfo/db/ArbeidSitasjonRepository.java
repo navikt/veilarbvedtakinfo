@@ -26,7 +26,6 @@ public class ArbeidSitasjonRepository {
     private final static String SVAR_TEXT = "SVAR_TEXT";
     private final static String ENDRET_AV_ID = "ENDRET_AV_ID";
     private final static String MIN_SITUASJON_SEQ = "MIN_SITUASJON_SEQ";
-    private final static String CURRENT_TIMESTAMP = "CURRENT_TIMESTAMP";
 
     public ArbeidSitasjonRepository(JdbcTemplate db) {
         this.db = db;

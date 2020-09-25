@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.ws.rs.Produces;
 
 @RestController
-@RequestMapping("/situasjon")
+@RequestMapping("/api/situasjon")
 @Produces("application/json")
 @Api(value = "ArbeidsSituasjonResource")
 public class ArbeidsSituasjonResource {

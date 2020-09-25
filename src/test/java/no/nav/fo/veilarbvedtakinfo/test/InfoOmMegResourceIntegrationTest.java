@@ -1,4 +1,4 @@
-package no.nav.fo.veilarbvedtakinfo;
+package no.nav.fo.veilarbvedtakinfo.test;
 
 import no.nav.common.abac.Pep;
 import no.nav.common.client.aktorregister.AktorregisterClient;
@@ -21,7 +21,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static java.lang.System.setProperty;
-import static no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient.VEILARBREGISTRERING_URL_PROPERTY_NAME;
+import static no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClientImpl.VEILARBREGISTRERING_URL_PROPERTY_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
