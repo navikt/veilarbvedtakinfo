@@ -22,10 +22,11 @@ public class DatabaseMigrator {
     @PostConstruct
     public void migrateDb() {
         log.info("Starting database migration...");
+        // TODO: Fjern baselineOnMigrate og repair etter det har blitt prodsatt 1 gang
         Flyway.configure()
                 .dataSource(dataSource)
                 .baselineOnMigrate(true)
                 .load()
-                .migrate();
+                .repair();
     }
 }
