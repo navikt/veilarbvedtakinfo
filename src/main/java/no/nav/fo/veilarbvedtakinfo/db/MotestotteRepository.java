@@ -32,12 +32,9 @@ public class MotestotteRepository {
             );
             db.update(sql, new Date(), aktorId);
         } catch (DuplicateKeyException e) {
-            // TODO: Her mangler det vel litt SQL?
-                format(
-                      "UPDATE " + TABLE_NAME +
-                      " SET " + DATO + " = " + new Date() +
-                      " WHERE " + AKTOR_ID + " = " + aktorId
-                );
+            db.update("UPDATE " + TABLE_NAME +
+                " SET " + DATO + " = " + new Date() +
+                " WHERE " + AKTOR_ID + " = " + aktorId);
         }
     }
 

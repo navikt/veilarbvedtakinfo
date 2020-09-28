@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.ResultSet;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static java.lang.String.format;
 
@@ -42,7 +43,7 @@ public class BehovsvurderingRepository {
                 BESVARLSE_TABLE_NAME, BESVARELSE_ID, AKTOR_ID, SIST_OPPDATERT
         );
         db.update(sql, id, aktorId.get(), new Date());
-        return  id;
+        return id;
     }
 
     public void leggTilNyttSvarPaBesvarelsen(long besvarlseId, Svar svar) {
@@ -53,11 +54,9 @@ public class BehovsvurderingRepository {
         );
         db.update(sql, besvarlseId, svar.spmId, svar.svar, svar.spm, sistOppdatertDato);
 
-        String sql1 = format(
-                "UPDATE " + BESVARLSE_TABLE_NAME +
-                        " SET " + BESVARELSE_ID + " = ?, " +
-                                  SIST_OPPDATERT + " = ? "
-        );
+        String sql1 = "UPDATE " + BESVARLSE_TABLE_NAME +
+                      " SET " + BESVARELSE_ID + " = ?, " +
+                      SIST_OPPDATERT + " = ? ";
         db.update(sql1, besvarlseId, sistOppdatertDato);
     }
 
@@ -66,8 +65,9 @@ public class BehovsvurderingRepository {
         Besvarelse bv =  db.query(sql, BehovsvurderingRepository::besvarelseMapper);
 
         String sql1 = format("SELECT * FROM %s WHERE %s = %d", SPM_SVAR_TABLE_NAME, BESVARELSE_ID, besvarlseId);
-        List<Svar> svar = List.of(db.query(sql1, BehovsvurderingRepository::svarMapper));
+        List<Svar> svar = List.of(Objects.requireNonNull(db.query(sql1, BehovsvurderingRepository::svarMapper)));
 
+        assert bv != null;
         bv.setSvar(svar);
         return bv;
     }
@@ -82,7 +82,7 @@ public class BehovsvurderingRepository {
         }
 
         String sql1 = format("SELECT * FROM %s WHERE %s = %d", SPM_SVAR_TABLE_NAME, BESVARELSE_ID, bv.besvarelseId);
-        List<Svar> svar = List.of(db.query(sql1, BehovsvurderingRepository::svarMapper));
+        List<Svar> svar = List.of(Objects.requireNonNull(db.query(sql1, BehovsvurderingRepository::svarMapper)));
         bv.setSvar(svar);
         return bv;
     }

@@ -86,8 +86,7 @@ public class InfoOmMegRepositoryTest {
 
     @Test
     public void lagreHelseHinderForAktorId_success() {
-        HelseOgAndreHensynData data = new HelseOgAndreHensynData()
-                .setVerdi(HinderSvar.NEI);
+        HelseOgAndreHensynData data = new HelseOgAndreHensynData().setVerdi(HinderSvar.NEI);
 
         long id = infoOmMegRepository.lagreHelseHinderForAktorId(data, eksternIdent);
         HelseOgAndreHensynData actual = infoOmMegRepository.hentHelseHinderForId(id);
@@ -98,8 +97,7 @@ public class InfoOmMegRepositoryTest {
 
     @Test
     public void lagreAndreHinderForAktorId_success() {
-        HelseOgAndreHensynData data = new HelseOgAndreHensynData()
-                .setVerdi(HinderSvar.NEI);
+        HelseOgAndreHensynData data = new HelseOgAndreHensynData().setVerdi(HinderSvar.NEI);
 
         long id = infoOmMegRepository.lagreAndreHinderForAktorId(data, eksternIdent);
         HelseOgAndreHensynData actual = infoOmMegRepository.hentAndreHinderForId(id);

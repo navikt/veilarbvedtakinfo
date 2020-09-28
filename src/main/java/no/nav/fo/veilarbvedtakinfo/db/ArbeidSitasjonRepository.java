@@ -32,20 +32,18 @@ public class ArbeidSitasjonRepository {
         this.db = db;
     }
 
-
-    public long lagreSitasjon(AktorId aktorId, EndretAvType endretAv, String avsenderID, ArbeidSituasjonSvar svar) {
+    public void lagreSituasjon(AktorId aktorId, EndretAvType endretAv, String avsenderID, ArbeidSituasjonSvar svar) {
         long id = DatabaseUtils.nesteFraSekvens(db, MIN_SITUASJON_SEQ);
         String sql = format(
                 "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?,?)",
                 MIN_SITUASJON, ID, AKTOR_ID, OPRETTET, ENDRET_AV_ID, ENDRET_AV_TYPE, SVAR_ID, SVAR_TEXT
         );
         db.update(sql, id, aktorId.get(), "CURRENT_TIMESTAMP", avsenderID, endretAv.toString(), svar.svarId, svar.svarTekst);
-        return id;
     }
 
     public ArbeidSituasjon hentSituasjon(AktorId aktorId) {
-        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %d ORDER BY OPRETTET DESC) WHERE ROWNUM <=1 ",
-                            MIN_SITUASJON, AKTOR_ID, aktorId.get(), OPRETTET
+        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %s ORDER BY OPRETTET DESC) WHERE ROWNUM <=1 ",
+                            MIN_SITUASJON, AKTOR_ID, aktorId.get()
         );
         return db.query(sql, ArbeidSitasjonRepository::fremtidigSituasjonMapper);
     }

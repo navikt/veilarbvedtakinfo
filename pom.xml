@@ -141,6 +141,7 @@
         <dependency>
             <groupId>no.nav.common</groupId>
             <artifactId>test</artifactId>
+            <version>${common.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

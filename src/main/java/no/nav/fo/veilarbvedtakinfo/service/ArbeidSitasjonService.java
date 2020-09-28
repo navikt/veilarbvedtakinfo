@@ -17,7 +17,7 @@ public class ArbeidSitasjonService {
 
     public void nytSvar(ArbeidSituasjonSvar svar, AktorId aktorId, String avsenderID, boolean erEksternBruker) {
         EndretAvType endretAv = erEksternBruker ? EndretAvType.BRUKER : EndretAvType.VEILEDER;
-        repository.lagreSitasjon(aktorId, endretAv, avsenderID, svar);
+        repository.lagreSituasjon(aktorId, endretAv, avsenderID, svar);
     }
 
     public ArbeidSituasjon fetchSvar(AktorId aktorId) {

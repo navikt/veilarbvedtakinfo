@@ -134,14 +134,15 @@ public class InfoOmMegRepository {
 
     @SneakyThrows
     private static HelseOgAndreHensynData helseHensynMapper(ResultSet rs) {
-        while(rs.next()) {
+        if (rs.next()) {
             return new HelseOgAndreHensynData()
-                        .setVerdi(ofNullable(rs.getString(SVAR)).isPresent()
+                    .setVerdi(ofNullable(rs.getString(SVAR)).isPresent()
                             ? HinderSvar.valueOf(rs.getString(SVAR))
                             : null
-                            )
-                        .setDato(rs.getTimestamp(DATO));
+                    )
+                    .setDato(rs.getTimestamp(DATO));
+        } else {
+            return null;
         }
-        return null;
     }
 }
