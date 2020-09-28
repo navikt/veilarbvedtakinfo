@@ -20,4 +20,6 @@ public class EnvironmentProperties {
     private String aadB2cClientId;
     private String openAmIssoRpUsername;
     private String openAmIssoRpPassword;
+    private String aadDiscoveryUrl;
+    private String veilarbloginAadClientId;
 }

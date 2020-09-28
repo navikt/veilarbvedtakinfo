@@ -35,11 +35,19 @@ public class FilterConfig {
                 .withUserRole(UserRole.EKSTERN);
     }
 
+    private OidcAuthenticatorConfig azureAdAuthConfig(EnvironmentProperties properties) {
+        return new OidcAuthenticatorConfig()
+                .withDiscoveryUrl(properties.getAadDiscoveryUrl())
+                .withClientId(properties.getVeilarbloginAadClientId())
+                .withIdTokenCookieName(AZURE_AD_ID_TOKEN_COOKIE_NAME)
+                .withUserRole(UserRole.INTERN);
+    }
+
     @Bean
     public FilterRegistrationBean authenticationFilterRegistrationBean(EnvironmentProperties properties) {
         FilterRegistrationBean<OidcAuthenticationFilter> registration = new FilterRegistrationBean<>();
         OidcAuthenticationFilter authenticationFilter = new OidcAuthenticationFilter(
-                fromConfigs(openAmAuthConfig(properties), azureAdB2CAuthConfig(properties))
+                fromConfigs(openAmAuthConfig(properties), azureAdB2CAuthConfig(properties), azureAdAuthConfig(properties))
         );
 
         registration.setFilter(authenticationFilter);
