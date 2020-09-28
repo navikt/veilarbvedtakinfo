@@ -1,15 +1,15 @@
-package no.nav.fo.veilarbvedtakinfo.test;
+package no.nav.fo.veilarbvedtakinfo.controller;
 
-import no.nav.common.client.aktorregister.AktorregisterClient;
-import no.nav.fo.veilarbvedtakinfo.controller.InfoOmMegController;
-import no.nav.fo.veilarbvedtakinfo.db.DbTestUtils;
+import no.nav.common.types.identer.AktorId;
+import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
-import no.nav.fo.veilarbvedtakinfo.mock.RegistreringClientMock;
+import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
+import no.nav.fo.veilarbvedtakinfo.test.DbTestUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,17 +22,19 @@ import static no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClientImpl.VEIL
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class InfoOmMegControllerIntegrationTest {
 
-    private static JdbcTemplate db;
-    private static InfoOmMegController infoOmMegController;
-    private static AktorregisterClient aktorregisterClient;
+    private JdbcTemplate db;
+    private InfoOmMegController infoOmMegController;
+    private RegistreringClient registreringClient;
+    private AuthService authService;
 
-    public static String eksernIdent = "123";
-    public static String eksernIdent2 = "543";
+    public static AktorId eksernIdent = AktorId.of("123");
+    public static AktorId eksernIdent2 = AktorId.of("543");
 
     @BeforeEach
     public void setup() {
@@ -40,10 +42,12 @@ class InfoOmMegControllerIntegrationTest {
 
         db = DbTestUtils.getTestDb();
 
-        aktorregisterClient = mock(AktorregisterClient.class);
+        registreringClient = mock(RegistreringClient.class);
+        authService = mock(AuthService.class);
+
         infoOmMegController = new InfoOmMegController(
-                new InfoOmMegService(new InfoOmMegRepository(db), new RegistreringClientMock()),
-                mock(AuthService.class)
+                new InfoOmMegService(new InfoOmMegRepository(db), registreringClient),
+                authService
         );
     }
 
@@ -59,11 +63,11 @@ class InfoOmMegControllerIntegrationTest {
                 .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER)
                 .setTekst("Test1");
 
-        when(userService.erEksternBruker()).thenReturn(true);
-        when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent);
+        when(authService.erEksternBruker()).thenReturn(true);
+        when(authService.hentInnloggetSubject()).thenReturn("12345");
+        when(authService.hentAktorId(eq(Fnr.of("12345")))).thenReturn(eksernIdent);
 
-        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data);
-
+        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data, Fnr.of("12345"));
 
         assertNotEquals(null, actualData.getDato());
         assertEquals(data.getAlternativId(), actualData.getAlternativId());
@@ -76,14 +80,13 @@ class InfoOmMegControllerIntegrationTest {
         HovedmalData data = new HovedmalData()
                 .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER);
 
-        when(userService.erEksternBruker()).thenReturn(false);
-        when(userService.getUid()).thenReturn("Z123");
-        when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent);
+        when(authService.erEksternBruker()).thenReturn(false);
+        when(authService.hentInnloggetSubject()).thenReturn("Z123");
+        when(authService.hentAktorId(any())).thenReturn(eksernIdent);
 
-        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data);
+        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data, null);
 
         assertEquals(EndretAvType.VEILEDER, actualData.getEndretAv());
-
     }
 
     @Test
@@ -101,18 +104,18 @@ class InfoOmMegControllerIntegrationTest {
                 .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER)
                 .setTekst("Test3");
 
-        when(userService.erEksternBruker()).thenReturn(true);
-        when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent);
-        when(userService.hentFnrFraUrlEllerToken()).thenReturn(eksernIdent);
+        when(authService.erEksternBruker()).thenReturn(true);
+        when(authService.hentAktorId(any())).thenReturn(eksernIdent);
+        when(authService.hentInnloggetSubject()).thenReturn(eksernIdent.get());
 
-        infoOmMegController.oppdaterFremtidigSituasjon(svar1);
-        infoOmMegController.oppdaterFremtidigSituasjon(svar2);
+        infoOmMegController.oppdaterFremtidigSituasjon(svar1, null);
+        infoOmMegController.oppdaterFremtidigSituasjon(svar2, null);
 
-        when(aktorregisterClient.hentAktorId((String) any())).thenReturn(eksernIdent2);
-        when(userService.hentFnrFraUrlEllerToken()).thenReturn(eksernIdent2);
+        when(authService.hentAktorId(any())).thenReturn(eksernIdent2);
+        when(authService.hentInnloggetSubject()).thenReturn(eksernIdent2.get());
 
-        infoOmMegController.oppdaterFremtidigSituasjon(svar3);
-        List<HovedmalData> data = infoOmMegController.hentSituasjonListe();
+        infoOmMegController.oppdaterFremtidigSituasjon(svar3, null);
+        List<HovedmalData> data = infoOmMegController.hentSituasjonListe(null);
 
         assertEquals(1, data.size());
     }

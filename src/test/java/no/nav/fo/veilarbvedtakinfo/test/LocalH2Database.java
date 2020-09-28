@@ -1,4 +1,4 @@
-package no.nav.fo.veilarbvedtakinfo.db;
+package no.nav.fo.veilarbvedtakinfo.test;
 
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;

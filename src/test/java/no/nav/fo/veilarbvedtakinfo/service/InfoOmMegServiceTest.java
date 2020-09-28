@@ -1,17 +1,23 @@
-package no.nav.fo.veilarbvedtakinfo.test;
+package no.nav.fo.veilarbvedtakinfo.service;
 
+import no.nav.common.types.identer.AktorId;
+import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.*;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.InfoOmMegData;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.*;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
-import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -23,8 +29,8 @@ class InfoOmMegServiceTest {
     private static InfoOmMegService infoOmMegService;
     private static InfoOmMegRepository infoOmMegRepository;
     private static RegistreringClient registreringClient;
-    private final static String fnr = "1234";
-    private final static String aktorId = "5689";
+    private final static Fnr fnr = Fnr.of("1234");
+    private final static AktorId aktorId = AktorId.of("5689");
 
     @BeforeEach
     void setup() {
