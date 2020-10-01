@@ -1,7 +1,7 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 
 import no.nav.common.types.identer.AktorId;
-import no.nav.fo.veilarbvedtakinfo.db.ArbeidSitasjonRepository;
+import no.nav.fo.veilarbvedtakinfo.db.ArbeidSituasjonRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjon;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjonSvar;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ArbeidSitasjonService {
-    private final ArbeidSitasjonRepository repository;
+    private final ArbeidSituasjonRepository repository;
 
-    public ArbeidSitasjonService(ArbeidSitasjonRepository repository) {
+    public ArbeidSitasjonService(ArbeidSituasjonRepository repository) {
         this.repository = repository;
     }
 

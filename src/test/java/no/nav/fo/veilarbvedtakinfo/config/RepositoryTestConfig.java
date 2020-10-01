@@ -1,6 +1,6 @@
 package no.nav.fo.veilarbvedtakinfo.config;
 
-import no.nav.fo.veilarbvedtakinfo.db.ArbeidSitasjonRepository;
+import no.nav.fo.veilarbvedtakinfo.db.ArbeidSituasjonRepository;
 import no.nav.fo.veilarbvedtakinfo.db.BehovsvurderingRepository;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.db.MotestotteRepository;
@@ -12,6 +12,6 @@ import org.springframework.context.annotation.Import;
         InfoOmMegRepository.class,
         BehovsvurderingRepository.class,
         MotestotteRepository.class,
-        ArbeidSitasjonRepository.class
+        ArbeidSituasjonRepository.class
 })
 public class RepositoryTestConfig {}

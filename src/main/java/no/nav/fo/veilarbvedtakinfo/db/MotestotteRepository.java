@@ -26,27 +26,24 @@ public class MotestotteRepository {
 
     public void oppdaterMotestotte(AktorId aktorId) {
         try {
-            String sql = format(
-                    "INSERT INTO %s (%s, %s) VALUES (?,?)",
-                    TABLE_NAME, DATO, AKTOR_ID
-            );
-            db.update(sql, new Date(), aktorId);
+            db.update("INSERT INTO MOTESTOTTE(DATO, AKTOR_ID) VALUES(CURRENT_TIMESTAMP,?)", aktorId.get());
         } catch (DuplicateKeyException e) {
-            db.update("UPDATE " + TABLE_NAME +
-                " SET " + DATO + " = " + new Date() +
-                " WHERE " + AKTOR_ID + " = " + aktorId);
+            db.update("UPDATE MOTESTOTTE SET DATO = CURRENT_TIMESTAMP WHERE AKTOR_ID = ?", aktorId.get());
         }
     }
 
     public Motestotte hentMoteStotte(AktorId aktorId) {
-        String sql = format("SELECT * FROM %s WHERE %s = %s",
-                TABLE_NAME, AKTOR_ID, aktorId.get());
+        String sql = format("SELECT * FROM %s WHERE %s = %s", TABLE_NAME, AKTOR_ID, aktorId.get());
         return db.query(sql, MotestotteRepository::motestotteMapper);
     }
 
     @SneakyThrows
     private static Motestotte motestotteMapper(ResultSet rs) {
-        return new Motestotte()
-                .setDato(rs.getTimestamp(DATO));
+        if (rs.next()) {
+            return new Motestotte()
+                    .setDato(rs.getTimestamp(DATO));
+        } else{
+            return null;
+        }
     }
 }
