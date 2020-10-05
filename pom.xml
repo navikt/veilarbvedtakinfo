@@ -20,7 +20,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <common.version>2.2020.08.03_12.26-bf51ea003411</common.version>
+        <common.version>2.2020.09.25_11.03-a96d54a9a687</common.version>
         <springfox.version>2.9.2</springfox.version>
     </properties>
 
@@ -119,10 +119,6 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>${springfox.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
 
         <!-- Database -->
         <dependency>
@@ -142,6 +138,17 @@
         </dependency>
 
         <!-- Test -->
+        <dependency>
+            <groupId>no.nav.common</groupId>
+            <artifactId>test</artifactId>
+            <version>${common.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>

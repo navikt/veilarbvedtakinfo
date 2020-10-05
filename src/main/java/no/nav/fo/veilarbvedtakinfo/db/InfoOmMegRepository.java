@@ -1,15 +1,14 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
-
+import no.nav.common.types.identer.AktorId;
+import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
-import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.HinderSvar;
-
+import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 
 import java.sql.ResultSet;
 import java.sql.Timestamp;
@@ -44,36 +43,38 @@ public class InfoOmMegRepository {
         this.db = db;
     }
 
-    public HovedmalData hentFremtidigSituasjonForAktorId(String aktorId) {
+    public HovedmalData hentFremtidigSituasjonForAktorId(AktorId aktorId) {
         String sql = format("SELECT * FROM %s WHERE %s = %s ORDER BY DATO DESC",
-                    FREMTIDIG_SITUASJON, AKTOR_ID, aktorId);
+                    FREMTIDIG_SITUASJON, AKTOR_ID, aktorId.get());
 
         List<HovedmalData> data = db.query(sql, (rs, rownum) -> fremtidigSituasjonMapper(rs));
         return data.isEmpty() ? null : data.get(0);
     }
 
     public HovedmalData hentFremtidigSituasjonForId(long id) {
-        String sql = format("SELECT * FROM %s WHERE %s = %s",
+        String sql = format("SELECT * FROM %s WHERE %s = %d",
                     FREMTIDIG_SITUASJON, FREMTIDIG_SITUASJON_ID, id);
+
         List<HovedmalData> data = db.query(sql, (rs, rownum) -> fremtidigSituasjonMapper(rs));
         return data.isEmpty() ? null : data.get(0);
     }
 
-    public List<HovedmalData> hentSituasjonHistorikk(String aktorId) {
+    public List<HovedmalData> hentSituasjonHistorikk(AktorId aktorId) {
         String sql = format("SELECT * FROM %s WHERE %s = %s ORDER BY DATO DESC",
-                    FREMTIDIG_SITUASJON, AKTOR_ID, aktorId);
+                    FREMTIDIG_SITUASJON, AKTOR_ID, aktorId.get());
 
         return db.query(sql, (rs, rownum) -> fremtidigSituasjonMapper(rs));
     }
 
-    public long lagreFremtidigSituasjonForAktorId(HovedmalData fremtidigSituasjonData, String aktorId, String endretAv) {
+    public long lagreFremtidigSituasjonForAktorId(HovedmalData fremtidigSituasjonData, AktorId aktorId, String endretAv) {
         long id = DatabaseUtils.nesteFraSekvens(db, FREMTIDIG_SITUASJON_SEQ);
         String alt = fremtidigSituasjonData.getAlternativId().toString();
+
         String sql = format(
                 "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?)",
                 FREMTIDIG_SITUASJON, FREMTIDIG_SITUASJON_ID, AKTOR_ID, ALTERNATIV_ID, TEKST, ENDRET_AV, DATO
         );
-        db.update(sql, id, aktorId, alt, fremtidigSituasjonData.getTekst(), endretAv, new Timestamp(System.currentTimeMillis()));
+        db.update(sql, id, aktorId.get(), alt, fremtidigSituasjonData.getTekst(), endretAv, new Timestamp(System.currentTimeMillis()));
         return id;
     }
 
@@ -89,60 +90,61 @@ public class InfoOmMegRepository {
                     .setEndretAv(rs.getString(ENDRET_AV));
     }
 
-    public HelseOgAndreHensynData hentHelseHinderForAktorId(String aktorId) {
+    public HelseOgAndreHensynData hentHelseHinderForAktorId(AktorId aktorId) {
         String sql = format("SELECT * FROM %s WHERE %s = %s ORDER BY DATO DESC LIMIT 1",
-                HELSEHINDER, AKTOR_ID, aktorId);
+                HELSEHINDER, AKTOR_ID, aktorId.get());
         return db.query(sql, InfoOmMegRepository::helseHensynMapper);
     }
 
     public HelseOgAndreHensynData hentHelseHinderForId(long id) {
-        String sql = format("SELECT * FROM %s WHERE %s = %s",
+        String sql = format("SELECT * FROM %s WHERE %s = %d",
                 HELSEHINDER, HELSEHINDER_ID, id);
         return db.query(sql, InfoOmMegRepository::helseHensynMapper);
     }
 
-    public HelseOgAndreHensynData hentAndreHinderForAktorId(String aktorId) {
+    public HelseOgAndreHensynData hentAndreHinderForAktorId(AktorId aktorId) {
         String sql = format("SELECT * FROM %s WHERE %s = %s ORDER BY DATO DESC LIMIT 1",
-                ANDREHINDER, AKTOR_ID, aktorId);
+                ANDREHINDER, AKTOR_ID, aktorId.get());
         return db.query(sql, InfoOmMegRepository::helseHensynMapper);
     }
 
     public HelseOgAndreHensynData hentAndreHinderForId(long id) {
-        String sql = format("SELECT * FROM %s WHERE %s = %s",
+        String sql = format("SELECT * FROM %s WHERE %s = %d",
                 ANDREHINDER, ANDREHINDER_ID, id);
         return db.query(sql, InfoOmMegRepository::helseHensynMapper);
     }
 
-    public long lagreHelseHinderForAktorId(HelseOgAndreHensynData helseOgAndreHensynData, String aktorId) {
+    public long lagreHelseHinderForAktorId(HelseOgAndreHensynData helseOgAndreHensynData, AktorId aktorId) {
         long id = DatabaseUtils.nesteFraSekvens(db, HELSEHINDER_SEQ);
         String sql = format(
                 "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)",
                 HELSEHINDER, HELSEHINDER_ID, AKTOR_ID, SVAR, DATO
         );
-        db.update(sql, id, aktorId, helseOgAndreHensynData.getVerdi().toString(), new Timestamp(System.currentTimeMillis()));
+        db.update(sql, id, aktorId.get(), helseOgAndreHensynData.getVerdi().toString(), new Timestamp(System.currentTimeMillis()));
         return id;
     }
 
-    public long lagreAndreHinderForAktorId(HelseOgAndreHensynData helseOgAndreHensynData, String aktorId) {
+    public long lagreAndreHinderForAktorId(HelseOgAndreHensynData helseOgAndreHensynData, AktorId aktorId) {
         long id = DatabaseUtils.nesteFraSekvens(db, ANDREHINDER_SEQ);
         String sql = format(
                 "INSERT INTO %s (%s, %s, %s, %s) VALUES (?,?,?,?)",
                 ANDREHINDER, ANDREHINDER_ID, AKTOR_ID, SVAR, DATO
         );
-        db.update(sql, id, aktorId, helseOgAndreHensynData.getVerdi().toString(), new Timestamp(System.currentTimeMillis()));
+        db.update(sql, id, aktorId.get(), helseOgAndreHensynData.getVerdi().toString(), new Timestamp(System.currentTimeMillis()));
         return id;
     }
 
     @SneakyThrows
     private static HelseOgAndreHensynData helseHensynMapper(ResultSet rs) {
-        while(rs.next()) {
+        if (rs.next()) {
             return new HelseOgAndreHensynData()
-                        .setVerdi(ofNullable(rs.getString(SVAR)).isPresent()
+                    .setVerdi(ofNullable(rs.getString(SVAR)).isPresent()
                             ? HinderSvar.valueOf(rs.getString(SVAR))
                             : null
-                            )
-                        .setDato(rs.getTimestamp(DATO));
+                    )
+                    .setDato(rs.getTimestamp(DATO));
+        } else {
+            return null;
         }
-        return null;
     }
 }

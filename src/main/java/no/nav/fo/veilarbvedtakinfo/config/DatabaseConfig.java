@@ -37,11 +37,6 @@ public class DatabaseConfig {
         return new HikariDataSource(config);
     }
 
-    @Bean(name = "transactionManager")
-    public PlatformTransactionManager transactionManager(DataSource dataSource) {
-        return new DataSourceTransactionManager(dataSource);
-    }
-
     @Bean
     public JdbcTemplate jdbcTemplate(DataSource dataSource) {
         return new JdbcTemplate(dataSource);

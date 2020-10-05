@@ -2,17 +2,16 @@ package no.nav.fo.veilarbvedtakinfo.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import no.nav.common.abac.Pep;
-import no.nav.common.client.aktorregister.AktorregisterClient;
+import no.nav.common.types.identer.AktorId;
+import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.InfoOmMegData;
+import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
-import no.nav.fo.veilarbvedtakinfo.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import no.nav.fo.veilarbvedtakinfo.utils.FnrUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,107 +19,102 @@ import java.util.List;
 @RequestMapping("/api")
 @Api(value = "InfoOmMegController", description = "Tjenester for deling av arbeidssøkerstatus.")
 public class InfoOmMegController {
+
     private final InfoOmMegService infoOmMegService;
-    private final UserService userService;
-    private final AktorregisterClient aktorregisterClient;
-    private final Pep pep;
+    private final AuthService authService;
 
-    public InfoOmMegController(InfoOmMegService infoOmMegService,
-                             UserService userService,
-                             AktorregisterClient aktorregisterClient,
-                             Pep pep){
-
+    @Autowired
+    public InfoOmMegController(InfoOmMegService infoOmMegService, AuthService authService){
         this.infoOmMegService = infoOmMegService;
-        this.userService = userService;
-        this.aktorregisterClient = aktorregisterClient;
-        this.pep = pep;
+        this.authService = authService;
     }
 
     @GetMapping("/sistesituasjon")
     @ApiOperation(value = "Henter alle sist lagrede verdier.")
-    public InfoOmMegData hentSisteSituasjon() {
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
+    public InfoOmMegData hentSisteSituasjon(@RequestParam(required = false, name = "fnr") Fnr fnr) {
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        userService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(aktorId);
 
         return infoOmMegService.hentSisteSituasjon(aktorId, fnr);
     }
 
     @GetMapping("/fremtidigsituasjon")
     @ApiOperation(value = "Henter nyeste verdi for fremtidig situasjon.")
-    public HovedmalData hentFremtidigSituasjon() {
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
+    public HovedmalData hentFremtidigSituasjon(@RequestParam(required = false, name = "fnr") Fnr fnr) {
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        userService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(aktorId);
 
         return infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
     }
 
     @GetMapping("/situasjonliste")
     @ApiOperation(value = "Henter nyeste verdi for fremtidig situasjon.")
-    public List<HovedmalData> hentSituasjonListe() {
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
+    public List<HovedmalData> hentSituasjonListe(@RequestParam(required = false, name = "fnr") Fnr fnr) {
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        userService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(aktorId);
 
         return infoOmMegService.hentSituasjonHistorikk(aktorId);
     }
 
     @PostMapping("/fremtidigsituasjon")
     @ApiOperation(value = "Oppdaterer fremtidig situasjon")
-    public HovedmalData oppdaterFremtidigSituasjon(HovedmalData fremtidigSituasjonData) {
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
-        String endretAv = userService.erEksternBruker() ? aktorId : userService.getUid();
+    public HovedmalData oppdaterFremtidigSituasjon(@RequestBody HovedmalData fremtidigSituasjonData, @RequestParam(required = false, name = "fnr") Fnr fnr) {
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        userService.sjekkLeseTilgangTilPerson(aktorId);
+        String endretAv = authService.erEksternBruker() ? aktorId.get() : authService.hentInnloggetSubject();
+
+        authService.sjekkLeseTilgangTilPerson(aktorId);
 
         return infoOmMegService.lagreFremtidigSituasjon(fremtidigSituasjonData, aktorId, endretAv);
     }
 
     @GetMapping("/helsehinder")
     @ApiOperation(value = "Henter siste lagrede verdi av helsehinder.")
-    public HelseOgAndreHensynData hentHelseHinder() {
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
+    public HelseOgAndreHensynData hentHelseHinder(@RequestParam(required = false, name = "fnr") Fnr fnr) {
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        userService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(aktorId);
 
         return infoOmMegService.hentHelseHinder(aktorId, fnr);
     }
 
     @PostMapping("/helsehinder")
     @ApiOperation(value = "Lagrer helsehinder.")
-    public HelseOgAndreHensynData lagreHelseHinder(HelseOgAndreHensynData helseOgAndreHensynData){
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
+    public HelseOgAndreHensynData lagreHelseHinder(@RequestBody HelseOgAndreHensynData helseOgAndreHensynData, @RequestParam(required = false, name = "fnr") Fnr fnr){
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        userService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(aktorId);
 
         return infoOmMegService.lagreHelseHinder(helseOgAndreHensynData, aktorId);
     }
 
     @GetMapping("/andrehinder")
     @ApiOperation(value = "Henter siste lagrede verdi av andre hinder.")
-    public HelseOgAndreHensynData hentAndreHinder() {
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
+    public HelseOgAndreHensynData hentAndreHinder(@RequestParam(required = false, name = "fnr") Fnr fnr) {
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        userService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(aktorId);
 
         return infoOmMegService.hentAndreHinder(aktorId, fnr);
     }
 
     @PostMapping("/andrehinder")
     @ApiOperation(value = "Lagrer andre hinder.")
-    public HelseOgAndreHensynData lagreAndreHinder(HelseOgAndreHensynData helseOgAndreHensynData){
-        String fnr = userService.hentFnrFraUrlEllerToken();
-        String aktorId = aktorregisterClient.hentAktorId(fnr);
+    public HelseOgAndreHensynData lagreAndreHinder(@RequestBody HelseOgAndreHensynData helseOgAndreHensynData, @RequestParam(required = false, name = "fnr") Fnr fnr){
+        Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
+        AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        userService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(aktorId);
 
         return infoOmMegService.lagreAndreHinder(helseOgAndreHensynData, aktorId);
     }

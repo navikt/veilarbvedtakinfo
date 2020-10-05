@@ -1,14 +1,15 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
+import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
+import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 
 import java.sql.ResultSet;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -29,77 +30,86 @@ public class BehovsvurderingRepository {
     private final static String SPM = "SPM";
     private final static String SVAR = "SVAR";
     private final static String DATO = "DATO";
+    private final static int ROWNUM = 1;
 
     public BehovsvurderingRepository(JdbcTemplate db) {
         this.db = db;
     }
 
-    public long lagNyBesvarlse(String aktorId) {
+    public long lagNyBesvarlse(AktorId aktorId) {
         long id = DatabaseUtils.nesteFraSekvens(db, SEQ);
         String sql = format(
-                "INSERT INTO %s (%s, %s, %s) VALUES (?,?,?)",
+                "INSERT INTO %s (%s, %s, %s) VALUES (?,?,CURRENT_TIMESTAMP)",
                 BESVARLSE_TABLE_NAME, BESVARELSE_ID, AKTOR_ID, SIST_OPPDATERT
         );
-        db.update(sql, id, aktorId, new Date());
-        return  id;
+        db.update(sql, id, aktorId.get());
+        return id;
     }
 
     public void leggTilNyttSvarPaBesvarelsen(long besvarlseId, Svar svar) {
-        Date sistOppdatertDato = new Date();
         String sql = format(
-                "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?,?)",
+                "INSERT INTO %s (%s, %s, %s, %s, %s) VALUES (?,?,?,?, CURRENT_TIMESTAMP)",
                 SPM_SVAR_TABLE_NAME, BESVARELSE_ID, SPM_ID, SVAR, SPM, DATO
         );
-        db.update(sql, besvarlseId, svar.spmId, svar.svar, svar.spm, sistOppdatertDato);
+        db.update(sql, besvarlseId, svar.spmId, svar.svar, svar.spm);
 
-        String sql1 = format(
-                "UPDATE " + BESVARLSE_TABLE_NAME +
-                        " SET " + BESVARELSE_ID + " = ?, " +
-                                  SIST_OPPDATERT + " = ? "
-        );
-        db.update(sql1, besvarlseId, sistOppdatertDato);
+        String sql1 = format("UPDATE %s SET %s = CURRENT_TIMESTAMP WHERE %s = ?", BESVARLSE_TABLE_NAME, SIST_OPPDATERT, BESVARELSE_ID);
+
+        db.update(sql1, besvarlseId);
     }
 
     public Besvarelse hentBesvarelse(Long besvarlseId) {
         String sql = format("SELECT * FROM %s WHERE %s = %d", BESVARLSE_TABLE_NAME, BESVARELSE_ID, besvarlseId);
         Besvarelse bv =  db.query(sql, BehovsvurderingRepository::besvarelseMapper);
 
-        String sql1 = format("SELECT * FROM %s WHERE %s = %d", SPM_SVAR_TABLE_NAME, BESVARELSE_ID, besvarlseId);
-        List<Svar> svar = List.of(db.query(sql1, BehovsvurderingRepository::svarMapper));
+        if (bv==null) {
+            throw new IllegalStateException("Mangler besvarelse i behovsvurdering");
+        }
 
-        bv.setSvar(svar);
+        bv.setSvar(hentSvarPaBesvarelse(bv.besvarelseId));
         return bv;
     }
 
-    public Besvarelse hentSisteBesvarelse(String aktorId) {
-        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %d ORDER BY SIST_OPPDATERT DESC) WHERE ROWNUM <=1",
-                            BESVARLSE_TABLE_NAME, AKTOR_ID, aktorId);
+    public Besvarelse hentSisteBesvarelse(AktorId aktorId) {
+        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %s ORDER BY SIST_OPPDATERT DESC) FETCH NEXT %d ROWS ONLY",
+                            BESVARLSE_TABLE_NAME, AKTOR_ID, aktorId.get(), ROWNUM);
+        Besvarelse bv = db.query(sql, BehovsvurderingRepository::besvarelseMapper);
 
-        Besvarelse bv =  db.query(sql, BehovsvurderingRepository::besvarelseMapper);
         if (bv == null) {
-            return null;
+            throw new IllegalStateException("Det er ingen besvarelese med aktorid: " + aktorId.get() + " i behovsvurdering");
         }
 
-        String sql1 = format("SELECT * FROM %s WHERE %s = %d", SPM_SVAR_TABLE_NAME, BESVARELSE_ID, bv.besvarelseId);
-        List<Svar> svar = List.of(db.query(sql1, BehovsvurderingRepository::svarMapper));
-        bv.setSvar(svar);
+        bv.setSvar(hentSvarPaBesvarelse(bv.besvarelseId));
         return bv;
+    }
+
+    public List<Svar> hentSvarPaBesvarelse(Long besvarelseId) {
+        String sql = format("SELECT * FROM %s WHERE %s = %d", SPM_SVAR_TABLE_NAME, BESVARELSE_ID, besvarelseId);
+        return Arrays.asList(db.query(sql, BehovsvurderingRepository::svarMapper));
     }
 
     @SneakyThrows
     private static Besvarelse besvarelseMapper(ResultSet rs) {
-        return new Besvarelse()
-                .setBesvarelseId(rs.getLong(BESVARELSE_ID))
-                .setSistOppdatert(rs.getTimestamp(SIST_OPPDATERT));
+        if(rs.next()) {
+            return new Besvarelse()
+                    .setBesvarelseId(rs.getLong(BESVARELSE_ID))
+                    .setSistOppdatert(rs.getTimestamp(SIST_OPPDATERT));
+        }else {
+            return null;
+        }
     }
 
     @SneakyThrows
     private static Svar svarMapper(ResultSet rs) {
-        return new Svar()
-                .setBesvarelseId(rs.getLong(BESVARELSE_ID))
-                .setSpmId(rs.getString(SPM_ID))
-                .setSpm(rs.getString(SPM))
-                .setSvar(rs.getString(SVAR))
-                .setDato(rs.getTimestamp(DATO));
+        if(rs.next()) {
+            return new Svar()
+                    .setBesvarelseId(rs.getLong(BESVARELSE_ID))
+                    .setSpmId(rs.getString(SPM_ID))
+                    .setSpm(rs.getString(SPM))
+                    .setSvar(rs.getString(SVAR))
+                    .setDato(rs.getTimestamp(DATO));
+        }else {
+            return null;
+        }
     }
 }

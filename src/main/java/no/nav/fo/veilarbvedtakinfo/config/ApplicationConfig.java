@@ -6,6 +6,7 @@ import no.nav.common.abac.audit.SpringAuditRequestInfoSupplier;
 import no.nav.common.client.aktorregister.AktorregisterClient;
 import no.nav.common.client.aktorregister.AktorregisterHttpClient;
 import no.nav.common.client.aktorregister.CachedAktorregisterClient;
+import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.OpenAmSystemUserTokenProvider;
 import no.nav.common.utils.Credentials;
 import no.nav.common.utils.NaisUtils;
@@ -27,7 +28,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public OpenAmSystemUserTokenProvider OpenAmsystemUserTokenProvider(EnvironmentProperties properties, Credentials serviceUserCredentials) {
+    public OpenAmSystemUserTokenProvider openAmsystemUserTokenProvider(EnvironmentProperties properties, Credentials serviceUserCredentials) {
         return new OpenAmSystemUserTokenProvider(
                 properties.getOpenAmDiscoveryUrl(), properties.getOpenAmRedirectUrl(),
                 new Credentials(properties.getOpenAmIssoRpUsername(), properties.getOpenAmIssoRpPassword()), serviceUserCredentials
@@ -35,9 +36,14 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AktorregisterClient aktorregisterClient(EnvironmentProperties properties, OpenAmSystemUserTokenProvider tokenProvider) {
+    public NaisSystemUserTokenProvider naisSystemUserTokenProvider(EnvironmentProperties properties, Credentials serviceUserCredentials) {
+        return new NaisSystemUserTokenProvider(properties.getStsDiscoveryUrl(), serviceUserCredentials.username, serviceUserCredentials.password);
+    }
+
+    @Bean
+    public AktorregisterClient aktorregisterClient(EnvironmentProperties properties, NaisSystemUserTokenProvider naisSystemUserTokenProvider) {
         AktorregisterClient aktorregisterClient = new AktorregisterHttpClient(
-                properties.getAktorregisterUrl(), APPLICATION_NAME, tokenProvider::getSystemUserToken
+                properties.getAktorregisterUrl(), APPLICATION_NAME, naisSystemUserTokenProvider::getSystemUserToken
         );
         return new CachedAktorregisterClient(aktorregisterClient);
     }
