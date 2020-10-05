@@ -30,6 +30,7 @@ public class BehovsvurderingRepository {
     private final static String SPM = "SPM";
     private final static String SVAR = "SVAR";
     private final static String DATO = "DATO";
+    private final static int ROWNUM = 1;
 
     public BehovsvurderingRepository(JdbcTemplate db) {
         this.db = db;
@@ -70,8 +71,8 @@ public class BehovsvurderingRepository {
     }
 
     public Besvarelse hentSisteBesvarelse(AktorId aktorId) {
-        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %s ORDER BY SIST_OPPDATERT DESC) WHERE ROWNUM <=1",
-                            BESVARLSE_TABLE_NAME, AKTOR_ID, aktorId.get());
+        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %s ORDER BY SIST_OPPDATERT DESC) FETCH NEXT %d ROWS ONLY",
+                            BESVARLSE_TABLE_NAME, AKTOR_ID, aktorId.get(), ROWNUM);
         Besvarelse bv = db.query(sql, BehovsvurderingRepository::besvarelseMapper);
 
         if (bv == null) {

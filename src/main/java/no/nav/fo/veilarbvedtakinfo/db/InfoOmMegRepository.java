@@ -52,8 +52,9 @@ public class InfoOmMegRepository {
     }
 
     public HovedmalData hentFremtidigSituasjonForId(long id) {
-        String sql = format("SELECT * FROM %s WHERE %s = %s",
+        String sql = format("SELECT * FROM %s WHERE %s = %d",
                     FREMTIDIG_SITUASJON, FREMTIDIG_SITUASJON_ID, id);
+
         List<HovedmalData> data = db.query(sql, (rs, rownum) -> fremtidigSituasjonMapper(rs));
         return data.isEmpty() ? null : data.get(0);
     }
@@ -68,6 +69,7 @@ public class InfoOmMegRepository {
     public long lagreFremtidigSituasjonForAktorId(HovedmalData fremtidigSituasjonData, AktorId aktorId, String endretAv) {
         long id = DatabaseUtils.nesteFraSekvens(db, FREMTIDIG_SITUASJON_SEQ);
         String alt = fremtidigSituasjonData.getAlternativId().toString();
+
         String sql = format(
                 "INSERT INTO %s (%s, %s, %s, %s, %s, %s) VALUES (?,?,?,?,?,?)",
                 FREMTIDIG_SITUASJON, FREMTIDIG_SITUASJON_ID, AKTOR_ID, ALTERNATIV_ID, TEKST, ENDRET_AV, DATO
@@ -95,7 +97,7 @@ public class InfoOmMegRepository {
     }
 
     public HelseOgAndreHensynData hentHelseHinderForId(long id) {
-        String sql = format("SELECT * FROM %s WHERE %s = %s",
+        String sql = format("SELECT * FROM %s WHERE %s = %d",
                 HELSEHINDER, HELSEHINDER_ID, id);
         return db.query(sql, InfoOmMegRepository::helseHensynMapper);
     }
@@ -107,7 +109,7 @@ public class InfoOmMegRepository {
     }
 
     public HelseOgAndreHensynData hentAndreHinderForId(long id) {
-        String sql = format("SELECT * FROM %s WHERE %s = %s",
+        String sql = format("SELECT * FROM %s WHERE %s = %d",
                 ANDREHINDER, ANDREHINDER_ID, id);
         return db.query(sql, InfoOmMegRepository::helseHensynMapper);
     }

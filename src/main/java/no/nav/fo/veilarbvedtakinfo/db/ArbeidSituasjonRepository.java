@@ -26,6 +26,7 @@ public class ArbeidSituasjonRepository {
     private final static String SVAR_TEXT = "SVAR_TEXT";
     private final static String ENDRET_AV_ID = "ENDRET_AV_ID";
     private final static String MIN_SITUASJON_SEQ = "MIN_SITUASJON_SEQ";
+    private final static int ROWNUM = 1;
 
     public ArbeidSituasjonRepository(JdbcTemplate db) {
         this.db = db;
@@ -41,10 +42,10 @@ public class ArbeidSituasjonRepository {
     }
 
     public ArbeidSituasjon hentSituasjon(AktorId aktorId) {
-        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = ? ORDER BY OPRETTET DESC) WHERE ROWNUM <=1 ",
-                            MIN_SITUASJON, AKTOR_ID
+        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %s ORDER BY OPRETTET DESC) FETCH NEXT %d ROWS ONLY",
+                            MIN_SITUASJON, AKTOR_ID, aktorId.get(), ROWNUM
         );
-        return db.query(sql, ArbeidSituasjonRepository::fremtidigSituasjonMapper, aktorId.get());
+        return db.query(sql, ArbeidSituasjonRepository::fremtidigSituasjonMapper);
     }
 
     @SneakyThrows
