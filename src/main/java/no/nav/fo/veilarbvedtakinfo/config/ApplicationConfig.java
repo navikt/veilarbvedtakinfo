@@ -16,8 +16,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.servlet.http.HttpServletRequest;
-
 import static no.nav.common.utils.NaisUtils.getCredentials;
 
 @Configuration
@@ -53,8 +51,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public RegistreringClient registreringClient(HttpServletRequest request, NaisSystemUserTokenProvider tokenProvider) {
-        return new RegistreringClientImpl(request, tokenProvider);
+    public RegistreringClient registreringClient(NaisSystemUserTokenProvider tokenProvider) {
+        return new RegistreringClientImpl(tokenProvider);
     }
 
     @Bean

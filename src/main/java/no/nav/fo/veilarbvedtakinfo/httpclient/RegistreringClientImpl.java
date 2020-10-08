@@ -11,11 +11,9 @@ import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.InternalServerErrorException;
 
 import static java.lang.String.format;
-import static javax.ws.rs.core.HttpHeaders.COOKIE;
 import static no.nav.common.utils.EnvironmentUtils.getRequiredProperty;
 import static no.nav.common.utils.UrlUtils.joinPaths;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -27,14 +25,11 @@ public class RegistreringClientImpl implements RegistreringClient {
 
     private final NaisSystemUserTokenProvider systemUserTokenProvider;
 
-    private final HttpServletRequest httpServletRequest;
-
     private final OkHttpClient client;
 
     private final String baseUrl;
 
-    public RegistreringClientImpl(HttpServletRequest httpServletRequest, NaisSystemUserTokenProvider systemUserTokenProvider) {
-        this.httpServletRequest = httpServletRequest;
+    public RegistreringClientImpl(NaisSystemUserTokenProvider systemUserTokenProvider) {
         this.systemUserTokenProvider = systemUserTokenProvider;
         this.client = RestClient.baseClient();
         this.baseUrl = getRequiredProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME);
@@ -42,11 +37,8 @@ public class RegistreringClientImpl implements RegistreringClient {
 
     @Override
     public BrukerRegistreringWrapper hentSisteRegistrering(Fnr fnr) {
-        String cookies = httpServletRequest.getHeader(COOKIE);
-
         Request request = new Request.Builder()
                 .url(joinPaths(baseUrl, format("/veilarbregistrering/api/registrering?fnr=%s", fnr.get())))
-                .header(COOKIE, cookies)
                 .header(AUTHORIZATION, "Bearer " + systemUserTokenProvider.getSystemUserToken())
                 .build();
 
