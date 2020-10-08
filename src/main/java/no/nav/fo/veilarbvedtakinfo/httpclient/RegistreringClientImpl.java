@@ -5,7 +5,7 @@ import no.nav.common.health.HealthCheckResult;
 import no.nav.common.health.HealthCheckUtils;
 import no.nav.common.rest.client.RestClient;
 import no.nav.common.rest.client.RestUtils;
-import no.nav.common.sts.SystemUserTokenProvider;
+import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper;
 import okhttp3.OkHttpClient;
@@ -25,7 +25,7 @@ public class RegistreringClientImpl implements RegistreringClient {
 
     public static final String VEILARBREGISTRERING_URL_PROPERTY_NAME = "VEILARBREGISTRERING_URL";
 
-    private final SystemUserTokenProvider systemUserTokenProvider;
+    private final NaisSystemUserTokenProvider systemUserTokenProvider;
 
     private final HttpServletRequest httpServletRequest;
 
@@ -33,7 +33,7 @@ public class RegistreringClientImpl implements RegistreringClient {
 
     private final String baseUrl;
 
-    public RegistreringClientImpl(HttpServletRequest httpServletRequest, SystemUserTokenProvider systemUserTokenProvider) {
+    public RegistreringClientImpl(HttpServletRequest httpServletRequest, NaisSystemUserTokenProvider systemUserTokenProvider) {
         this.httpServletRequest = httpServletRequest;
         this.systemUserTokenProvider = systemUserTokenProvider;
         this.client = RestClient.baseClient();

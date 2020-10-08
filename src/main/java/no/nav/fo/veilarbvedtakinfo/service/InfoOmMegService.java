@@ -55,9 +55,7 @@ public class InfoOmMegService {
 
     public HovedmalData lagreFremtidigSituasjon(HovedmalData fremtidigSituasjon, AktorId aktorId, String endretAv) {
         long id = infoOmMegRepository.lagreFremtidigSituasjonForAktorId(fremtidigSituasjon, aktorId, endretAv);
-
         return infoOmMegRepository.hentFremtidigSituasjonForId(id);
-
     }
 
     public HelseOgAndreHensynData hentHelseHinder(AktorId aktorId, Fnr fnr) {

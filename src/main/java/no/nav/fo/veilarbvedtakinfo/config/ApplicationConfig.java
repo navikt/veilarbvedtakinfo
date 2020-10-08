@@ -10,9 +10,13 @@ import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.OpenAmSystemUserTokenProvider;
 import no.nav.common.utils.Credentials;
 import no.nav.common.utils.NaisUtils;
+import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
+import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClientImpl;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static no.nav.common.utils.NaisUtils.getCredentials;
 
@@ -46,6 +50,11 @@ public class ApplicationConfig {
                 properties.getAktorregisterUrl(), APPLICATION_NAME, naisSystemUserTokenProvider::getSystemUserToken
         );
         return new CachedAktorregisterClient(aktorregisterClient);
+    }
+
+    @Bean
+    public RegistreringClient registreringClient(HttpServletRequest request, NaisSystemUserTokenProvider tokenProvider) {
+        return new RegistreringClientImpl(request, tokenProvider);
     }
 
     @Bean
