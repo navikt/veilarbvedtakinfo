@@ -5,6 +5,7 @@ import no.nav.common.auth.oidc.filter.OidcAuthenticationFilter;
 import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
 import no.nav.common.log.LogFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
+import no.nav.fo.veilarbvedtakinfo.utils.PingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,15 +45,14 @@ public class FilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean authenticationFilterRegistrationBean(EnvironmentProperties properties) {
-        FilterRegistrationBean<OidcAuthenticationFilter> registration = new FilterRegistrationBean<>();
-        OidcAuthenticationFilter authenticationFilter = new OidcAuthenticationFilter(
-                fromConfigs(openAmAuthConfig(properties), azureAdB2CAuthConfig(properties), azureAdAuthConfig(properties))
-        );
+    public FilterRegistrationBean pingFilterRegistrationBean() {
+        // Veilarbproxy trenger dette endepunktet for å sjekke at tjenesten lever
+        // /internal kan ikke brukes siden det blir stoppet før det kommer frem
 
-        registration.setFilter(authenticationFilter);
-        registration.setOrder(2);
-        registration.addUrlPatterns("/api/*");
+        FilterRegistrationBean<PingFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new PingFilter());
+        registration.setOrder(1);
+        registration.addUrlPatterns("/api/ping");
         return registration;
     }
 
@@ -60,8 +60,21 @@ public class FilterConfig {
     public FilterRegistrationBean logFilterRegistrationBean() {
         FilterRegistrationBean<LogFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new LogFilter(requireApplicationName(), isDevelopment().orElse(false)));
-        registration.setOrder(1);
+        registration.setOrder(2);
         registration.addUrlPatterns("/*");
+        return registration;
+    }
+
+    @Bean
+    public FilterRegistrationBean authenticationFilterRegistrationBean(EnvironmentProperties properties) {
+        FilterRegistrationBean<OidcAuthenticationFilter> registration = new FilterRegistrationBean<>();
+        OidcAuthenticationFilter authenticationFilter = new OidcAuthenticationFilter(
+                fromConfigs(openAmAuthConfig(properties), azureAdB2CAuthConfig(properties), azureAdAuthConfig(properties))
+        );
+
+        registration.setFilter(authenticationFilter);
+        registration.setOrder(3);
+        registration.addUrlPatterns("/api/*");
         return registration;
     }
 
@@ -69,7 +82,7 @@ public class FilterConfig {
     public FilterRegistrationBean setStandardHeadersFilterRegistrationBean() {
         FilterRegistrationBean<SetStandardHttpHeadersFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new SetStandardHttpHeadersFilter());
-        registration.setOrder(3);
+        registration.setOrder(4);
         registration.addUrlPatterns("/*");
         return registration;
     }
