@@ -5,8 +5,10 @@ import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
 import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.ResultSet;
 import java.util.Arrays;
@@ -62,8 +64,8 @@ public class BehovsvurderingRepository {
         String sql = format("SELECT * FROM %s WHERE %s = %d", BESVARLSE_TABLE_NAME, BESVARELSE_ID, besvarlseId);
         Besvarelse bv =  db.query(sql, BehovsvurderingRepository::besvarelseMapper);
 
-        if (bv==null) {
-            throw new IllegalStateException("Mangler besvarelse i behovsvurdering");
+        if (bv == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mangler besvarelse i behovsvurdering");
         }
 
         bv.setSvar(hentSvarPaBesvarelse(bv.besvarelseId));
@@ -76,7 +78,7 @@ public class BehovsvurderingRepository {
         Besvarelse bv = db.query(sql, BehovsvurderingRepository::besvarelseMapper);
 
         if (bv == null) {
-            throw new IllegalStateException("Det er ingen besvarelese med aktorid: " + aktorId.get() + " i behovsvurdering");
+            return null;
         }
 
         bv.setSvar(hentSvarPaBesvarelse(bv.besvarelseId));
