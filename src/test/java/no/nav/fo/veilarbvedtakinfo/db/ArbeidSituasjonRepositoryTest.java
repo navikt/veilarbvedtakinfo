@@ -30,21 +30,30 @@ public class ArbeidSituasjonRepositoryTest {
     }
 
     @Test
-    public void lagreSituasjon() {
-        AktorId aktorId = eksternIdent;
-        EndretAvType endretAv = EndretAvType.BRUKER;
-        String avsenderID = "234";
+    public void lagrerSituasjonerOgHenterSiste() {
+        lagreSituasjonen(EndretAvType.BRUKER, "234", "1", "SvarTekst1");
+        ArbeidSituasjon endring2 = lagreSituasjonen(EndretAvType.BRUKER, "123", "2", "SvarTekst2");
+
+        ArbeidSituasjon arbeidSituasjon = arbeidSituasjonRepository.hentSituasjon(eksternIdent);
+
+        assertEquals(endring2.getEndretAvType(), arbeidSituasjon.getEndretAvType());
+        assertEquals(endring2.getSvarId(), arbeidSituasjon.getSvarId());
+        assertEquals(endring2.getSvarTekst(), arbeidSituasjon.getSvarTekst());
+        assertEquals(endring2.getEndretAvId(), arbeidSituasjon.getEndretAvId());
+    }
+
+    private ArbeidSituasjon lagreSituasjonen(EndretAvType endretAvType, String avsenderId, String svarId, String svarTekst) {
+        AktorId aktorId1 = eksternIdent;
         ArbeidSituasjonSvar svar = new ArbeidSituasjonSvar();
-        svar.setSvarId("1");
-        svar.setSvarTekst("Test");
+        svar.setSvarId(svarId);
+        svar.setSvarTekst(svarTekst);
 
-        arbeidSituasjonRepository.lagreSituasjon(aktorId, endretAv, avsenderID, svar);
+        arbeidSituasjonRepository.lagreSituasjon(aktorId1, endretAvType, avsenderId, svar);
 
-        ArbeidSituasjon arbeidSituasjon = arbeidSituasjonRepository.hentSituasjon(aktorId);
-
-        assertEquals(endretAv.toString(), arbeidSituasjon.getEndretAvType());
-        assertEquals(svar.getSvarId(), arbeidSituasjon.getSvarId());
-        assertEquals(svar.getSvarTekst(), arbeidSituasjon.getSvarTekst());
-        assertEquals(avsenderID, arbeidSituasjon.getEndretAvId());
+        return  new ArbeidSituasjon()
+                        .setEndretAvType(endretAvType.toString())
+                        .setSvarId(svarId)
+                        .setSvarTekst(svarTekst)
+                        .setEndretAvId(avsenderId);
     }
 }

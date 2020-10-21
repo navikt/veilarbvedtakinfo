@@ -20,7 +20,7 @@ public class ArbeidSituasjonRepository {
     private final static String MIN_SITUASJON = "MIN_SITUASJON";
     private final static String ID = "ID";
     private final static String AKTOR_ID = "AKTOR_ID";
-    private final static String OPRETTET = "OPRETTET";
+    private final static String OPPRETTET = "OPRETTET";
     private final static String ENDRET_AV_TYPE = "ENDRET_AV_TYPE";
     private final static String SVAR_ID = "SVAR_ID";
     private final static String SVAR_TEXT = "SVAR_TEXT";
@@ -36,23 +36,23 @@ public class ArbeidSituasjonRepository {
         long id = DatabaseUtils.nesteFraSekvens(db, MIN_SITUASJON_SEQ);
         String sql = format(
                 "INSERT INTO %s (%s, %s, %s, %s, %s, %s, %s) VALUES (?,?,CURRENT_TIMESTAMP,?,?,?,?)",
-                MIN_SITUASJON, ID, AKTOR_ID, OPRETTET, ENDRET_AV_ID, ENDRET_AV_TYPE, SVAR_ID, SVAR_TEXT
+                MIN_SITUASJON, ID, AKTOR_ID, OPPRETTET, ENDRET_AV_ID, ENDRET_AV_TYPE, SVAR_ID, SVAR_TEXT
         );
         db.update(sql, id, aktorId.get(), avsenderID, endretAv.toString(), svar.svarId, svar.svarTekst);
     }
 
     public ArbeidSituasjon hentSituasjon(AktorId aktorId) {
-        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %s ORDER BY OPRETTET DESC) FETCH NEXT %d ROWS ONLY",
-                            MIN_SITUASJON, AKTOR_ID, aktorId.get(), ROWNUM
+        String sql = format("SELECT * FROM %s WHERE %s = ? ORDER BY %s DESC FETCH NEXT %d ROWS ONLY",
+                MIN_SITUASJON, AKTOR_ID, OPPRETTET, ROWNUM
         );
-        return db.query(sql, ArbeidSituasjonRepository::fremtidigSituasjonMapper);
+        return db.query(sql, ArbeidSituasjonRepository::fremtidigSituasjonMapper, aktorId.get());
     }
 
     @SneakyThrows
     private static ArbeidSituasjon fremtidigSituasjonMapper(ResultSet rs) {
         if(rs.next()) {
             return new ArbeidSituasjon()
-                    .setOpprettet(rs.getString(OPRETTET))
+                    .setOpprettet(rs.getString(OPPRETTET))
                     .setEndretAvType(rs.getString(ENDRET_AV_TYPE))
                     .setEndretAvId(rs.getString(ENDRET_AV_ID))
                     .setSvarId(rs.getString(SVAR_ID))

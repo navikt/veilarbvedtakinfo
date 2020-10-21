@@ -68,20 +68,20 @@ public class BehovsvurderingRepository {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mangler besvarelse i behovsvurdering");
         }
 
-        bv.setSvar(hentSvarPaBesvarelse(bv.besvarelseId));
+        bv.setSvar(hentSvarPaBesvarelse(bv.getBesvarelseId()));
         return bv;
     }
 
     public Besvarelse hentSisteBesvarelse(AktorId aktorId) {
-        String sql = format("SELECT * FROM(SELECT * FROM %s WHERE %s = %s ORDER BY SIST_OPPDATERT DESC) FETCH NEXT %d ROWS ONLY",
-                            BESVARLSE_TABLE_NAME, AKTOR_ID, aktorId.get(), ROWNUM);
-        Besvarelse bv = db.query(sql, BehovsvurderingRepository::besvarelseMapper);
+        String sql = format("SELECT * FROM %s WHERE %s = ? ORDER BY SIST_OPPDATERT DESC FETCH NEXT %d ROWS ONLY",
+                            BESVARLSE_TABLE_NAME, AKTOR_ID, ROWNUM);
+        Besvarelse bv = db.query(sql, BehovsvurderingRepository::besvarelseMapper, aktorId.get());
 
         if (bv == null) {
             return null;
         }
 
-        bv.setSvar(hentSvarPaBesvarelse(bv.besvarelseId));
+        bv.setSvar(hentSvarPaBesvarelse(bv.getBesvarelseId()));
         return bv;
     }
 
@@ -94,6 +94,7 @@ public class BehovsvurderingRepository {
     private static Besvarelse besvarelseMapper(ResultSet rs) {
         if(rs.next()) {
             return new Besvarelse()
+                    .setAktorId(AktorId.of(rs.getString(AKTOR_ID)))
                     .setBesvarelseId(rs.getLong(BESVARELSE_ID))
                     .setSistOppdatert(rs.getTimestamp(SIST_OPPDATERT));
         }else {
