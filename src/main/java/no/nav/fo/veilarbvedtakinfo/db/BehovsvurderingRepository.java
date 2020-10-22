@@ -7,11 +7,10 @@ import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
 import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.sql.ResultSet;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -62,57 +61,51 @@ public class BehovsvurderingRepository {
 
     public Besvarelse hentBesvarelse(Long besvarlseId) {
         String sql = format("SELECT * FROM %s WHERE %s = %d", BESVARLSE_TABLE_NAME, BESVARELSE_ID, besvarlseId);
-        Besvarelse bv =  db.query(sql, BehovsvurderingRepository::besvarelseMapper);
+        List<Besvarelse> besvarelseList = db.query(sql, besvarelseMapper());
 
-        if (bv == null) {
+        if (besvarelseList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mangler besvarelse i behovsvurdering");
         }
-
-        bv.setSvar(hentSvarPaBesvarelse(bv.getBesvarelseId()));
-        return bv;
+        Besvarelse besvarelse = besvarelseList.get(0);
+        besvarelse.setSvar(hentSvarPaBesvarelse(besvarelse.getBesvarelseId()));
+        return besvarelse;
     }
 
     public Besvarelse hentSisteBesvarelse(AktorId aktorId) {
         String sql = format("SELECT * FROM %s WHERE %s = ? ORDER BY SIST_OPPDATERT DESC FETCH NEXT %d ROWS ONLY",
                             BESVARLSE_TABLE_NAME, AKTOR_ID, ROWNUM);
-        Besvarelse bv = db.query(sql, BehovsvurderingRepository::besvarelseMapper, aktorId.get());
+        List<Besvarelse> besvarelseList = db.query(sql, besvarelseMapper(), aktorId.get());
 
-        if (bv == null) {
+        if (besvarelseList.isEmpty()) {
             return null;
         }
-
-        bv.setSvar(hentSvarPaBesvarelse(bv.getBesvarelseId()));
-        return bv;
+        Besvarelse besvarelse = besvarelseList.get(0);
+        besvarelse.setSvar(hentSvarPaBesvarelse(besvarelse.getBesvarelseId()));
+        return besvarelse;
     }
 
     public List<Svar> hentSvarPaBesvarelse(Long besvarelseId) {
         String sql = format("SELECT * FROM %s WHERE %s = %d", SPM_SVAR_TABLE_NAME, BESVARELSE_ID, besvarelseId);
-        return Arrays.asList(db.query(sql, BehovsvurderingRepository::svarMapper));
+        return db.query(sql, svarMapper());
     }
 
     @SneakyThrows
-    private static Besvarelse besvarelseMapper(ResultSet rs) {
-        if(rs.next()) {
-            return new Besvarelse()
-                    .setAktorId(AktorId.of(rs.getString(AKTOR_ID)))
-                    .setBesvarelseId(rs.getLong(BESVARELSE_ID))
-                    .setSistOppdatert(rs.getTimestamp(SIST_OPPDATERT));
-        }else {
-            return null;
-        }
+    private RowMapper<Besvarelse> besvarelseMapper() {
+        return (rs, rowNum) ->
+                new Besvarelse()
+                        .setAktorId(AktorId.of(rs.getString(AKTOR_ID)))
+                        .setBesvarelseId(rs.getLong(BESVARELSE_ID))
+                        .setSistOppdatert(rs.getTimestamp(SIST_OPPDATERT));
     }
 
     @SneakyThrows
-    private static Svar svarMapper(ResultSet rs) {
-        if(rs.next()) {
-            return new Svar()
-                    .setBesvarelseId(rs.getLong(BESVARELSE_ID))
-                    .setSpmId(rs.getString(SPM_ID))
-                    .setSpm(rs.getString(SPM))
-                    .setSvar(rs.getString(SVAR))
-                    .setDato(rs.getTimestamp(DATO));
-        }else {
-            return null;
-        }
+    private RowMapper<Svar> svarMapper() {
+        return (rs, rowNum) ->
+                new Svar()
+                        .setBesvarelseId(rs.getLong(BESVARELSE_ID))
+                        .setSpmId(rs.getString(SPM_ID))
+                        .setSpm(rs.getString(SPM))
+                        .setSvar(rs.getString(SVAR))
+                        .setDato(rs.getTimestamp(DATO));
     }
 }

@@ -47,7 +47,7 @@ public class InfoOmMegService {
                 registrering.setTekst(brukerRegistrering.getSvarTekstForSpmId("fremtidigSituasjon"));
             }
 
-            return (HovedmalData) hentNyeste(registrering, hovedmalData);
+            return hentNyeste(registrering, hovedmalData);
         }
 
         return hovedmalData;
@@ -71,7 +71,7 @@ public class InfoOmMegService {
                     .setDato(registreringWrapper.getRegistrering().getOpprettetDato())
                     .setVerdi(registreringWrapper.getRegistrering().getBesvarelse().getHelseHinder());
 
-            return (HelseOgAndreHensynData) hentNyeste(registrering, helseData);
+            return hentNyeste(registrering, helseData);
 
         }
         return helseData;
@@ -95,7 +95,7 @@ public class InfoOmMegService {
                     .setDato(registreringWrapper.getRegistrering().getOpprettetDato())
                     .setVerdi(registreringWrapper.getRegistrering().getBesvarelse().getAndreForhold());
 
-            return (HelseOgAndreHensynData) hentNyeste(registrering, andreHinderData);
+            return hentNyeste(registrering, andreHinderData);
 
         }
         return andreHinderData;
@@ -119,7 +119,7 @@ public class InfoOmMegService {
         return infoOmMegRepository.hentSituasjonHistorikk(aktorId);
     }
 
-    private DataItem hentNyeste(DataItem item1, DataItem item2) {
+    private <T extends DataItem> T hentNyeste(T item1, T item2) {
         if (item1 == null) {
             return item2;
         }

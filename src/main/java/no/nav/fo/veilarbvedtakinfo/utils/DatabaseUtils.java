@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class DatabaseUtils {
 
     public static long nesteFraSekvens(JdbcTemplate jdbcTemplate, String sekvensNavn) {
-        String sql = "Select " + sekvensNavn + ".nextval from dual";
+        String sql = "select " + sekvensNavn + ".nextval from dual";
         return jdbcTemplate.queryForObject(sql, Long.class);
     }
 }

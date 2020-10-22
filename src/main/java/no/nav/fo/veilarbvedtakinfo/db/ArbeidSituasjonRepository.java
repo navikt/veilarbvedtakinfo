@@ -7,9 +7,10 @@ import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjon;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjonSvar;
 import no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
+import java.util.List;
 
 import static java.lang.String.format;
 
@@ -45,21 +46,23 @@ public class ArbeidSituasjonRepository {
         String sql = format("SELECT * FROM %s WHERE %s = ? ORDER BY %s DESC FETCH NEXT %d ROWS ONLY",
                 MIN_SITUASJON, AKTOR_ID, OPPRETTET, ROWNUM
         );
-        return db.query(sql, ArbeidSituasjonRepository::fremtidigSituasjonMapper, aktorId.get());
+        List<ArbeidSituasjon> arbeidSituasjonList = db.query(sql, fremtidigSituasjonMapper(), aktorId.get());
+
+        if (arbeidSituasjonList.isEmpty()) {
+            return null;
+        }
+
+        return arbeidSituasjonList.get(0);
     }
 
     @SneakyThrows
-    private static ArbeidSituasjon fremtidigSituasjonMapper(ResultSet rs) {
-        if(rs.next()) {
-            return new ArbeidSituasjon()
-                    .setOpprettet(rs.getString(OPPRETTET))
-                    .setEndretAvType(rs.getString(ENDRET_AV_TYPE))
-                    .setEndretAvId(rs.getString(ENDRET_AV_ID))
-                    .setSvarId(rs.getString(SVAR_ID))
-                    .setSvarTekst(rs.getString(SVAR_TEXT));
-        }else {
-            return null;
-        }
+    private RowMapper<ArbeidSituasjon> fremtidigSituasjonMapper() {
+        return (rs, rowNum) ->
+                new ArbeidSituasjon()
+                        .setOpprettet(rs.getString(OPPRETTET))
+                        .setEndretAvType(rs.getString(ENDRET_AV_TYPE))
+                        .setEndretAvId(rs.getString(ENDRET_AV_ID))
+                        .setSvarId(rs.getString(SVAR_ID))
+                        .setSvarTekst(rs.getString(SVAR_TEXT));
     }
-
 }
