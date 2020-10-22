@@ -8,7 +8,9 @@ import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjonSvar;
 import no.nav.fo.veilarbvedtakinfo.service.ArbeidSitasjonService;
 import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.utils.FnrUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/situasjon")
@@ -40,7 +42,11 @@ public class ArbeidsSituasjonController {
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
-        return service.fetchSvar(aktorId);
+        ArbeidSituasjon arbeidSituasjon = service.fetchSvar(aktorId);
+        if (arbeidSituasjon == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return arbeidSituasjon;
     }
 
 }

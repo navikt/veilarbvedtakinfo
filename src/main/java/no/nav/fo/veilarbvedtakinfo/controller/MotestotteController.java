@@ -8,7 +8,9 @@ import no.nav.fo.veilarbvedtakinfo.db.MotestotteRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.motestotte.Motestotte;
 import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.utils.FnrUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/motestotte")
@@ -45,7 +47,10 @@ public class MotestotteController {
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
-        return msRepo.hentMoteStotte(aktorId);
-
+        Motestotte motestotte = msRepo.hentMoteStotte(aktorId);
+        if (motestotte == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return motestotte;
     }
 }

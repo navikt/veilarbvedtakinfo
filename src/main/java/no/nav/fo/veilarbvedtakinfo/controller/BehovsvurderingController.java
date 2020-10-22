@@ -4,12 +4,15 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
+import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.BesvarelseDto;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
 import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.service.BehovsvurderingService;
 import no.nav.fo.veilarbvedtakinfo.utils.FnrUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/behovsvurdering")
@@ -43,7 +46,11 @@ public class BehovsvurderingController {
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
-        return BesvarelseDto.fromBesvarelse(bvService.hentBesvarelse(aktorId));
+        Besvarelse besvarelse = bvService.hentBesvarelse(aktorId);
+        if (besvarelse == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return BesvarelseDto.fromBesvarelse(besvarelse);
 
     }
 }
