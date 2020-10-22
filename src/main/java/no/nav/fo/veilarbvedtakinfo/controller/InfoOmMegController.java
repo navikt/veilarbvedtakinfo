@@ -11,7 +11,9 @@ import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.utils.FnrUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -48,7 +50,11 @@ public class InfoOmMegController {
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
-        return infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
+        HovedmalData hovedmalData = infoOmMegService.hentFremtidigSituasjon(aktorId, fnr);
+        if (hovedmalData == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return hovedmalData;
     }
 
     @GetMapping("/situasjonliste")
@@ -83,7 +89,11 @@ public class InfoOmMegController {
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
-        return infoOmMegService.hentHelseHinder(aktorId, fnr);
+        HelseOgAndreHensynData helseOgAndreHensynData = infoOmMegService.hentHelseHinder(aktorId, fnr);
+        if (helseOgAndreHensynData == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return helseOgAndreHensynData;
     }
 
     @PostMapping("/helsehinder")
@@ -105,7 +115,11 @@ public class InfoOmMegController {
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
-        return infoOmMegService.hentAndreHinder(aktorId, fnr);
+        HelseOgAndreHensynData helseOgAndreHensynData = infoOmMegService.hentAndreHinder(aktorId, fnr);
+        if (helseOgAndreHensynData == null) {
+            throw new ResponseStatusException(HttpStatus.NO_CONTENT);
+        }
+        return helseOgAndreHensynData;
     }
 
     @PostMapping("/andrehinder")

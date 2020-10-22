@@ -10,13 +10,11 @@ import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.InfoOmMegData;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.*;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
-import no.nav.fo.veilarbvedtakinfo.utils.DateUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -42,7 +40,7 @@ class InfoOmMegServiceTest {
 
     @Test
     void hentFremtidigSituasjon_manglerRegistrering() {
-        Date now = Date.from(Instant.now());
+        ZonedDateTime now = ZonedDateTime.now();
         EndretAvType endretAv = EndretAvType.VEILEDER;
         HovedmalData fremtidigSituasjon = new HovedmalData()
                 .setAlternativId(HovedmalSvar.NY_ARBEIDSGIVER)
@@ -64,7 +62,7 @@ class InfoOmMegServiceTest {
 
     @Test
     void hentFremtidigSituasjon_manglerHovedmal() {
-        Date now = Date.from(Instant.now());
+        ZonedDateTime now = ZonedDateTime.now();
 
         BrukerRegistreringWrapper registrering = byggRegistreringsWrapper(now, null, FremtidigSituasjonSvar.SAMME_ARBEIDSGIVER);
 
@@ -91,8 +89,8 @@ class InfoOmMegServiceTest {
 
     @Test
     void hentFremtidigSituasjon_nyereRegistrering_medFremtidigSituasjon() {
-        Date hovedmalDate = DateUtils.addMinutesToDate(new Date(), -1);
-        Date registreringDate = Date.from(Instant.now());
+        ZonedDateTime hovedmalDate = ZonedDateTime.now().minusMinutes(1);
+        ZonedDateTime registreringDate = ZonedDateTime.now();
         HovedmalData hovedmal = new HovedmalData()
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING)
                 .setDato(hovedmalDate);
@@ -111,8 +109,8 @@ class InfoOmMegServiceTest {
 
     @Test
     void hentFremtidigSituasjon_nyereRegistrering_utenFremtidigSituasjon() {
-        Date hovedmalDate = DateUtils.addMinutesToDate(new Date(), -1);
-        Date registreringDate = Date.from(Instant.now());
+        ZonedDateTime hovedmalDate = ZonedDateTime.now().minusMinutes(1);
+        ZonedDateTime registreringDate = ZonedDateTime.now();
         HovedmalData hovedmal = new HovedmalData()
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER)
                 .setDato(hovedmalDate);
@@ -131,8 +129,8 @@ class InfoOmMegServiceTest {
 
     @Test
     void hentFremtidigSituasjon_nyereRegistrering_USIKKER() {
-        Date hovedmalDate = DateUtils.addMinutesToDate(new Date(), -1);
-        Date registreringDate = Date.from(Instant.now());
+        ZonedDateTime hovedmalDate = ZonedDateTime.now().minusMinutes(1);
+        ZonedDateTime registreringDate = ZonedDateTime.now();
         HovedmalData hovedmal = new HovedmalData()
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER_NY_STILLING)
                 .setDato(hovedmalDate);
@@ -150,7 +148,7 @@ class InfoOmMegServiceTest {
 
     @Test
     void hentSisteSituasjon() {
-        Date now = Date.from(Instant.now());
+        ZonedDateTime now = ZonedDateTime.now();
         EndretAvType endretAv = EndretAvType.VEILEDER;
         HovedmalData fremtidigSituasjon = new HovedmalData()
                 .setAlternativId(HovedmalSvar.SAMME_ARBEIDSGIVER)
@@ -180,8 +178,8 @@ class InfoOmMegServiceTest {
 
     @Test
     void hentHelsehinder() {
-        Date now = Date.from(Instant.now());
-        Date earlier = DateUtils.addMinutesToDate(new Date(), -1);
+        ZonedDateTime now = ZonedDateTime.now();
+        ZonedDateTime earlier = ZonedDateTime.now().minusMinutes(1);
 
         HelseOgAndreHensynData helseHinder = new HelseOgAndreHensynData()
                 .setDato(earlier)
@@ -198,7 +196,7 @@ class InfoOmMegServiceTest {
         assertEquals(now, helseHinderData.getDato());
     }
 
-    private BrukerRegistreringWrapper byggRegistreringsWrapper(Date dato, HinderSvar svar, FremtidigSituasjonSvar fremtidigSituasjonSvar) {
+    private BrukerRegistreringWrapper byggRegistreringsWrapper(ZonedDateTime dato, HinderSvar svar, FremtidigSituasjonSvar fremtidigSituasjonSvar) {
         Besvarelse besvarelse = new Besvarelse()
                 .setHelseHinder(svar)
                 .setFremtidigSituasjon(fremtidigSituasjonSvar);

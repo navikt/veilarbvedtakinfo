@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.FremtidigSituasjonSvar;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 @Data
 @Accessors(chain = true)
@@ -13,7 +13,7 @@ public class HovedmalData extends DataItem {
     private HovedmalSvar alternativId;
     private String tekst;
     private EndretAvType endretAv;
-    private Date dato;
+    private ZonedDateTime dato;
 
     public HovedmalData setEndretAv(String endretAv) {
         this.endretAv =  isNumeric(endretAv)? EndretAvType.BRUKER: EndretAvType.VEILEDER;

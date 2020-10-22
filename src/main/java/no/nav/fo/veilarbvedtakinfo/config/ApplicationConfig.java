@@ -12,6 +12,7 @@ import no.nav.common.utils.Credentials;
 import no.nav.common.utils.NaisUtils;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClientImpl;
+import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,8 +52,8 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public RegistreringClient registreringClient(NaisSystemUserTokenProvider tokenProvider) {
-        return new RegistreringClientImpl(tokenProvider);
+    public RegistreringClient registreringClient(AuthService authService) {
+        return new RegistreringClientImpl(authService);
     }
 
     @Bean

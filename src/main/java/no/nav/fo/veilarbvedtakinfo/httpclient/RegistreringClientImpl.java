@@ -5,9 +5,9 @@ import no.nav.common.health.HealthCheckResult;
 import no.nav.common.health.HealthCheckUtils;
 import no.nav.common.rest.client.RestClient;
 import no.nav.common.rest.client.RestUtils;
-import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper;
+import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
@@ -23,14 +23,14 @@ public class RegistreringClientImpl implements RegistreringClient {
 
     public static final String VEILARBREGISTRERING_URL_PROPERTY_NAME = "VEILARBREGISTRERING_URL";
 
-    private final NaisSystemUserTokenProvider systemUserTokenProvider;
+    private final AuthService authService;
 
     private final OkHttpClient client;
 
     private final String baseUrl;
 
-    public RegistreringClientImpl(NaisSystemUserTokenProvider systemUserTokenProvider) {
-        this.systemUserTokenProvider = systemUserTokenProvider;
+    public RegistreringClientImpl(AuthService authService) {
+        this.authService = authService;
         this.client = RestClient.baseClient();
         this.baseUrl = getRequiredProperty(VEILARBREGISTRERING_URL_PROPERTY_NAME);
     }
@@ -39,7 +39,7 @@ public class RegistreringClientImpl implements RegistreringClient {
     public BrukerRegistreringWrapper hentSisteRegistrering(Fnr fnr) {
         Request request = new Request.Builder()
                 .url(joinPaths(baseUrl, format("/veilarbregistrering/api/registrering?fnr=%s", fnr.get())))
-                .header(AUTHORIZATION, "Bearer " + systemUserTokenProvider.getSystemUserToken())
+                .header(AUTHORIZATION, "Bearer " + authService.hentInnloggetBrukerToken())
                 .build();
 
         try (okhttp3.Response response = client.newCall(request).execute()) {

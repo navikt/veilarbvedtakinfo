@@ -3,9 +3,10 @@ package no.nav.fo.veilarbvedtakinfo.domain.infoommeg;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
+
 @Data
 @Accessors(chain = true)
 public class DataItem {
-    Date dato = null;
+    ZonedDateTime dato = null;
 }
