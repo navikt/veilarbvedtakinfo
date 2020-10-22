@@ -60,8 +60,8 @@ public class BehovsvurderingRepository {
     }
 
     public Besvarelse hentBesvarelse(Long besvarlseId) {
-        String sql = format("SELECT * FROM %s WHERE %s = %d", BESVARLSE_TABLE_NAME, BESVARELSE_ID, besvarlseId);
-        List<Besvarelse> besvarelseList = db.query(sql, besvarelseMapper());
+        String sql = format("SELECT * FROM %s WHERE %s = ?", BESVARLSE_TABLE_NAME, BESVARELSE_ID);
+        List<Besvarelse> besvarelseList = db.query(sql, besvarelseMapper(), besvarlseId);
 
         if (besvarelseList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Mangler besvarelse i behovsvurdering");
