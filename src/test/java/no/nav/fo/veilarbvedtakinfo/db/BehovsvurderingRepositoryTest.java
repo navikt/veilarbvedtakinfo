@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -49,8 +48,7 @@ public class BehovsvurderingRepositoryTest {
                                                                              .setBesvarelseId(besvarelseId)
                                                                              .setSpmId("123")
                                                                              .setSpm("spm")
-                                                                             .setSvar("svar")
-                                                                             .setDato(new Timestamp(System.currentTimeMillis())));
+                                                                             .setSvar("svar"));
 
         List<Svar> svarList = behovsvurderingRepository.hentSvarPaBesvarelse(besvarelseId);
         assertNotNull(svarList);

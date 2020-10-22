@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static java.lang.String.format;
+import static no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils.hentZonedDateTime;
 
 @Repository
 public class MotestotteRepository {
@@ -41,6 +42,6 @@ public class MotestotteRepository {
     @SneakyThrows
     private RowMapper<Motestotte> motestotteMapper() {
         return (rs, rowNum) -> new Motestotte()
-                .setDato(rs.getTimestamp(DATO));
+                .setDato(hentZonedDateTime(rs, DATO));
     }
 }

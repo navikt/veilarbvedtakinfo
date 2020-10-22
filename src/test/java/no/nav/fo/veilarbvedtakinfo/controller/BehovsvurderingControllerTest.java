@@ -7,10 +7,8 @@ import no.nav.fo.veilarbvedtakinfo.config.*;
 import no.nav.fo.veilarbvedtakinfo.db.BehovsvurderingRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
-import no.nav.fo.veilarbvedtakinfo.service.ArbeidSitasjonService;
 import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.service.BehovsvurderingService;
-import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,8 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.time.ZonedDateTime;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -57,7 +54,7 @@ public class BehovsvurderingControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/api/behovsvurdering/svar?fnr=" + FNR_1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(new Svar()
-                        .setDato(new Date())
+                        .setDato(ZonedDateTime.now())
                         .setSpm("spm")
                         .setSvar("svar")
                 ))).andReturn();
@@ -68,7 +65,7 @@ public class BehovsvurderingControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(new Svar()
                         .setBesvarelseId(besvarelse.getBesvarelseId())
-                        .setDato(new Date())
+                        .setDato(ZonedDateTime.now())
                         .setSpm("spm2")
                         .setSvar("svar2")
                 ))).andExpect(status().isOk());
@@ -82,7 +79,7 @@ public class BehovsvurderingControllerTest {
         MvcResult mvcResult = mockMvc.perform(post("/api/behovsvurdering/svar?fnr=" + FNR_1)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(new Svar()
-                        .setDato(new Date())
+                        .setDato(ZonedDateTime.now())
                         .setSpm("spm")
                         .setSvar("svar")
                 ))).andReturn();
@@ -93,7 +90,7 @@ public class BehovsvurderingControllerTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(new Svar()
                         .setBesvarelseId(besvarelse.getBesvarelseId())
-                        .setDato(new Date())
+                        .setDato(ZonedDateTime.now())
                         .setSpm("spm2")
                         .setSvar("svar2")
                 ))).andExpect(status().isForbidden());

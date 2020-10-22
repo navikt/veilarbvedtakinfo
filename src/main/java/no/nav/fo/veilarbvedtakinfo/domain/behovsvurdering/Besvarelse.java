@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import no.nav.common.types.identer.AktorId;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 @Data
@@ -12,6 +12,6 @@ import java.util.List;
 public class Besvarelse {
     AktorId aktorId;
     long besvarelseId;
-    Date sistOppdatert;
+    ZonedDateTime sistOppdatert;
     List<Svar> svar;
 }

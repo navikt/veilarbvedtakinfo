@@ -126,7 +126,7 @@ public class InfoOmMegService {
         else if (item2 == null) {
             return item1;
         }
-        else if (item1.getDato().before(item2.getDato())) {
+        else if (item1.getDato().isBefore(item2.getDato())) {
             return item2;
         }
         return item1;

@@ -15,6 +15,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
+import static no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils.hentZonedDateTime;
 
 @Repository
 public class InfoOmMegRepository {
@@ -86,7 +87,7 @@ public class InfoOmMegRepository {
                             : null
                     )
                     .setTekst(rs.getString(TEKST))
-                    .setDato(rs.getTimestamp(DATO))
+                    .setDato(hentZonedDateTime(rs, DATO))
                     .setEndretAv(rs.getString(ENDRET_AV));
     }
 
@@ -143,6 +144,6 @@ public class InfoOmMegRepository {
                         ? HinderSvar.valueOf(rs.getString(SVAR))
                         : null
                 )
-                .setDato(rs.getTimestamp(DATO));
+                .setDato(hentZonedDateTime(rs, DATO));
     }
 }

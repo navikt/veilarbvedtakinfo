@@ -14,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 import static java.lang.String.format;
+import static no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils.hentZonedDateTime;
 
 @Repository
 public class BehovsvurderingRepository {
@@ -95,7 +96,7 @@ public class BehovsvurderingRepository {
                 new Besvarelse()
                         .setAktorId(AktorId.of(rs.getString(AKTOR_ID)))
                         .setBesvarelseId(rs.getLong(BESVARELSE_ID))
-                        .setSistOppdatert(rs.getTimestamp(SIST_OPPDATERT));
+                        .setSistOppdatert(hentZonedDateTime(rs, SIST_OPPDATERT));
     }
 
     @SneakyThrows
@@ -106,6 +107,6 @@ public class BehovsvurderingRepository {
                         .setSpmId(rs.getString(SPM_ID))
                         .setSpm(rs.getString(SPM))
                         .setSvar(rs.getString(SVAR))
-                        .setDato(rs.getTimestamp(DATO));
+                        .setDato(hentZonedDateTime(rs, DATO));
     }
 }
