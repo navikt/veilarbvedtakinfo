@@ -28,7 +28,7 @@ public class MotestotteController {
         this.authService = authService;
     }
 
-    @PostMapping("/")
+    @PostMapping
     @ApiOperation(value = "Sender inn en motestotte besvarelse")
     public void nyttSvar(@RequestParam(required = false, name = "fnr") Fnr fnr) {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
@@ -39,7 +39,7 @@ public class MotestotteController {
         msRepo.oppdaterMotestotte(aktorId);
     }
 
-    @GetMapping("/")
+    @GetMapping
     @ApiOperation(value = "Henter den siste motestotte på bruker")
     public Motestotte hent(@RequestParam(required = false, name = "fnr") Fnr fnr) {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
