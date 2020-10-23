@@ -12,7 +12,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>no.nav.fo</groupId>
+    <groupId>no.nav</groupId>
     <artifactId>veilarbvedtakinfo</artifactId>
     <version>1</version>
     <name>veilarbvedtakinfo</name>
