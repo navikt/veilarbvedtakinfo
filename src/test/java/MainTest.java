@@ -1,4 +1,4 @@
-import no.nav.fo.veilarbvedtakinfo.config.ApplicationTestConfig;
+import no.nav.veilarbvedtakinfo.config.ApplicationTestConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Import;
