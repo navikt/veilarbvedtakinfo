@@ -1,29 +1,26 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 
+import lombok.RequiredArgsConstructor;
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
+import no.nav.fo.veilarbvedtakinfo.client.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.*;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistrering;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.FremtidigSituasjonSvar;
-import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @Service
 public class InfoOmMegService {
-    private final InfoOmMegRepository infoOmMegRepository;
-    private final RegistreringClient registreringClient;
 
-    @Autowired
-    public InfoOmMegService(InfoOmMegRepository infoOmMegRepository, RegistreringClient registreringClient) {
-        this.infoOmMegRepository = infoOmMegRepository;
-        this.registreringClient = registreringClient;
-    }
+    private final InfoOmMegRepository infoOmMegRepository;
+
+    private final RegistreringClient registreringClient;
 
     public HovedmalData hentFremtidigSituasjon(AktorId aktorId, Fnr fnr) {
         BrukerRegistreringWrapper registreringWrapper = registreringClient.hentSisteRegistrering(fnr);

@@ -1,4 +1,4 @@
-package no.nav.fo.veilarbvedtakinfo.httpclient;
+package no.nav.fo.veilarbvedtakinfo.client;
 
 import lombok.extern.slf4j.Slf4j;
 import no.nav.common.health.HealthCheckResult;

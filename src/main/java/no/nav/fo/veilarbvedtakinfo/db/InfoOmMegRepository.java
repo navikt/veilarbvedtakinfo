@@ -1,5 +1,6 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
@@ -17,9 +18,10 @@ import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils.hentZonedDateTime;
 
+@RequiredArgsConstructor
 @Repository
 public class InfoOmMegRepository {
-    private JdbcTemplate db;
+
     public final static String FREMTIDIG_SITUASJON = "FREMTIDIG_SITUASJON";
     public final static String FREMTIDIG_SITUASJON_SEQ = "FREMTIDIG_SITUASJON_SEQ";
 
@@ -39,9 +41,7 @@ public class InfoOmMegRepository {
     public final static String HELSEHINDER_ID = "HELSEHINDER_ID";
     public final static String SVAR = "SVAR";
 
-    public InfoOmMegRepository(JdbcTemplate db) {
-        this.db = db;
-    }
+    private final JdbcTemplate db;
 
     public HovedmalData hentFremtidigSituasjonForAktorId(AktorId aktorId) {
         String sql = format("SELECT * FROM %s WHERE %s = ? ORDER BY DATO DESC",

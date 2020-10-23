@@ -1,6 +1,7 @@
 package no.nav.fo.veilarbvedtakinfo.controller;
 
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjon;
@@ -13,18 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/situasjon")
 @Api(value = "ArbeidsSituasjonController")
 public class ArbeidsSituasjonController {
 
     private final AuthService authService;
-    private final ArbeidSitasjonService service;
 
-    public ArbeidsSituasjonController(AuthService authService, ArbeidSitasjonService service) {
-        this.authService = authService;
-        this.service = service;
-    }
+    private final ArbeidSitasjonService service;
 
     @PostMapping
     public ResponseEntity besvarelse(@RequestBody ArbeidSituasjonSvar svar, @RequestParam(required = false, name = "fnr") Fnr fnr) {

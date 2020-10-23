@@ -2,6 +2,7 @@ package no.nav.fo.veilarbvedtakinfo.service;
 
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
+import no.nav.fo.veilarbvedtakinfo.client.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
@@ -9,7 +10,6 @@ import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.InfoOmMegData;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.*;
-import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

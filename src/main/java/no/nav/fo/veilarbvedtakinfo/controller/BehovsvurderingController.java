@@ -2,6 +2,7 @@ package no.nav.fo.veilarbvedtakinfo.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
@@ -14,18 +15,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/behovsvurdering")
 @Api(value = "BehovsvurderingController", description = "Tjenester for deling behovsvurdering besvarelse")
 public class BehovsvurderingController {
 
     private final BehovsvurderingService bvService;
-    private final AuthService authService;
 
-    public BehovsvurderingController(BehovsvurderingService bvService, AuthService authService) {
-        this.bvService = bvService;
-        this.authService = authService;
-    }
+    private final AuthService authService;
 
     @PostMapping("/svar")
     @ApiOperation(value = "Sender inn en behovsvurderings besvarelse")

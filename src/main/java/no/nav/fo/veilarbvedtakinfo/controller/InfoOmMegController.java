@@ -2,6 +2,7 @@ package no.nav.fo.veilarbvedtakinfo.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HelseOgAndreHensynData;
@@ -10,26 +11,21 @@ import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.InfoOmMegData;
 import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.utils.FnrUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
 @Api(value = "InfoOmMegController", description = "Tjenester for deling av arbeidssøkerstatus.")
 public class InfoOmMegController {
 
     private final InfoOmMegService infoOmMegService;
-    private final AuthService authService;
 
-    @Autowired
-    public InfoOmMegController(InfoOmMegService infoOmMegService, AuthService authService){
-        this.infoOmMegService = infoOmMegService;
-        this.authService = authService;
-    }
+    private final AuthService authService;
 
     @GetMapping("/sistesituasjon")
     @ApiOperation(value = "Henter alle sist lagrede verdier.")
