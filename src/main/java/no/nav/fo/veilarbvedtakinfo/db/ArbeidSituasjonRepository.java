@@ -1,5 +1,6 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
@@ -14,10 +15,10 @@ import java.util.List;
 
 import static java.lang.String.format;
 
+@RequiredArgsConstructor
 @Repository
 public class ArbeidSituasjonRepository {
 
-    private JdbcTemplate db;
     private final static String MIN_SITUASJON = "MIN_SITUASJON";
     private final static String ID = "ID";
     private final static String AKTOR_ID = "AKTOR_ID";
@@ -29,9 +30,7 @@ public class ArbeidSituasjonRepository {
     private final static String MIN_SITUASJON_SEQ = "MIN_SITUASJON_SEQ";
     private final static int ROWNUM = 1;
 
-    public ArbeidSituasjonRepository(JdbcTemplate db) {
-        this.db = db;
-    }
+    private final JdbcTemplate db;
 
     public void lagreSituasjon(AktorId aktorId, EndretAvType endretAv, String avsenderID, ArbeidSituasjonSvar svar) {
         long id = DatabaseUtils.nesteFraSekvens(db, MIN_SITUASJON_SEQ);

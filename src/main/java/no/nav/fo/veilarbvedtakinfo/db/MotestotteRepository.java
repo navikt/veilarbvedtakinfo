@@ -1,5 +1,6 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.motestotte.Motestotte;
@@ -13,17 +14,15 @@ import java.util.List;
 import static java.lang.String.format;
 import static no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils.hentZonedDateTime;
 
+@RequiredArgsConstructor
 @Repository
 public class MotestotteRepository {
 
-    private JdbcTemplate db;
     private final static String TABLE_NAME = "MOTESTOTTE";
     private final static String AKTOR_ID = "AKTOR_ID";
     private final static String DATO = "DATO";
 
-    public MotestotteRepository(JdbcTemplate db) {
-        this.db = db;
-    }
+    private final JdbcTemplate db;
 
     public void oppdaterMotestotte(AktorId aktorId) {
         try {

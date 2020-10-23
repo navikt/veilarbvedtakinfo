@@ -1,5 +1,6 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 
+import lombok.RequiredArgsConstructor;
 import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.db.BehovsvurderingRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
@@ -10,13 +11,10 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class BehovsvurderingService {
     private final BehovsvurderingRepository behovsvurderingRepository;
-
-    public BehovsvurderingService(BehovsvurderingRepository behovsvurderingRepository) {
-        this.behovsvurderingRepository = behovsvurderingRepository;
-    }
 
     public Besvarelse nyBesvarlse(AktorId aktorId, Svar svar) {
 

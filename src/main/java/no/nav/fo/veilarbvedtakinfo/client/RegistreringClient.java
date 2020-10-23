@@ -1,4 +1,4 @@
-package no.nav.fo.veilarbvedtakinfo.httpclient;
+package no.nav.fo.veilarbvedtakinfo.client;
 
 import no.nav.common.health.HealthCheck;
 import no.nav.common.types.identer.Fnr;

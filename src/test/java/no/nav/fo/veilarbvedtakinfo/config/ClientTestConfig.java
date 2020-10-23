@@ -7,8 +7,8 @@ import no.nav.common.client.aktorregister.AktorregisterClient;
 import no.nav.common.client.aktorregister.IdentOppslag;
 import no.nav.common.health.HealthCheckResult;
 import no.nav.common.types.identer.*;
+import no.nav.fo.veilarbvedtakinfo.client.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper;
-import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import org.springframework.context.annotation.Bean;
 
 import java.util.List;

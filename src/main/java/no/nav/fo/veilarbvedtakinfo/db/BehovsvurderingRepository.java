@@ -1,5 +1,6 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
@@ -16,10 +17,10 @@ import java.util.List;
 import static java.lang.String.format;
 import static no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils.hentZonedDateTime;
 
+@RequiredArgsConstructor
 @Repository
 public class BehovsvurderingRepository {
 
-    private JdbcTemplate db;
     private final static String SEQ = "BEHOVSVURDERING_SEQ";
     private final static String BESVARLSE_TABLE_NAME = "BEHOVSVURDERING_BESVARELSE";
     private final static String SPM_SVAR_TABLE_NAME = "BEHOVSVURDERING_SPORSMAL_SVAR";
@@ -34,9 +35,7 @@ public class BehovsvurderingRepository {
     private final static String DATO = "DATO";
     private final static int ROWNUM = 1;
 
-    public BehovsvurderingRepository(JdbcTemplate db) {
-        this.db = db;
-    }
+    private final JdbcTemplate db;
 
     public long lagNyBesvarlse(AktorId aktorId) {
         long id = DatabaseUtils.nesteFraSekvens(db, SEQ);

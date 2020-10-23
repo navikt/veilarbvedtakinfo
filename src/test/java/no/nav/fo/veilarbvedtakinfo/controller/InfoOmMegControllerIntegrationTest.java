@@ -2,11 +2,11 @@ package no.nav.fo.veilarbvedtakinfo.controller;
 
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
+import no.nav.fo.veilarbvedtakinfo.client.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.db.InfoOmMegRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalData;
 import no.nav.fo.veilarbvedtakinfo.domain.infoommeg.HovedmalSvar;
-import no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClient;
 import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.service.InfoOmMegService;
 import no.nav.fo.veilarbvedtakinfo.test.DbTestUtils;
@@ -18,7 +18,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 
 import static java.lang.System.setProperty;
-import static no.nav.fo.veilarbvedtakinfo.httpclient.RegistreringClientImpl.VEILARBREGISTRERING_URL_PROPERTY_NAME;
+import static no.nav.fo.veilarbvedtakinfo.client.RegistreringClientImpl.VEILARBREGISTRERING_URL_PROPERTY_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.ArgumentMatchers.any;
