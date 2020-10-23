@@ -2,10 +2,9 @@ kind: Application
 apiVersion: nais.io/v1alpha1
 metadata:
   name: veilarbvedtakinfo
-  namespace: default
+  namespace: pto
   labels:
     team: pto
-  cluster: prod-fss
 spec:
   image: docker.pkg.github.com/navikt/veilarbvedtakinfo/veilarbvedtakinfo:{{version}}
   port: 8080
@@ -29,8 +28,9 @@ spec:
   resources:
     limits:
       cpu: "2"
-      memory: 1024Mi
+      memory: 2048Mi
     requests:
+      cpu: 500m
       memory: 512Mi
   vault:
     enabled: true
