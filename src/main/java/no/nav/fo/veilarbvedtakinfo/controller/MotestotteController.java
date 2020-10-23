@@ -9,6 +9,7 @@ import no.nav.fo.veilarbvedtakinfo.domain.motestotte.Motestotte;
 import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.utils.FnrUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -30,13 +31,15 @@ public class MotestotteController {
 
     @PostMapping
     @ApiOperation(value = "Sender inn en motestotte besvarelse")
-    public void nyttSvar(@RequestParam(required = false, name = "fnr") Fnr fnr) {
+    public ResponseEntity nyttSvar(@RequestParam(required = false, name = "fnr") Fnr fnr) {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
         msRepo.oppdaterMotestotte(aktorId);
+
+        return ResponseEntity.status(204).build();
     }
 
     @GetMapping
@@ -48,9 +51,11 @@ public class MotestotteController {
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
         Motestotte motestotte = msRepo.hentMoteStotte(aktorId);
+
         if (motestotte == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
+
         return motestotte;
     }
 }

@@ -9,6 +9,7 @@ import no.nav.fo.veilarbvedtakinfo.service.ArbeidSitasjonService;
 import no.nav.fo.veilarbvedtakinfo.service.AuthService;
 import no.nav.fo.veilarbvedtakinfo.utils.FnrUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -26,13 +27,15 @@ public class ArbeidsSituasjonController {
     }
 
     @PostMapping
-    public void besvarelse(@RequestBody ArbeidSituasjonSvar svar, @RequestParam(required = false, name = "fnr") Fnr fnr) {
+    public ResponseEntity besvarelse(@RequestBody ArbeidSituasjonSvar svar, @RequestParam(required = false, name = "fnr") Fnr fnr) {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
         service.nytSvar(svar, aktorId, authService.hentInnloggetSubject(), authService.erEksternBruker());
+
+        return ResponseEntity.status(204).build();
     }
 
     @GetMapping
@@ -43,9 +46,11 @@ public class ArbeidsSituasjonController {
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
         ArbeidSituasjon arbeidSituasjon = service.fetchSvar(aktorId);
+
         if (arbeidSituasjon == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
         }
+
         return arbeidSituasjon;
     }
 

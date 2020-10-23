@@ -84,7 +84,7 @@ class InfoOmMegControllerIntegrationTest {
         when(authService.hentInnloggetSubject()).thenReturn("Z123");
         when(authService.hentAktorId(any())).thenReturn(eksernIdent);
 
-        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data, null);
+        HovedmalData actualData = infoOmMegController.oppdaterFremtidigSituasjon(data, Fnr.of("1234"));
 
         assertEquals(EndretAvType.VEILEDER, actualData.getEndretAv());
     }
