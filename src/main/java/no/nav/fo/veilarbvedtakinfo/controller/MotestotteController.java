@@ -2,6 +2,7 @@ package no.nav.fo.veilarbvedtakinfo.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
 import no.nav.fo.veilarbvedtakinfo.db.MotestotteRepository;
@@ -13,21 +14,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/motestotte")
 @Api(value = "MotestotteController", description = "Tjenester for deling motestotte")
 public class MotestotteController {
 
     private final MotestotteRepository msRepo;
+
     private final AuthService authService;
-
-    public MotestotteController(
-            MotestotteRepository msRepo,
-            AuthService authService) {
-
-        this.msRepo = msRepo;
-        this.authService = authService;
-    }
 
     @PostMapping
     @ApiOperation(value = "Sender inn en motestotte besvarelse")

@@ -2,29 +2,23 @@ package no.nav.fo.veilarbvedtakinfo.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.RequiredArgsConstructor;
 import no.nav.common.utils.Credentials;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-import static no.nav.common.utils.NaisUtils.getCredentials;
-
+@RequiredArgsConstructor
 @Configuration
 @EnableTransactionManagement
 public class DatabaseConfig {
 
     private final EnvironmentProperties environmentProperties;
-    private final Credentials oracleCredentials;
 
-    public DatabaseConfig(EnvironmentProperties environmentProperties) {
-        this.environmentProperties = environmentProperties;
-        oracleCredentials = getCredentials("oracle_creds");
-    }
+    private final Credentials oracleCredentials;
 
     @Bean
     public DataSource getDataSource() {
