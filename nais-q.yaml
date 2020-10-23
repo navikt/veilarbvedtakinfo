@@ -15,12 +15,12 @@ spec:
     - https://veilarbvedtakinfo-{{namespace}}.nais.preprod.local
   prometheus:
     enabled: true
-    path: veilarbvedtakinfo/internal/metrics
+    path: veilarbvedtakinfo/internal/prometheus
   readiness:
-    path: veilarbvedtakinfo/internal/isReady
+    path: veilarbvedtakinfo/internal/health/readiness
     initialDelay: 30
   liveness:
-    path: veilarbvedtakinfo/internal/isAlive
+    path: veilarbvedtakinfo/internal/health/liveness
     initialDelay: 30
   replicas:
     min: 1

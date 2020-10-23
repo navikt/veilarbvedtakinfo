@@ -1,12 +1,16 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 
+import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.db.BehovsvurderingRepository;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.fo.veilarbvedtakinfo.domain.behovsvurdering.Svar;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
+@Service
 public class BehovsvurderingService {
     private final BehovsvurderingRepository behovsvurderingRepository;
 
@@ -15,14 +19,20 @@ public class BehovsvurderingService {
     }
 
     public Besvarelse nyBesvarlse(AktorId aktorId, Svar svar) {
+
+        if(svar.besvarelseId != null) {
+            Besvarelse besvarelse = behovsvurderingRepository.hentBesvarelse(svar.besvarelseId);
+            if (!besvarelse.getAktorId().equals(aktorId)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+        }
+
         Long besvarsleId = Optional.ofNullable(svar.besvarelseId)
                 .orElse(behovsvurderingRepository.lagNyBesvarlse(aktorId));
-        behovsvurderingRepository.leggTilNyttSvarPaBesvarelsen(besvarsleId, svar);
-        return hentBesvarelse(besvarsleId);
-    }
 
-    public Besvarelse hentBesvarelse(Long besvarlseId) {
-        return behovsvurderingRepository.hentBesvarelse(besvarlseId);
+        behovsvurderingRepository.leggTilNyttSvarPaBesvarelsen(besvarsleId, svar);
+
+        return behovsvurderingRepository.hentBesvarelse(besvarsleId);
     }
 
     public Besvarelse hentBesvarelse(AktorId aktorId) {

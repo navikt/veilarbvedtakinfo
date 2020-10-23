@@ -1,16 +1,19 @@
 package no.nav.fo.veilarbvedtakinfo.db;
 
 import lombok.SneakyThrows;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
+import no.nav.common.types.identer.AktorId;
 import no.nav.fo.veilarbvedtakinfo.domain.motestotte.Motestotte;
-import no.nav.sbl.sql.SqlUtils;
-import no.nav.sbl.sql.where.WhereClause;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.util.Date;
+import java.util.List;
 
+import static java.lang.String.format;
+import static no.nav.fo.veilarbvedtakinfo.utils.DatabaseUtils.hentZonedDateTime;
+
+@Repository
 public class MotestotteRepository {
 
     private JdbcTemplate db;
@@ -24,30 +27,21 @@ public class MotestotteRepository {
 
     public void oppdaterMotestotte(AktorId aktorId) {
         try {
-            SqlUtils.insert(db, TABLE_NAME)
-                    .value(DATO, new Date())
-                    .value(AKTOR_ID, aktorId.getAktorId())
-                    .execute();
+            db.update("INSERT INTO MOTESTOTTE(DATO, AKTOR_ID) VALUES(CURRENT_TIMESTAMP,?)", aktorId.get());
         } catch (DuplicateKeyException e) {
-            SqlUtils.update(db, TABLE_NAME)
-                    .set(DATO, new Date())
-                    .whereEquals(AKTOR_ID, aktorId.getAktorId())
-                    .execute();
+            db.update("UPDATE MOTESTOTTE SET DATO = CURRENT_TIMESTAMP WHERE AKTOR_ID = ?", aktorId.get());
         }
     }
 
-
     public Motestotte hentMoteStotte(AktorId aktorId) {
-        return SqlUtils.select(db, TABLE_NAME, MotestotteRepository::motestotteMapper)
-                .where(WhereClause.equals(AKTOR_ID, aktorId.getAktorId()))
-                .column("*")
-                .execute();
+        String sql = format("SELECT * FROM %s WHERE %s = ?", TABLE_NAME, AKTOR_ID);
+        List<Motestotte> query = db.query(sql, motestotteMapper(), aktorId.get());
+        return query.isEmpty() ? null : query.get(0);
     }
 
-
     @SneakyThrows
-    private static Motestotte motestotteMapper(ResultSet rs) {
-        return new Motestotte()
-                .setDato(rs.getTimestamp(DATO));
+    private RowMapper<Motestotte> motestotteMapper() {
+        return (rs, rowNum) -> new Motestotte()
+                .setDato(hentZonedDateTime(rs, DATO));
     }
 }

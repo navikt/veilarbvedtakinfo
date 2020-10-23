@@ -1,21 +1,23 @@
 package no.nav.fo.veilarbvedtakinfo.service;
 
-import no.nav.fo.veilarbvedtakinfo.db.ArbeidSitasjonRepository;
-import no.nav.fo.veilarbvedtakinfo.domain.AktorId;
+import no.nav.common.types.identer.AktorId;
+import no.nav.fo.veilarbvedtakinfo.db.ArbeidSituasjonRepository;
 import no.nav.fo.veilarbvedtakinfo.domain.EndretAvType;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjon;
 import no.nav.fo.veilarbvedtakinfo.domain.arbeidSitasjon.ArbeidSituasjonSvar;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ArbeidSitasjonService {
-    private final ArbeidSitasjonRepository repository;
+    private final ArbeidSituasjonRepository repository;
 
-    public ArbeidSitasjonService(ArbeidSitasjonRepository repository) {
+    public ArbeidSitasjonService(ArbeidSituasjonRepository repository) {
         this.repository = repository;
     }
 
     public void nytSvar(ArbeidSituasjonSvar svar, AktorId aktorId, String avsenderID, boolean erEksternBruker) {
         EndretAvType endretAv = erEksternBruker ? EndretAvType.BRUKER : EndretAvType.VEILEDER;
-        repository.lagreSitasjon(aktorId, endretAv, avsenderID, svar);
+        repository.lagreSituasjon(aktorId, endretAv, avsenderID, svar);
     }
 
     public ArbeidSituasjon fetchSvar(AktorId aktorId) {

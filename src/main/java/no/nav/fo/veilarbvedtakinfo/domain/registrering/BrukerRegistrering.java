@@ -3,7 +3,7 @@ package no.nav.fo.veilarbvedtakinfo.domain.registrering;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class BrukerRegistrering {
 
     String manueltRegistrertAv;
-    Date opprettetDato;
+    ZonedDateTime opprettetDato;
     Besvarelse besvarelse;
     List<TekstForSporsmal> teksterForBesvarelse;
 
