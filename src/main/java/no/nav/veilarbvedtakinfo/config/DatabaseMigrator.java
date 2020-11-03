@@ -20,7 +20,10 @@ public class DatabaseMigrator {
         log.info("Starting database migration...");
         Flyway.configure()
                 .dataSource(dataSource)
+                .baselineOnMigrate(true)
+                .table("schema_version") // use old schema_version table from earlier version of flyway
                 .load()
-                .migrate();
+                .repair();
     }
+
 }
