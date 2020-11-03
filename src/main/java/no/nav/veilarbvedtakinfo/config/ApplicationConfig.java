@@ -9,7 +9,6 @@ import no.nav.common.client.aktorregister.CachedAktorregisterClient;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.OpenAmSystemUserTokenProvider;
 import no.nav.common.utils.Credentials;
-import no.nav.common.utils.NaisUtils;
 import no.nav.veilarbvedtakinfo.client.RegistreringClient;
 import no.nav.veilarbvedtakinfo.client.RegistreringClientImpl;
 import no.nav.veilarbvedtakinfo.service.AuthService;
@@ -57,8 +56,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public Pep pep(EnvironmentProperties properties) {
-        Credentials serviceUserCredentials = NaisUtils.getCredentials("service_user");
+    public Pep pep(EnvironmentProperties properties, Credentials serviceUserCredentials) {
         return new VeilarbPep(
                 properties.getAbacUrl(), serviceUserCredentials.username,
                 serviceUserCredentials.password, new SpringAuditRequestInfoSupplier()
