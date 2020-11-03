@@ -2,7 +2,6 @@ package no.nav.veilarbvedtakinfo.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.RequiredArgsConstructor;
 import no.nav.common.utils.Credentials;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +10,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
-@RequiredArgsConstructor
+import static no.nav.common.utils.NaisUtils.getCredentials;
+
 @Configuration
 @EnableTransactionManagement
 public class DatabaseConfig {
@@ -19,6 +19,11 @@ public class DatabaseConfig {
     private final EnvironmentProperties environmentProperties;
 
     private final Credentials oracleCredentials;
+
+    public DatabaseConfig(EnvironmentProperties environmentProperties) {
+        this.environmentProperties = environmentProperties;
+        oracleCredentials = getCredentials("oracle_creds");
+    }
 
     @Bean
     public DataSource getDataSource() {
