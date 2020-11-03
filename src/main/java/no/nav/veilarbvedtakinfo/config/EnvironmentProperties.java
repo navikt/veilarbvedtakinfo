@@ -16,8 +16,8 @@ public class EnvironmentProperties {
     private String openAmRedirectUrl;
     private String openAmClientId;
     private String openAmRefreshUrl;
-    private String aadB2cDiscoveryUrl;
-    private String aadB2cClientId;
+    private String loginserviceIdportenAudience;
+    private String loginserviceIdportenDiscoveryUrl;
     private String openAmIssoRpUsername;
     private String openAmIssoRpPassword;
     private String aadDiscoveryUrl;
