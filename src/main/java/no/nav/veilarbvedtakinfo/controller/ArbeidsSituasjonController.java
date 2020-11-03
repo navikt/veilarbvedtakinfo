@@ -20,9 +20,16 @@ import org.springframework.web.server.ResponseStatusException;
 @Api(value = "ArbeidsSituasjonController")
 public class ArbeidsSituasjonController {
 
+    /**
+     * TODO
+     * Denne kontrolleren er egentlig ikke i bruk.
+     * GET hentBesvarelse() blir brukt av veientilarbeid, men siden det er ingen som bruker POST besvarelse(),
+     * så er resultatet alltid statuskode 204. Alt relatert til arbeidssituasjon kan trolig fjernes.
+     */
+
     private final AuthService authService;
 
-    private final ArbeidSitasjonService service;
+    private final ArbeidSitasjonService arbeidSitasjonService;
 
     @PostMapping
     public ResponseEntity besvarelse(@RequestBody ArbeidSituasjonSvar svar, @RequestParam(required = false, name = "fnr") Fnr fnr) {
@@ -31,7 +38,7 @@ public class ArbeidsSituasjonController {
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
-        service.nytSvar(svar, aktorId, authService.hentInnloggetSubject(), authService.erEksternBruker());
+        arbeidSitasjonService.opprettSvar(svar, aktorId, authService.hentInnloggetSubject(), authService.erEksternBruker());
 
         return ResponseEntity.status(204).build();
     }
@@ -43,7 +50,7 @@ public class ArbeidsSituasjonController {
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
 
-        ArbeidSituasjon arbeidSituasjon = service.fetchSvar(aktorId);
+        ArbeidSituasjon arbeidSituasjon = arbeidSitasjonService.fetchSvar(aktorId);
 
         if (arbeidSituasjon == null) {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT);
