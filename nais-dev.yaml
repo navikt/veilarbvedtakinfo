@@ -41,6 +41,8 @@ spec:
         mountPath: /var/run/secrets/nais.io/oracle_creds
       - kvPath: /kv/preprod/fss/veilarbvedtakinfo/q1
         mountPath: /var/run/secrets/nais.io/vault
+      - kvPath: /oracle/data/dev/config/veilarbvedtakinfo_q1
+        mountPath: /var/run/secrets/nais.io/oracle_config
   envFrom:
     - configmap: pto-config
     - configmap: loginservice-idporten

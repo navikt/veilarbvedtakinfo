@@ -11,7 +11,6 @@ public class EnvironmentProperties {
     private String abacUrl;
     private String aktorregisterUrl;
     private String stsDiscoveryUrl;
-    private String dbUrl;
     private String openAmDiscoveryUrl;
     private String openAmRedirectUrl;
     private String openAmClientId;
