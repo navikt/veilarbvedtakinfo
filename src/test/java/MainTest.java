@@ -9,7 +9,6 @@ public class MainTest {
 
     public static void main(String[] args) {
         SpringApplication application = new SpringApplication(MainTest.class);
-        application.setAdditionalProfiles("local");
         application.run(args);
     }
 

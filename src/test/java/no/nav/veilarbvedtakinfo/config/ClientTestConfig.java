@@ -7,8 +7,6 @@ import no.nav.common.client.aktorregister.AktorregisterClient;
 import no.nav.common.client.aktorregister.IdentOppslag;
 import no.nav.common.health.HealthCheckResult;
 import no.nav.common.types.identer.*;
-import no.nav.veilarbvedtakinfo.client.RegistreringClient;
-import no.nav.veilarbvedtakinfo.domain.registrering.BrukerRegistreringWrapper;
 import org.springframework.context.annotation.Bean;
 
 import java.util.List;
@@ -107,23 +105,6 @@ public class ClientTestConfig {
             public AbacClient getAbacClient() {
                 return null;
             }
-        };
-    }
-
-    @Bean
-    public RegistreringClient registreringClient() {
-        return new RegistreringClient() {
-
-            @Override
-            public BrukerRegistreringWrapper hentSisteRegistrering(Fnr fnr) {
-                return null;
-            }
-
-            @Override
-            public HealthCheckResult checkHealth() {
-                return null;
-            }
-
         };
     }
 }
