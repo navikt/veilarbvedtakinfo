@@ -11,7 +11,6 @@ import java.util.List;
 public class DbTestUtils {
 
     private final static List<String> ALL_TABLES = Arrays.asList(
-            "MIN_SITUASJON",
             "BEHOVSVURDERING_SPORSMAL_SVAR",
             "BEHOVSVURDERING_BESVARELSE",
             "MOTESTOTTE"
