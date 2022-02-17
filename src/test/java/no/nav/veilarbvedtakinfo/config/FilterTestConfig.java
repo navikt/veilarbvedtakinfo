@@ -1,7 +1,7 @@
 package no.nav.veilarbvedtakinfo.config;
 
 import no.nav.common.auth.context.UserRole;
-import no.nav.veilarbvedtakinfo.test.TestAuthContextFilter;
+import no.nav.common.test.auth.TestAuthContextFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 

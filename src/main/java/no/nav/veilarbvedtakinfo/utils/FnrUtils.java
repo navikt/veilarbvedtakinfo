@@ -9,7 +9,7 @@ public class FnrUtils {
 
     public static Fnr hentFnrFraUrlEllerToken(AuthService authService, Fnr queryParamFnr) {
        Fnr fnr = authService.erEksternBruker()
-                ? Fnr.of(authService.hentInnloggetSubject())
+                ? Fnr.of(authService.hentInnloggetUid())
                 : queryParamFnr;
 
        if (fnr == null) {

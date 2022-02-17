@@ -1,7 +1,7 @@
 package no.nav.veilarbvedtakinfo.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
@@ -18,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/behovsvurdering")
-@Api(value = "BehovsvurderingController", description = "Tjenester for deling behovsvurdering besvarelse")
+@Tag(name = "BehovsvurderingController", description = "Tjenester for deling behovsvurdering besvarelse")
 public class BehovsvurderingController {
 
     private final BehovsvurderingService bvService;
@@ -26,7 +26,7 @@ public class BehovsvurderingController {
     private final AuthService authService;
 
     @PostMapping("/svar")
-    @ApiOperation(value = "Sender inn en behovsvurderings besvarelse")
+    @Operation(summary = "Sender inn en behovsvurderings besvarelse")
     public BesvarelseDto nyttSvar(@RequestBody Svar svar, @RequestParam(required = false, name = "fnr") Fnr fnr) {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);
@@ -37,7 +37,7 @@ public class BehovsvurderingController {
     }
 
     @GetMapping("/besvarelse")
-    @ApiOperation(value = "Henter den siste behovsvurderings besvarelsen på bruker")
+    @Operation(summary = "Henter den siste behovsvurderings besvarelsen på bruker")
     public BesvarelseDto hentSisteBesvarelse(@RequestParam(required = false, name = "fnr") Fnr fnr) {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);

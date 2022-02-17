@@ -1,19 +1,24 @@
 package no.nav.veilarbvedtakinfo.config;
 
 import no.nav.common.abac.Pep;
-import no.nav.common.abac.VeilarbPep;
+import no.nav.common.abac.VeilarbPepFactory;
 import no.nav.common.abac.audit.SpringAuditRequestInfoSupplier;
-import no.nav.common.client.aktorregister.AktorregisterClient;
-import no.nav.common.client.aktorregister.AktorregisterHttpClient;
-import no.nav.common.client.aktorregister.CachedAktorregisterClient;
+import no.nav.common.auth.context.AuthContextHolder;
+import no.nav.common.auth.context.AuthContextHolderThreadLocal;
+import no.nav.common.client.aktoroppslag.CachedAktorOppslagClient;
+import no.nav.common.client.aktoroppslag.PdlAktorOppslagClient;
+import no.nav.common.client.pdl.PdlClientImpl;
 import no.nav.common.sts.NaisSystemUserTokenProvider;
 import no.nav.common.sts.OpenAmSystemUserTokenProvider;
 import no.nav.common.utils.Credentials;
+import no.nav.common.utils.EnvironmentUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static no.nav.common.utils.NaisUtils.getCredentials;
+import static no.nav.common.utils.UrlUtils.createDevInternalIngressUrl;
+import static no.nav.common.utils.UrlUtils.createProdInternalIngressUrl;
 
 @Configuration
 @EnableConfigurationProperties({EnvironmentProperties.class})
@@ -40,18 +45,32 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AktorregisterClient aktorregisterClient(EnvironmentProperties properties, NaisSystemUserTokenProvider naisSystemUserTokenProvider) {
-        AktorregisterClient aktorregisterClient = new AktorregisterHttpClient(
-                properties.getAktorregisterUrl(), APPLICATION_NAME, naisSystemUserTokenProvider::getSystemUserToken
-        );
-        return new CachedAktorregisterClient(aktorregisterClient);
+    public CachedAktorOppslagClient aktoroppslacClient(NaisSystemUserTokenProvider naisSystemUserTokenProvider) {
+        String url = isProduction()
+                ? createProdInternalIngressUrl("pdl-api")
+                : createDevInternalIngressUrl("pdl-api-q1");
+
+        PdlClientImpl pdlClient = new PdlClientImpl(
+                url,
+                naisSystemUserTokenProvider::getSystemUserToken,
+                naisSystemUserTokenProvider::getSystemUserToken);
+
+        return new CachedAktorOppslagClient(new PdlAktorOppslagClient(pdlClient));
     }
 
     @Bean
     public Pep pep(EnvironmentProperties properties, Credentials serviceUserCredentials) {
-        return new VeilarbPep(
+        return VeilarbPepFactory.get(
                 properties.getAbacUrl(), serviceUserCredentials.username,
-                serviceUserCredentials.password, new SpringAuditRequestInfoSupplier()
-        );
+                serviceUserCredentials.password, new SpringAuditRequestInfoSupplier());
+    }
+
+    @Bean
+    public AuthContextHolder authContextHolder() {
+        return AuthContextHolderThreadLocal.instance();
+    }
+
+    private static boolean isProduction() {
+        return EnvironmentUtils.isProduction().orElseThrow();
     }
 }

@@ -11,13 +11,13 @@ import javax.sql.DataSource;
 public class DatabaseTestConfig {
 
     @Bean
-    public JdbcTemplate getDatabase() {
-        return LocalH2Database.getDb();
+    public JdbcTemplate getJdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 
     @Bean
-    public DataSource dataSource(JdbcTemplate jdbcTemplate) {
-        return jdbcTemplate.getDataSource();
+    public DataSource dataSource() {
+        return LocalH2Database.getDb().getDataSource();
     }
 
 }
