@@ -1,7 +1,7 @@
 package no.nav.veilarbvedtakinfo.controller;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
@@ -17,7 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/motestotte")
-@Api(value = "MotestotteController", description = "Tjenester for deling motestotte")
+@Tag(name = "MotestotteController", description = "Tjenester for deling motestotte")
 public class MotestotteController {
 
     private final MotestotteRepository msRepo;
@@ -25,7 +25,7 @@ public class MotestotteController {
     private final AuthService authService;
 
     @PostMapping
-    @ApiOperation(value = "Sender inn en motestotte besvarelse")
+    @Operation(summary = "Sender inn en motestotte besvarelse")
     public ResponseEntity nyttSvar(@RequestParam(required = false, name = "fnr") Fnr fnr) {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);
@@ -38,7 +38,7 @@ public class MotestotteController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Henter den siste motestotte på bruker")
+    @Operation(summary = "Henter den siste motestotte på bruker")
     public Motestotte hent(@RequestParam(required = false, name = "fnr") Fnr fnr) {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);
