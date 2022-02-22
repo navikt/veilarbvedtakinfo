@@ -3,19 +3,20 @@ package no.nav.veilarbvedtakinfo.config;
 import no.nav.common.abac.AbacClient;
 import no.nav.common.abac.Pep;
 import no.nav.common.abac.domain.request.ActionId;
-import no.nav.common.client.aktorregister.AktorregisterClient;
-import no.nav.common.client.aktorregister.IdentOppslag;
+import no.nav.common.client.aktoroppslag.AktorOppslagClient;
+import no.nav.common.client.aktoroppslag.BrukerIdenter;
 import no.nav.common.health.HealthCheckResult;
 import no.nav.common.types.identer.*;
 import org.springframework.context.annotation.Bean;
 
 import java.util.List;
+import java.util.Map;
 
 public class ClientTestConfig {
 
     @Bean
-    public AktorregisterClient aktorregisterClient() {
-        return new AktorregisterClient() {
+    public AktorOppslagClient aktorOppslagClient() {
+        return new AktorOppslagClient() {
             @Override
             public Fnr hentFnr(AktorId aktorId) {
                 return null;
@@ -27,17 +28,17 @@ public class ClientTestConfig {
             }
 
             @Override
-            public List<IdentOppslag> hentFnr(List<AktorId> list) {
+            public Map<AktorId, Fnr> hentFnrBolk(List<AktorId> aktorIdListe) {
                 return null;
             }
 
             @Override
-            public List<IdentOppslag> hentAktorId(List<Fnr> list) {
+            public Map<Fnr, AktorId> hentAktorIdBolk(List<Fnr> fnrListe) {
                 return null;
             }
 
             @Override
-            public List<AktorId> hentAktorIder(Fnr fnr) {
+            public BrukerIdenter hentIdenter(EksternBrukerId brukerId) {
                 return null;
             }
 
