@@ -18,6 +18,6 @@ public class EnvironmentProperties {
     private String loginserviceIdportenDiscoveryUrl;
     private String openAmIssoRpUsername;
     private String openAmIssoRpPassword;
-    private String aadDiscoveryUrl;
-    private String veilarbloginAadClientId;
+    private String naisAadDiscoveryUrl;
+    private String naisAadClientId;
 }
