@@ -42,6 +42,8 @@ spec:
       inbound:
         rules:
           - application: veilarbvedtaksstotte
+            namespace: pto
+            cluster: prod-fss
   vault:
     enabled: true
     paths:
