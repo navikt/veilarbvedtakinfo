@@ -38,12 +38,12 @@ spec:
       claims:
         extra:
           - "NAVident"
-    accessPolicy:
-      inbound:
-        rules:
-          - application: veilarbvedtaksstotte
-            namespace: pto
-            cluster: prod-fss
+  accessPolicy:
+    inbound:
+      rules:
+        - application: veilarbvedtaksstotte
+          namespace: pto
+          cluster: prod-fss
   vault:
     enabled: true
     paths:
