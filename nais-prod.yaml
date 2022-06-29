@@ -32,6 +32,18 @@ spec:
     requests:
       cpu: 500m
       memory: 512Mi
+  azure:
+    application:
+      enabled: true
+      claims:
+        extra:
+          - "NAVident"
+  accessPolicy:
+    inbound:
+      rules:
+        - application: veilarbvedtaksstotte
+          namespace: pto
+          cluster: prod-fss
   vault:
     enabled: true
     paths:
