@@ -9,15 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "app.env")
 public class EnvironmentProperties {
     private String abacUrl;
-    private String stsDiscoveryUrl;
-    private String openAmDiscoveryUrl;
-    private String openAmRedirectUrl;
-    private String openAmClientId;
-    private String openAmRefreshUrl;
     private String loginserviceIdportenAudience;
     private String loginserviceIdportenDiscoveryUrl;
-    private String openAmIssoRpUsername;
-    private String openAmIssoRpPassword;
     private String naisAadDiscoveryUrl;
     private String naisAadClientId;
 }

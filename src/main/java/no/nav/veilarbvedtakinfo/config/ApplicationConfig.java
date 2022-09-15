@@ -8,8 +8,8 @@ import no.nav.common.auth.context.AuthContextHolderThreadLocal;
 import no.nav.common.client.aktoroppslag.CachedAktorOppslagClient;
 import no.nav.common.client.aktoroppslag.PdlAktorOppslagClient;
 import no.nav.common.client.pdl.PdlClientImpl;
-import no.nav.common.sts.NaisSystemUserTokenProvider;
-import no.nav.common.sts.OpenAmSystemUserTokenProvider;
+import no.nav.common.token_client.builder.AzureAdTokenClientBuilder;
+import no.nav.common.token_client.client.AzureAdMachineToMachineTokenClient;
 import no.nav.common.utils.Credentials;
 import no.nav.common.utils.EnvironmentUtils;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -24,42 +24,30 @@ import static no.nav.common.utils.UrlUtils.createProdInternalIngressUrl;
 @EnableConfigurationProperties({EnvironmentProperties.class})
 public class ApplicationConfig {
 
-    public static final String APPLICATION_NAME = "veilarbvedtakinfo";
-
     @Bean
-    public Credentials serviceUserCredentials() {
-        return getCredentials("service_user");
+    public AzureAdMachineToMachineTokenClient azureAdMachineToMachineTokenClient() {
+        return AzureAdTokenClientBuilder.builder()
+                .withNaisDefaults()
+                .buildMachineToMachineTokenClient();
     }
-
     @Bean
-    public OpenAmSystemUserTokenProvider openAmsystemUserTokenProvider(EnvironmentProperties properties, Credentials serviceUserCredentials) {
-        return new OpenAmSystemUserTokenProvider(
-                properties.getOpenAmDiscoveryUrl(), properties.getOpenAmRedirectUrl(),
-                new Credentials(properties.getOpenAmIssoRpUsername(), properties.getOpenAmIssoRpPassword()), serviceUserCredentials
-        );
-    }
-
-    @Bean
-    public NaisSystemUserTokenProvider naisSystemUserTokenProvider(EnvironmentProperties properties, Credentials serviceUserCredentials) {
-        return new NaisSystemUserTokenProvider(properties.getStsDiscoveryUrl(), serviceUserCredentials.username, serviceUserCredentials.password);
-    }
-
-    @Bean
-    public CachedAktorOppslagClient aktoroppslacClient(NaisSystemUserTokenProvider naisSystemUserTokenProvider) {
+    public CachedAktorOppslagClient aktoroppslacClient(AzureAdMachineToMachineTokenClient tokenClient) {
         String url = isProduction()
                 ? createProdInternalIngressUrl("pdl-api")
-                : createDevInternalIngressUrl("pdl-api-q1");
+                : createDevInternalIngressUrl("pdl-api");
 
         PdlClientImpl pdlClient = new PdlClientImpl(
                 url,
-                naisSystemUserTokenProvider::getSystemUserToken,
-                naisSystemUserTokenProvider::getSystemUserToken);
+                () -> tokenClient.createMachineToMachineToken(String.format("api://%s.pdl.pdl-api/.default",
+                        isProduction() ? "prod-fss" : "dev-fss")
+                ));
 
         return new CachedAktorOppslagClient(new PdlAktorOppslagClient(pdlClient));
     }
 
     @Bean
-    public Pep pep(EnvironmentProperties properties, Credentials serviceUserCredentials) {
+    public Pep pep(EnvironmentProperties properties) {
+        Credentials serviceUserCredentials = getCredentials("service_user");
         return VeilarbPepFactory.get(
                 properties.getAbacUrl(), serviceUserCredentials.username,
                 serviceUserCredentials.password, new SpringAuditRequestInfoSupplier());
