@@ -20,7 +20,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <common.version>2.2022.09.02_11.04-2530dd139a0a</common.version>
+        <common.version>2.2022.09.15_07.46-e4fa96eb6813</common.version>
     </properties>
 
     <build>
@@ -100,7 +100,7 @@
         </dependency>
         <dependency>
             <groupId>no.nav.common</groupId>
-            <artifactId>sts</artifactId>
+            <artifactId>token-client</artifactId>
             <version>${common.version}</version>
         </dependency>
         <dependency>
@@ -125,7 +125,7 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.9</version>
+            <version>1.6.10</version>
         </dependency>
 
         <!-- Database -->
