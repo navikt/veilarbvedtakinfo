@@ -33,15 +33,7 @@ public class FilterConfig {
                 .withClientId(properties.getNaisAadClientId())
                 .withUserRoleResolver(new AzureAdUserRoleResolver());
     }
-    private OidcAuthenticatorConfig openAmAuthConfig(EnvironmentProperties properties) {
-        return new OidcAuthenticatorConfig()
-                .withDiscoveryUrl(properties.getOpenAmDiscoveryUrl())
-                .withClientId(properties.getOpenAmClientId())
-                .withIdTokenCookieName(OPEN_AM_ID_TOKEN_COOKIE_NAME)
-                .withRefreshTokenCookieName(REFRESH_TOKEN_COOKIE_NAME)
-                .withRefreshUrl(properties.getOpenAmRefreshUrl())
-                .withUserRole(UserRole.INTERN);
-    }
+
     @Bean
     public FilterRegistrationBean<PingFilter> pingFilterRegistrationBean() {
         // Veilarbproxy trenger dette endepunktet for å sjekke at tjenesten lever
@@ -68,7 +60,6 @@ public class FilterConfig {
         FilterRegistrationBean<OidcAuthenticationFilter> registration = new FilterRegistrationBean<>();
         OidcAuthenticationFilter authenticationFilter = new OidcAuthenticationFilter(
                 fromConfigs(
-                        openAmAuthConfig(properties),
                         loginserviceIdportenConfig(properties),
                         azureAdAuthConfig(properties)
                 )
