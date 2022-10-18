@@ -20,7 +20,7 @@
 
     <properties>
         <java.version>11</java.version>
-        <common.version>2.2022.09.15_07.46-e4fa96eb6813</common.version>
+        <common.version>2.2022.09.26_07.11-9c0037f021cb</common.version>
     </properties>
 
     <build>
