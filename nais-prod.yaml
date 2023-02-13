@@ -44,6 +44,9 @@ spec:
         - application: veilarbvedtaksstotte
           namespace: pto
           cluster: prod-fss
+        - application: start-samtale
+          namespace: pto
+          cluster: prod-gcp
   vault:
     enabled: true
     paths:
