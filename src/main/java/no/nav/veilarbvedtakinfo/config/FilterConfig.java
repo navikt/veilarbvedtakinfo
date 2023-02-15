@@ -6,6 +6,7 @@ import no.nav.common.auth.oidc.filter.OidcAuthenticationFilter;
 import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
 import no.nav.common.log.LogFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
+import no.nav.common.token_client.utils.env.TokenXEnvironmentvariables;
 import no.nav.veilarbvedtakinfo.utils.PingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -32,6 +33,13 @@ public class FilterConfig {
                 .withDiscoveryUrl(properties.getNaisAadDiscoveryUrl())
                 .withClientId(properties.getNaisAadClientId())
                 .withUserRoleResolver(new AzureAdUserRoleResolver());
+    }
+
+    private OidcAuthenticatorConfig tokenxConfig() {
+        return new OidcAuthenticatorConfig()
+                .withDiscoveryUrl(System.getenv(TokenXEnvironmentvariables.TOKEN_X_WELL_KNOWN_URL))
+                .withClientId(System.getenv(TokenXEnvironmentvariables.TOKEN_X_CLIENT_ID))
+                .withUserRole(UserRole.EKSTERN);
     }
 
     @Bean
@@ -61,7 +69,8 @@ public class FilterConfig {
         OidcAuthenticationFilter authenticationFilter = new OidcAuthenticationFilter(
                 fromConfigs(
                         loginserviceIdportenConfig(properties),
-                        azureAdAuthConfig(properties)
+                        azureAdAuthConfig(properties),
+                        tokenxConfig()
                 )
         );
 
