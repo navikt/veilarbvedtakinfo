@@ -43,6 +43,7 @@ public class AuthService {
             if (!hentInnloggetUid().equals(eksternBrukerId.get())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
+            return;
         }
 
         boolean harTilgang = pep.harTilgangTilPerson(hentInnloggetBrukerToken(), ActionId.READ, eksternBrukerId);
