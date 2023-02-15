@@ -12,6 +12,7 @@ spec:
   ingresses:
     - https://app.adeo.no/veilarbvedtakinfo
     - https://veilarbvedtakinfo.nais.adeo.no
+    - https://veilarbvedtakinfo.prod-fss-pub.nais.io
   prometheus:
     enabled: true
     path: veilarbvedtakinfo/internal/prometheus
@@ -37,6 +38,7 @@ spec:
   azure:
     application:
       enabled: true
+      allowAllUsers: true
       claims:
         extra:
           - "NAVident"

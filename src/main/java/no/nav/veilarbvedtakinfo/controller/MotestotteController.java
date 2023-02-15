@@ -30,7 +30,7 @@ public class MotestotteController {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        authService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(brukerFnr);
 
         msRepo.oppdaterMotestotte(aktorId);
 
