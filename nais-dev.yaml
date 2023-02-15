@@ -32,6 +32,8 @@ spec:
     requests:
       cpu: 500m
       memory: 512Mi
+  tokenx:
+    enabled: true
   azure:
     application:
       enabled: true
@@ -44,6 +46,9 @@ spec:
         - application: veilarbvedtaksstotte
           namespace: pto
           cluster: dev-fss
+        - application: start-samtale
+          namespace: pto
+          cluster: dev-gcp
   vault:
     enabled: true
     paths:
