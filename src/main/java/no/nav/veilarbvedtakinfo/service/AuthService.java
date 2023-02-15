@@ -6,6 +6,7 @@ import no.nav.common.abac.domain.request.ActionId;
 import no.nav.common.auth.context.AuthContextHolder;
 import no.nav.common.client.aktoroppslag.AktorOppslagClient;
 import no.nav.common.types.identer.AktorId;
+import no.nav.common.types.identer.EksternBrukerId;
 import no.nav.common.types.identer.Fnr;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -37,11 +38,16 @@ public class AuthService {
         return authContextHolder.getIdTokenString().orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Fant ikke token for innlogget bruker"));
     }
 
-    public void sjekkLeseTilgangTilPerson(AktorId aktorId) {
-        boolean harTilgang = pep.harTilgangTilPerson(hentInnloggetBrukerToken(), ActionId.READ, aktorId);
+    public void sjekkLeseTilgangTilPerson(EksternBrukerId eksternBrukerId) {
+        if (authContextHolder.erEksternBruker()) {
+            if (!hentInnloggetUid().equals(eksternBrukerId.get())) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            }
+        }
+
+        boolean harTilgang = pep.harTilgangTilPerson(hentInnloggetBrukerToken(), ActionId.READ, eksternBrukerId);
         if (!harTilgang) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
     }
-
 }
