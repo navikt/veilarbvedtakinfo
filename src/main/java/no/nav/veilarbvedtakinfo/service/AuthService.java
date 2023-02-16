@@ -38,8 +38,12 @@ public class AuthService {
         return authContextHolder.getIdTokenString().orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Fant ikke token for innlogget bruker"));
     }
 
+    public boolean isTokenX() {
+        return authContextHolder.getIdTokenClaims().map(claims -> claims.getIssuer().contains("tokendings")).orElse(false);
+    }
+
     public void sjekkLeseTilgangTilPerson(EksternBrukerId eksternBrukerId) {
-        if (authContextHolder.erEksternBruker()) {
+        if (isTokenX()) {
             if (!hentInnloggetUid().equals(eksternBrukerId.get())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
