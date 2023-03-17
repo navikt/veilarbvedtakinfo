@@ -4,7 +4,7 @@ import no.nav.common.auth.context.UserRole;
 import no.nav.common.auth.oidc.filter.AzureAdUserRoleResolver;
 import no.nav.common.auth.oidc.filter.OidcAuthenticationFilter;
 import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
-import no.nav.common.log.LogFilter;
+import no.nav.common.rest.filter.LogRequestFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
 import no.nav.common.token_client.utils.env.TokenXEnvironmentvariables;
 import no.nav.veilarbvedtakinfo.utils.PingFilter;
@@ -55,9 +55,9 @@ public class FilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<LogFilter> logFilterRegistrationBean() {
-        FilterRegistrationBean<LogFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(new LogFilter(requireApplicationName(), isDevelopment().orElse(false)));
+    public FilterRegistrationBean<LogRequestFilter> logFilterRegistrationBean() {
+        FilterRegistrationBean<LogRequestFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(new LogRequestFilter(requireApplicationName(), isDevelopment().orElse(false)));
         registration.setOrder(2);
         registration.addUrlPatterns("/*");
         return registration;

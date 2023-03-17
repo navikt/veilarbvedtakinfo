@@ -11,17 +11,17 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class BehovsvurderingRepositoryTest {
-    private static JdbcTemplate db;
-    private static BehovsvurderingRepository behovsvurderingRepository;
-    private static AktorId eksternIdent = AktorId.of("123");
+    private BehovsvurderingRepository behovsvurderingRepository;
+    private final AktorId eksternIdent = AktorId.of("123");
 
     @BeforeEach
     public void setup() {
-        db = DbTestUtils.getTestDb();
+        JdbcTemplate db = DbTestUtils.getTestDb();
         behovsvurderingRepository = new BehovsvurderingRepository(db);
     }
 
