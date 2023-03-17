@@ -1,15 +1,18 @@
-name: Test, build, push and deploy
+name: Deploy branch to dev
+run-name: Deploy feature branch ${{ github.ref_name }} by @${{ github.actor }}
+
 on:
-  push:
-    branches:
-      - main
-concurrency:
-  group: deploy_main_branch
-  cancel-in-progress: true
+  workflow_dispatch:
+
 env:
   IMAGE_TAG: ${{ github.sha }}
   IMAGE: ghcr.io/${{ github.repository }}/veilarbvedtakinfo
   PRINT_PAYLOAD: true
+
+concurrency:
+  group: deploy_feature_branch
+  cancel-in-progress: true
+
 jobs:
   test-build-and-push:
     name: Test, build and push
@@ -37,7 +40,6 @@ jobs:
           context: .
           push: true
           tags: ${{ env.IMAGE }}:${{ env.IMAGE_TAG }}
-
   deploy-dev:
     name: Deploy application to dev
     needs: test-build-and-push
@@ -51,19 +53,4 @@ jobs:
           APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
           CLUSTER: dev-fss
           RESOURCE: nais-dev.yaml
-          VAR: version=${{ env.IMAGE_TAG }}
-
-  deploy-prod:
-    name: Deploy application to prod
-    needs: [test-build-and-push, deploy-dev]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Deploy application
-        uses: nais/deploy/actions/deploy@v1
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: prod-fss
-          RESOURCE: nais-prod.yaml
           VAR: version=${{ env.IMAGE_TAG }}
