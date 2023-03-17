@@ -13,7 +13,7 @@ public class LocalH2Database {
     public static JdbcTemplate getDb() {
         if (db == null) {
             JdbcDataSource dataSource = new JdbcDataSource();
-            dataSource.setURL("jdbc:h2:mem:veilarbvedtakinfo-local;DB_CLOSE_DELAY=-1;MODE=Oracle;TRACE_LEVEL_SYSTEM_OUT=3;");
+            dataSource.setURL("jdbc:h2:mem:veilarbvedtakinfo-local;DB_CLOSE_DELAY=-1;MODE=Oracle;");
 
             db = new JdbcTemplate(dataSource);
             initDb(db);

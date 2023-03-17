@@ -8,17 +8,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 
 public class MotestotteRepositoryTest {
 
-    private static JdbcTemplate db;
-    private static MotestotteRepository motestotteRepository;
-    private static AktorId eksternIdent = AktorId.of("123");
+    private MotestotteRepository motestotteRepository;
+    private final AktorId eksternIdent = AktorId.of("123");
 
     @BeforeEach
     public void setup() {
-        db = DbTestUtils.getTestDb();
+        JdbcTemplate db = DbTestUtils.getTestDb();
         motestotteRepository = new MotestotteRepository(db);
     }
 
