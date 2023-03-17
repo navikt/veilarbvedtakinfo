@@ -19,7 +19,7 @@
     <description>Applikasjon for lagring av informasjon relatert til paragraf §14a vedtak</description>
 
     <properties>
-        <java.version>11</java.version>
+        <java.version>17</java.version>
         <common.version>2.2022.09.15_07.46-e4fa96eb6813</common.version>
     </properties>
 
