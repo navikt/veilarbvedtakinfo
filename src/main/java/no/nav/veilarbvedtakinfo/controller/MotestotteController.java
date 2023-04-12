@@ -3,6 +3,7 @@ package no.nav.veilarbvedtakinfo.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import no.nav.common.audit_log.cef.AuthorizationDecision;
 import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
 import no.nav.veilarbvedtakinfo.db.MotestotteRepository;
@@ -25,13 +26,13 @@ public class MotestotteController {
     private final AuthService authService;
 
     @PostMapping
-    @Operation(summary = "Sender inn en motestotte besvarelse")
+    @Operation(summary = "Sender inn en motestottebesvarelse")
     public ResponseEntity nyttSvar(@RequestParam(required = false, name = "fnr") Fnr fnr) {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);
 
         authService.sjekkLeseTilgangTilPerson(brukerFnr);
-
+		authService.auditLogWithMessageAndDestinationUserId("Sender inn en motestottebesvarelse", brukerFnr.get(), authService.hentInnloggetUid(), AuthorizationDecision.PERMIT);
         msRepo.oppdaterMotestotte(aktorId);
 
         return ResponseEntity.status(204).build();
@@ -44,7 +45,7 @@ public class MotestotteController {
         AktorId aktorId = authService.hentAktorId(brukerFnr);
 
         authService.sjekkLeseTilgangTilPerson(aktorId);
-
+		authService.auditLogWithMessageAndDestinationUserId("Henter den siste motestotte på bruker", brukerFnr.get(), authService.hentInnloggetUid(), AuthorizationDecision.PERMIT);
         Motestotte motestotte = msRepo.hentMoteStotte(aktorId);
 
         if (motestotte == null) {

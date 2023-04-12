@@ -33,50 +33,48 @@ import static java.util.Optional.ofNullable;
 @Service
 public class AuthService {
 
-    private final AktorOppslagClient aktorOppslagClient;
-    private final AuthContextHolder authContextHolder;
+	private final AktorOppslagClient aktorOppslagClient;
+	private final AuthContextHolder authContextHolder;
 	private final PoaoTilgangClient poaoTilgangClient;
 	private final UnleashService unleashService;
 
 	private final AuditLogger auditLogger;
-    private final Pep pep;
+	private final Pep pep;
 
-    public boolean erEksternBruker() {
-        return authContextHolder.erEksternBruker();
-    }
+	public boolean erEksternBruker() {
+		return authContextHolder.erEksternBruker();
+	}
 
-    public AktorId hentAktorId(Fnr fnr) {
-        return aktorOppslagClient.hentAktorId(fnr);
-    }
+	public AktorId hentAktorId(Fnr fnr) {
+		return aktorOppslagClient.hentAktorId(fnr);
+	}
 
-    public String hentInnloggetUid() {
-        return authContextHolder.getUid()
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Fant ikke ident for bruker"));
-    }
+	public String hentInnloggetUid() {
+		return authContextHolder.getUid()
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Fant ikke ident for bruker"));
+	}
 
-    public String hentInnloggetBrukerToken() {
-        return authContextHolder.getIdTokenString().orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Fant ikke token for innlogget bruker"));
-    }
+	public String hentInnloggetBrukerToken() {
+		return authContextHolder.getIdTokenString().orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Fant ikke token for innlogget bruker"));
+	}
 
-    public boolean isTokenX() {
-        return authContextHolder.getIdTokenClaims().map(claims -> claims.getIssuer().contains("tokendings")).orElse(false);
-    }
+	public boolean isTokenX() {
+		return authContextHolder.getIdTokenClaims().map(claims -> claims.getIssuer().contains("tokendings")).orElse(false);
+	}
 
-    public void sjekkLeseTilgangTilPerson(EksternBrukerId eksternBrukerId) {
-        if (isTokenX()) {
-            if (!hentInnloggetUid().equals(eksternBrukerId.get())) {
-                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
-            }
-            return;
-        }
+	public void sjekkLeseTilgangTilPerson(EksternBrukerId eksternBrukerId) {
+		if (isTokenX()) {
+			if (!hentInnloggetUid().equals(eksternBrukerId.get())) {
+				throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+			}
+			return;
+		}
 		if (unleashService.skalBrukePoaoTilgang() && !authContextHolder.erSystemBruker()) {
 			if (authContextHolder.erEksternBruker()) {
 				harSikkerhetsNivaa4();
 				Decision desicion = poaoTilgangClient.evaluatePolicy(new EksternBrukerTilgangTilEksternBrukerPolicyInput(
 						hentInnloggetUid(), getEksternBrukerFn(eksternBrukerId)
 				)).getOrThrow();
-
-				auditLogWithMessageAndDestinationUserId("Bruker ønsker tilgang til seg selv", getEksternBrukerFn(eksternBrukerId), hentInnloggetUid(), desicion.isPermit() ? AuthorizationDecision.PERMIT : AuthorizationDecision.DENY);
 				if (desicion.isDeny()) {
 					throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 				}
@@ -84,7 +82,6 @@ public class AuthService {
 				Decision desicion = poaoTilgangClient.evaluatePolicy(new NavAnsattTilgangTilEksternBrukerPolicyInput(
 						hentInnloggetVeilederUUID(), TilgangType.LESE, getEksternBrukerFn(eksternBrukerId)
 				)).getOrThrow();
-				auditLogWithMessageAndDestinationUserId("Veileder tilgang til ekstern bruker", getEksternBrukerFn(eksternBrukerId), hentInnloggetUid(), desicion.isPermit() ? AuthorizationDecision.PERMIT : AuthorizationDecision.DENY);
 				if (desicion.isDeny()) {
 					throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 				}
@@ -94,7 +91,7 @@ public class AuthService {
 				throw new ResponseStatusException(HttpStatus.FORBIDDEN);
 			}
 		}
-    }
+	}
 
 	public static Optional<String> getStringClaimOrEmpty(JWTClaimsSet claims, String claimName) {
 		try {
@@ -104,7 +101,7 @@ public class AuthService {
 		}
 	}
 
-	private void auditLogWithMessageAndDestinationUserId(String logMessage, String destinationUserId, String sourceUserID, AuthorizationDecision authorizationDecision) {
+	public void auditLogWithMessageAndDestinationUserId(String logMessage, String destinationUserId, String sourceUserID, AuthorizationDecision authorizationDecision) {
 		auditLogger.log(CefMessage.builder()
 				.timeEnded(System.currentTimeMillis())
 				.applicationName("veilarbvedtakinfo")
@@ -124,6 +121,7 @@ public class AuthService {
 				.map(UUID::fromString)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Fant ikke oid for innlogget veileder"));
 	}
+
 	private void harSikkerhetsNivaa4() {
 		Optional<String> acrClaim = authContextHolder.getIdTokenClaims()
 				.flatMap(claims -> getStringClaimOrEmpty(claims, "acr"));
