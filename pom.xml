@@ -33,12 +33,16 @@
         <finalName>veilarbvedtakinfo</finalName>
     </build>
 
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-    </repositories>
+	<repositories>
+		<repository>
+			<id>central</id>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+		<repository>
+			<id>jitpack</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
     <dependencies>
         <!-- spring boot bibliotek -->
@@ -80,6 +84,17 @@
         </dependency>
 
         <!-- felles bibliotek -->
+		<dependency>
+			<groupId>com.github.navikt.poao-tilgang</groupId>
+			<artifactId>client</artifactId>
+			<version>2023.03.17_11.36-31ab7c6e4216</version>
+			<exclusions>
+				<exclusion>
+					<groupId>com.github.navikt.common-java-modules</groupId>
+					<artifactId>rest</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
         <dependency>
             <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>feature-toggle</artifactId>
@@ -110,6 +125,11 @@
             <artifactId>auth</artifactId>
             <version>${common.version}</version>
         </dependency>
+		<dependency>
+			<groupId>com.github.navikt.common-java-modules</groupId>
+			<artifactId>audit-log</artifactId>
+			<version>${common.version}</version>
+		</dependency>
 
         <!-- Misc -->
         <dependency>
