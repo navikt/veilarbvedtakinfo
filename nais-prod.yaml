@@ -53,7 +53,7 @@ spec:
           cluster: prod-gcp
         - application: aia-backend
           namespace: paw
-          cluster: dev-gcp
+          cluster: prod-gcp
   vault:
     enabled: true
     paths:
