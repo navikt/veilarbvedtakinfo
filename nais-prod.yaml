@@ -51,6 +51,9 @@ spec:
         - application: start-samtale
           namespace: pto
           cluster: prod-gcp
+        - application: aia-backend
+          namespace: paw
+          cluster: dev-gcp
   vault:
     enabled: true
     paths:
