@@ -65,6 +65,11 @@ spec:
         mountPath: /var/run/secrets/nais.io/vault
       - kvPath: /oracle/data/dev/config/veilarbvedtakinfo_q1
         mountPath: /var/run/secrets/nais.io/oracle_config
+  env:
+    - name: POAO_TILGANG_URL
+      value: http://poao-tilgang.poao.svc.nais.local
+    - name: POAO_TILGANG_SCOPE
+      value: api://dev-fss.poao.poao-tilgang/.default
   envFrom:
     - configmap: pto-config
     - configmap: loginservice-idporten
