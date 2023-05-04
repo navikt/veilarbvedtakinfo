@@ -31,7 +31,7 @@ public class BehovsvurderingController {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        authService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(brukerFnr);
 
         return BesvarelseDto.fromBesvarelse(bvService.nyBesvarlse(aktorId, svar));
     }
@@ -42,7 +42,7 @@ public class BehovsvurderingController {
         Fnr brukerFnr = FnrUtils.hentFnrFraUrlEllerToken(authService, fnr);
         AktorId aktorId = authService.hentAktorId(brukerFnr);
 
-        authService.sjekkLeseTilgangTilPerson(aktorId);
+        authService.sjekkLeseTilgangTilPerson(brukerFnr);
 
         Besvarelse besvarelse = bvService.hentBesvarelse(aktorId);
         if (besvarelse == null) {
