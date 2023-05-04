@@ -42,15 +42,15 @@ public class AuthService {
         return authContextHolder.getIdTokenClaims().map(claims -> claims.getIssuer().contains("tokendings")).orElse(false);
     }
 
-    public void sjekkLeseTilgangTilPerson(EksternBrukerId eksternBrukerId) {
+    public void sjekkLeseTilgangTilPerson(Fnr fnr) {
         if (isTokenX()) {
-            if (!hentInnloggetUid().equals(eksternBrukerId.get())) {
+            if (!hentInnloggetUid().equals(fnr.get())) {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
             return;
         }
 
-        boolean harTilgang = pep.harTilgangTilPerson(hentInnloggetBrukerToken(), ActionId.READ, eksternBrukerId);
+        boolean harTilgang = pep.harTilgangTilPerson(hentInnloggetBrukerToken(), ActionId.READ, fnr);
         if (!harTilgang) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
