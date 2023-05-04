@@ -6,7 +6,6 @@ import no.nav.common.abac.domain.request.ActionId;
 import no.nav.common.auth.context.AuthContextHolder;
 import no.nav.common.client.aktoroppslag.AktorOppslagClient;
 import no.nav.common.types.identer.AktorId;
-import no.nav.common.types.identer.EksternBrukerId;
 import no.nav.common.types.identer.Fnr;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
