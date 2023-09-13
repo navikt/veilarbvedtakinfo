@@ -38,7 +38,7 @@ public class AuthService {
     }
 
     public boolean isTokenX() {
-        return authContextHolder.getIdTokenClaims().map(claims -> claims.getIssuer().contains("tokendings")).orElse(false);
+        return authContextHolder.getIdTokenClaims().map(claims -> claims.getIssuer().contains("tokenx")).orElse(false);
     }
 
     public void sjekkLeseTilgangTilPerson(Fnr fnr) {
