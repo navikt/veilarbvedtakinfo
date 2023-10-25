@@ -1,4 +1,4 @@
-package no.nav.veilarbvedtakinfo.controller;
+package no.nav.veilarbvedtakinfo.controller.v1;
 
 import no.nav.common.health.selftest.SelfTestChecks;
 import no.nav.common.health.selftest.SelfTestUtils;

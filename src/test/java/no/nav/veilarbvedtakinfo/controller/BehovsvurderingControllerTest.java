@@ -5,6 +5,7 @@ import no.nav.common.types.identer.AktorId;
 import no.nav.common.types.identer.Fnr;
 import no.nav.veilarbvedtakinfo.config.DatabaseTestConfig;
 import no.nav.veilarbvedtakinfo.config.FilterTestConfig;
+import no.nav.veilarbvedtakinfo.controller.v1.BehovsvurderingController;
 import no.nav.veilarbvedtakinfo.db.BehovsvurderingRepository;
 import no.nav.veilarbvedtakinfo.domain.behovsvurdering.Besvarelse;
 import no.nav.veilarbvedtakinfo.domain.behovsvurdering.Svar;
