@@ -1,4 +1,4 @@
-package no.nav.veilarbvedtakinfo.controller;
+package no.nav.veilarbvedtakinfo.controller.v1;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.common.types.identer.AktorId;
