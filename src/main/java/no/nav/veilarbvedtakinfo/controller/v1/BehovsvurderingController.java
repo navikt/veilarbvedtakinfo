@@ -25,6 +25,7 @@ public class BehovsvurderingController {
 
     private final AuthService authService;
 
+    @Deprecated(forRemoval = true)
     @PostMapping("/svar")
     @Operation(summary = "Sender inn en behovsvurderings besvarelse")
     public BesvarelseDto nyttSvar(@RequestBody Svar svar, @RequestParam(required = false, name = "fnr") Fnr fnr) {
@@ -36,6 +37,7 @@ public class BehovsvurderingController {
         return BesvarelseDto.fromBesvarelse(bvService.nyBesvarlse(aktorId, svar));
     }
 
+    @Deprecated(forRemoval = true)
     @GetMapping("/besvarelse")
     @Operation(summary = "Henter den siste behovsvurderings besvarelsen på bruker")
     public BesvarelseDto hentSisteBesvarelse(@RequestParam(required = false, name = "fnr") Fnr fnr) {

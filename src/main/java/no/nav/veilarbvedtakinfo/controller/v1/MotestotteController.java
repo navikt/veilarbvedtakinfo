@@ -37,6 +37,7 @@ public class MotestotteController {
         return ResponseEntity.status(204).build();
     }
 
+    @Deprecated(forRemoval = true)
     @GetMapping
     @Operation(summary = "Henter den siste motestotte på bruker")
     public Motestotte hent(@RequestParam(required = false, name = "fnr") Fnr fnr) {
