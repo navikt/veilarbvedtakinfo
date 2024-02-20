@@ -4,7 +4,7 @@ metadata:
   name: veilarbvedtakinfo
   namespace: pto
   labels:
-    team: obo
+    team: pto
 spec:
   image: ghcr.io/navikt/veilarbvedtakinfo/veilarbvedtakinfo:{{version}}
   port: 8080
