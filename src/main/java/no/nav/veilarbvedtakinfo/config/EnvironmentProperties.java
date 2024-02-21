@@ -8,9 +8,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Setter
 @ConfigurationProperties(prefix = "app.env")
 public class EnvironmentProperties {
-    private String abacUrl;
     private String loginserviceIdportenAudience;
     private String loginserviceIdportenDiscoveryUrl;
     private String naisAadDiscoveryUrl;
     private String naisAadClientId;
+    private String poaoTilgangUrl;
+    private String poaoTilgangScope;
 }
