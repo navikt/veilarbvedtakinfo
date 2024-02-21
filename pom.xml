@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.0.3</version>
+        <version>3.2.2</version>
         <relativePath/>
     </parent>
 
@@ -92,11 +92,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.navikt.common-java-modules</groupId>
-            <artifactId>abac</artifactId>
-            <version>${common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>token-client</artifactId>
             <version>${common.version}</version>
         </dependency>
@@ -104,6 +99,11 @@
             <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>auth</artifactId>
             <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.navikt.poao-tilgang</groupId>
+            <artifactId>client</artifactId>
+            <version>2024.02.20_07.34-4dbbf67d478e</version>
         </dependency>
 
         <!-- Misc -->
@@ -133,6 +133,10 @@
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-database-oracle</artifactId>
         </dependency>
 
         <!-- Test -->
