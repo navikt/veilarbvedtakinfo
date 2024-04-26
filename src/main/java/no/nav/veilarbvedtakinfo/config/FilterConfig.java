@@ -7,7 +7,6 @@ import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
 import no.nav.common.rest.filter.LogRequestFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
 import no.nav.common.token_client.utils.env.TokenXEnvironmentvariables;
-import no.nav.veilarbvedtakinfo.utils.PingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +42,7 @@ public class FilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<PingFilter> pingFilterRegistrationBean() {
+    public FilterRegistrationBean pingFilterRegistrationBean() {
         // Veilarbproxy trenger dette endepunktet for å sjekke at tjenesten lever
         // /internal kan ikke brukes siden det blir stoppet før det kommer frem
 
@@ -55,7 +54,7 @@ public class FilterConfig {
     }
 
     @Bean
-    public FilterRegistrationBean<LogRequestFilter> logFilterRegistrationBean() {
+    public FilterRegistrationBean logFilterRegistrationBean() {
         FilterRegistrationBean<LogRequestFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new LogRequestFilter(requireApplicationName(), isDevelopment().orElse(false)));
         registration.setOrder(2);
