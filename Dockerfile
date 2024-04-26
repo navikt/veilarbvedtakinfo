@@ -1,2 +1,2 @@
-FROM docker.pkg.github.com/navikt/pus-nais-java-app/pus-nais-java-app:java17
+FROM ghcr.io/navikt/poao-baseimages/java:17
 COPY /target/veilarbvedtakinfo.jar app.jar
