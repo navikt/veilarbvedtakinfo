@@ -40,7 +40,8 @@ public class ApplicationConfig {
                 url,
                 () -> tokenClient.createMachineToMachineToken(String.format("api://%s.pdl.pdl-api/.default",
                         isProduction() ? "prod-fss" : "dev-fss")
-                ));
+                ),
+                "B642"); //Samme behandlingsnummer som vedtaksstøtte
 
         return new CachedAktorOppslagClient(new PdlAktorOppslagClient(pdlClient));
     }
