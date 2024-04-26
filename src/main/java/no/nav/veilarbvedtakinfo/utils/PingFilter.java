@@ -1,9 +1,9 @@
 package no.nav.veilarbvedtakinfo.utils;
 
-import org.springframework.http.HttpStatus;
-
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
+
 
 public class PingFilter implements Filter {
 

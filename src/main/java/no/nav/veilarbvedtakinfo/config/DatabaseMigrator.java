@@ -1,11 +1,11 @@
 package no.nav.veilarbvedtakinfo.config;
 
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.flywaydb.core.Flyway;
 import org.springframework.context.annotation.Configuration;
 
-import jakarta.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 @Slf4j
