@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.6</version>
+        <version>3.2.5</version>
         <relativePath/>
     </parent>
 
@@ -81,27 +81,32 @@
 
         <!-- felles bibliotek -->
         <dependency>
-            <groupId>com.github.navikt.common-java-modules</groupId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>feature-toggle</artifactId>
+            <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.common</groupId>
             <artifactId>util</artifactId>
             <version>${common.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.navikt.common-java-modules</groupId>
+            <groupId>no.nav.common</groupId>
             <artifactId>client</artifactId>
             <version>${common.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.navikt.common-java-modules</groupId>
+            <groupId>no.nav.common</groupId>
             <artifactId>abac</artifactId>
             <version>${common.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.navikt.common-java-modules</groupId>
-            <artifactId>token-client</artifactId>
+            <groupId>no.nav.common</groupId>
+            <artifactId>sts</artifactId>
             <version>${common.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.github.navikt.common-java-modules</groupId>
+            <groupId>no.nav.common</groupId>
             <artifactId>auth</artifactId>
             <version>${common.version}</version>
         </dependency>
@@ -117,27 +122,30 @@
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-            <version>2.3.0</version>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.6</version>
         </dependency>
 
         <!-- Database -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
+            <version>3.2.0</version>
         </dependency>
         <dependency>
-            <groupId>com.oracle.database.jdbc</groupId>
-            <artifactId>ojdbc11</artifactId>
+            <groupId>com.oracle.ojdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>19.3.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
+            <version>6.5.3</version>
         </dependency>
 
         <!-- Test -->
         <dependency>
-            <groupId>com.github.navikt.common-java-modules</groupId>
+            <groupId>no.nav.common</groupId>
             <artifactId>test</artifactId>
             <version>${common.version}</version>
             <scope>test</scope>
@@ -148,8 +156,21 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>testcontainers</artifactId>
+            <version>1.16.3</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
+            <version>1.4.200</version>
             <scope>test</scope>
         </dependency>
         <dependency>
