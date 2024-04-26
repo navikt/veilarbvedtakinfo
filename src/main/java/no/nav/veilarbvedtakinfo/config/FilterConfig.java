@@ -7,6 +7,7 @@ import no.nav.common.auth.oidc.filter.OidcAuthenticatorConfig;
 import no.nav.common.rest.filter.LogRequestFilter;
 import no.nav.common.rest.filter.SetStandardHttpHeadersFilter;
 import no.nav.common.token_client.utils.env.TokenXEnvironmentvariables;
+import no.nav.veilarbvedtakinfo.utils.PingFilter;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
