@@ -159,4 +159,27 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>github</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <!-- Legger til central eksplisitt for prioritet over jitpack -->
+                <repository>
+                    <id>central</id>
+                    <url>https://repo.maven.apache.org/maven2</url>
+                </repository>
+                <repository>
+                    <id>confluent</id>
+                    <url>https://packages.confluent.io/maven</url>
+                </repository>
+                <repository>
+                    <id>jitpack</id>
+                    <url>https://jitpack.io</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
 </project>
