@@ -96,11 +96,6 @@
         </dependency>
         <dependency>
             <groupId>com.github.navikt.common-java-modules</groupId>
-            <artifactId>abac</artifactId>
-            <version>${common.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>token-client</artifactId>
             <version>${common.version}</version>
         </dependency>
@@ -108,6 +103,11 @@
             <groupId>com.github.navikt.common-java-modules</groupId>
             <artifactId>auth</artifactId>
             <version>${common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.navikt.poao-tilgang</groupId>
+            <artifactId>client</artifactId>
+            <version>2024.02.20_07.34-4dbbf67d478e</version>
         </dependency>
 
         <!-- Misc -->
